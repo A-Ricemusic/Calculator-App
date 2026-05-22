@@ -206,15 +206,15 @@ const notesStorageKey = 'calculator-math-notes';
 const notePagesStorageKey = 'calculator-math-note-pages';
 const noteCollectionsStorageKey = 'calculator-math-note-collections';
 const utensilColors = ['#ffffff', '#1495ff', '#facc15', '#fb7185', '#34d399', '#a78bfa'];
-const collectionPageSizes = [5, 10, 20];
+const maxPagesPerNote = 20;
 const noteDots = Array.from({ length: 360 }, (_, index) => ({
   id: index,
   left: (index % 24) * 18 + 12,
   top: Math.floor(index / 24) * 24 + 12,
 }));
 const toolSettings: Record<Exclude<NoteTool, 'text'>, { label: string; icon: string; width: number }> = {
-  pen: { label: 'Pen', icon: '✎', width: 5 },
-  marker: { label: 'Marker', icon: '▮', width: 9 },
+  pen: { label: 'Pen', icon: '/', width: 5 },
+  marker: { label: 'Marker', icon: '//', width: 9 },
   highlighter: { label: 'Highlighter', icon: '▰', width: 16 },
   eraser: { label: 'Eraser', icon: '⌫', width: 24 },
 };
@@ -474,6 +474,15 @@ function isNoteCollection(value: unknown): value is NoteCollection {
     && collection.pages.every(isNotePage);
 }
 
+function normalizeNoteCollection(collection: NoteCollection): NoteCollection {
+  const pages = collection.pages.slice(0, maxPagesPerNote);
+  return {
+    ...collection,
+    pageCount: pages.length,
+    pages,
+  };
+}
+
 export default function App() {
   const [mode, setMode] = useState<Mode>('basic');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -485,12 +494,14 @@ export default function App() {
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [notes, setNotes] = useState<MathNote[]>([]);
   const [notesLoaded, setNotesLoaded] = useState(false);
-  const [noteCollections, setNoteCollections] = useState<NoteCollection[]>(() => [createCollection(10)]);
+  const [noteCollections, setNoteCollections] = useState<NoteCollection[]>(() => [createCollection(1)]);
   const [noteCollectionsLoaded, setNoteCollectionsLoaded] = useState(false);
   const [activeCollectionIndex, setActiveCollectionIndex] = useState(0);
+  const [notesManagerOpen, setNotesManagerOpen] = useState(false);
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [activeTool, setActiveTool] = useState<NoteTool>('pen');
   const [activeColor, setActiveColor] = useState('#ffffff');
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const [textDraft, setTextDraft] = useState('');
   const [drawingStroke, setDrawingStroke] = useState<Stroke | null>(null);
   const drawingStrokeRef = useRef<Stroke | null>(null);
@@ -559,7 +570,9 @@ export default function App() {
 
         const parsedCollections = JSON.parse(storedCollections);
         if (Array.isArray(parsedCollections)) {
-          const validCollections = parsedCollections.filter(isNoteCollection);
+          const validCollections = parsedCollections
+            .filter(isNoteCollection)
+            .map(normalizeNoteCollection);
           if (validCollections.length > 0) {
             setNoteCollections(validCollections);
             setActiveCollectionIndex(0);
@@ -576,7 +589,7 @@ export default function App() {
 
         const parsedPages = JSON.parse(storedPages);
         if (Array.isArray(parsedPages)) {
-          const validPages = parsedPages.filter(isNotePage);
+          const validPages = parsedPages.filter(isNotePage).slice(0, maxPagesPerNote);
           if (validPages.length > 0) {
             setNoteCollections([{
               id: createId('collection'),
@@ -730,6 +743,11 @@ export default function App() {
         return collection;
       }
 
+      if (collection.pages.length >= maxPagesPerNote) {
+        setActivePageIndex(maxPagesPerNote - 1);
+        return collection;
+      }
+
       setActivePageIndex(collection.pages.length);
       return {
         ...collection,
@@ -754,19 +772,28 @@ export default function App() {
     drawingStrokeRef.current = null;
   }
 
-  function selectCollectionSize(pageCount: number) {
-    const matchingCollectionIndex = noteCollections.findIndex((collection) => collection.pageCount === pageCount);
-
-    if (matchingCollectionIndex >= 0) {
-      selectCollection(matchingCollectionIndex);
-      return;
-    }
-
+  function createNewCollection() {
     setNoteCollections((current) => {
-      const nextCollection = createCollection(pageCount, current.length);
+      const nextCollection = createCollection(1, current.length);
       setActiveCollectionIndex(current.length);
       setActivePageIndex(0);
+      setNotesManagerOpen(false);
       return [...current, nextCollection];
+    });
+  }
+
+  function openCollection(collectionIndex: number) {
+    selectCollection(collectionIndex);
+    setNotesManagerOpen(false);
+  }
+
+  function deleteCollection(collectionId: string) {
+    setNoteCollections((current) => {
+      const nextCollections = current.filter((collection) => collection.id !== collectionId);
+      const resolvedCollections = nextCollections.length > 0 ? nextCollections : [createCollection(1)];
+      setActiveCollectionIndex((currentIndex) => Math.min(currentIndex, resolvedCollections.length - 1));
+      setActivePageIndex(0);
+      return resolvedCollections;
     });
   }
 
@@ -802,6 +829,13 @@ export default function App() {
       ],
     }));
     setTextDraft('');
+  }
+
+  function deleteTextBlock(blockId: string) {
+    updateActivePage((page) => ({
+      ...page,
+      textBlocks: page.textBlocks.filter((tb) => tb.id !== blockId),
+    }));
   }
 
   function pointFromEvent(event: GestureResponderEvent) {
@@ -1120,76 +1154,23 @@ export default function App() {
               </Text>
               <Pressable
                 accessibilityRole="button"
+                accessibilityLabel="Open notes manager"
+                onPress={() => {
+                  setColorPickerOpen(false);
+                  setNotesManagerOpen(true);
+                }}
+                style={styles.notesManagerBtn}
+              >
+                <Text style={styles.notesManagerIcon}>☷</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
                 accessibilityLabel="Save notebook"
                 onPress={saveNotebookSnapshot}
                 style={styles.notesSaveBtn}
               >
                 <Text style={styles.notesSaveIcon}>✓</Text>
               </Pressable>
-            </View>
-
-            <View style={styles.collectionPanel}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.collectionList}
-              >
-                {noteCollections.map((collection, index) => (
-                  <Pressable
-                    key={collection.id}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: index === activeCollectionIndex }}
-                    accessibilityLabel={`Open ${collection.title}`}
-                    onPress={() => selectCollection(index)}
-                    style={[
-                      styles.collectionChip,
-                      index === activeCollectionIndex && styles.collectionChipActive,
-                    ]}
-                  >
-                    <Text
-                      numberOfLines={1}
-                      style={[
-                        styles.collectionChipTitle,
-                        index === activeCollectionIndex && styles.collectionChipTitleActive,
-                      ]}
-                    >
-                      {collection.title}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.collectionChipMeta,
-                        index === activeCollectionIndex && styles.collectionChipMetaActive,
-                      ]}
-                    >
-                      {collection.pages.length} pages
-                    </Text>
-                  </Pressable>
-                ))}
-              </ScrollView>
-
-              <View style={styles.collectionSizeRow}>
-                {collectionPageSizes.map((pageCount) => (
-                  <Pressable
-                    key={pageCount}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Switch to ${pageCount} page collection`}
-                    onPress={() => selectCollectionSize(pageCount)}
-                    style={[
-                      styles.collectionSizeButton,
-                      activeCollection?.pageCount === pageCount && styles.collectionSizeButtonActive,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.collectionSizeText,
-                        activeCollection?.pageCount === pageCount && styles.collectionSizeTextActive,
-                      ]}
-                    >
-                      {pageCount}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
             </View>
 
             <View style={styles.notesCanvasWrap}>
@@ -1204,19 +1185,27 @@ export default function App() {
                 {activePage?.strokes.map((stroke) => renderStroke(stroke))}
                 {drawingStroke && renderStroke(drawingStroke)}
                 {activePage?.textBlocks.map((textBlock) => (
-                  <Text
+                  <View
                     key={textBlock.id}
                     style={[
-                      styles.canvasTextBlock,
-                      {
-                        color: activeColor,
-                        left: textBlock.x,
-                        top: textBlock.y,
-                      },
+                      styles.canvasTextBlockWrap,
+                      { left: textBlock.x, top: textBlock.y },
                     ]}
                   >
-                    {textBlock.body}
-                  </Text>
+                    <Text style={[styles.canvasTextBlock, { color: activeColor }]}>
+                      {textBlock.body}
+                    </Text>
+                    {activeTool === 'text' && (
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={`Delete "${textBlock.body}"`}
+                        onPress={() => deleteTextBlock(textBlock.id)}
+                        style={styles.textBlockDelete}
+                      >
+                        <Text style={styles.textBlockDeleteIcon}>✕</Text>
+                      </Pressable>
+                    )}
+                  </View>
                 ))}
               </View>
             </View>
@@ -1242,94 +1231,167 @@ export default function App() {
               </View>
             )}
 
-            <View style={styles.notesToolbar}>
+            <View style={styles.notesBottomBar}>
               <View style={styles.notesToolRow}>
-                {(['pen', 'marker', 'highlighter', 'eraser'] as Exclude<NoteTool, 'text'>[]).map((tool) => (
+                {([
+                  { tool: 'pen' as NoteTool, label: 'Pen' },
+                  { tool: 'marker' as NoteTool, label: 'Ink' },
+                  { tool: 'eraser' as NoteTool, label: 'Erase' },
+                  { tool: 'text' as NoteTool, label: 'Aa' },
+                ]).map(({ tool, label }) => (
                   <Pressable
                     key={tool}
                     accessibilityRole="button"
                     accessibilityLabel={`Select ${tool}`}
-                    onPress={() => setActiveTool(tool)}
+                    onPress={() => { setActiveTool(tool); setColorPickerOpen(false); }}
                     style={[
                       styles.notesToolBtn,
                       activeTool === tool && styles.notesToolBtnActive,
                     ]}
                   >
-                    <Text style={[
-                      styles.notesToolIcon,
-                      activeTool === tool && styles.notesToolIconActive,
-                    ]}>
-                      {toolSettings[tool].icon}
+                    <Text
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={[
+                        styles.notesToolLabel,
+                        activeTool === tool && styles.notesToolLabelActive,
+                      ]}
+                    >
+                      {label}
                     </Text>
                   </Pressable>
                 ))}
+
                 <View style={styles.notesToolDivider} />
+
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel="Select text tool"
-                  onPress={() => setActiveTool('text')}
-                  style={[
-                    styles.notesToolBtn,
-                    activeTool === 'text' && styles.notesToolBtnActive,
-                  ]}
+                  accessibilityLabel="Pick color"
+                  onPress={() => setColorPickerOpen((o) => !o)}
+                  style={styles.notesColorBtn}
                 >
-                  <Text style={[
-                    styles.notesToolIcon,
-                    activeTool === 'text' && styles.notesToolIconActive,
-                  ]}>
-                    Aa
-                  </Text>
+                  <View style={[styles.notesColorBtnDot, { backgroundColor: activeColor }]} />
                 </Pressable>
               </View>
-              <View style={styles.notesToolDivider} />
-              <View style={styles.notesColorRow}>
-                {utensilColors.map((color) => (
-                  <Pressable
-                    key={color}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Set color ${color}`}
-                    onPress={() => setActiveColor(color)}
-                    style={[
-                      styles.notesColorDot,
-                      { backgroundColor: color },
-                      activeColor === color && styles.notesColorDotActive,
-                    ]}
-                  />
-                ))}
+
+              <View style={styles.notesPageRow}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Previous page"
+                  disabled={activePageIndex === 0}
+                  onPress={() => changePage(-1)}
+                  style={[styles.notesPageBtn, activePageIndex === 0 && styles.notesPageBtnDisabled]}
+                >
+                  <Text style={styles.notesPageBtnText}>‹</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Create new page"
+                  disabled={activePages.length >= maxPagesPerNote}
+                  onPress={addPage}
+                  style={[
+                    styles.notesNewPageBtn,
+                    activePages.length >= maxPagesPerNote && styles.notesNewPageBtnDisabled,
+                  ]}
+                >
+                  <Text style={styles.notesNewPageText}>
+                    {activePages.length >= maxPagesPerNote ? '20 Page Max' : '+ New Page'}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Next page"
+                  disabled={activePageIndex === activePages.length - 1}
+                  onPress={() => changePage(1)}
+                  style={[
+                    styles.notesPageBtn,
+                    activePageIndex === activePages.length - 1 && styles.notesPageBtnDisabled,
+                  ]}
+                >
+                  <Text style={styles.notesPageBtnText}>›</Text>
+                </Pressable>
               </View>
             </View>
 
-            <View style={styles.notesPageNav}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Previous page"
-                disabled={activePageIndex === 0}
-                onPress={() => changePage(-1)}
-                style={[styles.notesPageBtn, activePageIndex === 0 && styles.notesPageBtnDisabled]}
-              >
-                <Text style={styles.notesPageBtnText}>‹</Text>
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Create new page"
-                onPress={addPage}
-                style={styles.notesNewPageBtn}
-              >
-                <Text style={styles.notesNewPageText}>+ New Page</Text>
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Next page"
-                disabled={activePageIndex === activePages.length - 1}
-                onPress={() => changePage(1)}
-                style={[
-                  styles.notesPageBtn,
-                  activePageIndex === activePages.length - 1 && styles.notesPageBtnDisabled,
-                ]}
-              >
-                <Text style={styles.notesPageBtnText}>›</Text>
-              </Pressable>
-            </View>
+            {notesManagerOpen && (
+              <View style={styles.notesManagerOverlay}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Close notes manager"
+                  onPress={() => setNotesManagerOpen(false)}
+                  style={styles.notesManagerScrim}
+                />
+                <View style={styles.notesManagerSheet}>
+                  <View style={styles.notesManagerHeader}>
+                    <Text style={styles.notesManagerTitle}>Notes</Text>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Create new note"
+                      onPress={createNewCollection}
+                      style={styles.notesManagerNewBtn}
+                    >
+                      <Text style={styles.notesManagerNewText}>+ Note</Text>
+                    </Pressable>
+                  </View>
+
+                  <ScrollView contentContainerStyle={styles.notesManagerList}>
+                    {noteCollections.map((collection, index) => (
+                      <View
+                        key={collection.id}
+                        style={[
+                          styles.notesManagerItem,
+                          index === activeCollectionIndex && styles.notesManagerItemActive,
+                        ]}
+                      >
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityState={{ selected: index === activeCollectionIndex }}
+                          accessibilityLabel={`Open ${collection.title}`}
+                          onPress={() => openCollection(index)}
+                          style={styles.notesManagerItemMain}
+                        >
+                          <Text numberOfLines={1} style={styles.notesManagerItemTitle}>
+                            {collection.title}
+                          </Text>
+                          <Text style={styles.notesManagerItemMeta}>
+                            {collection.pages.length}/{maxPagesPerNote} pages
+                          </Text>
+                        </Pressable>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={`Delete ${collection.title}`}
+                          onPress={() => deleteCollection(collection.id)}
+                          style={styles.notesManagerDeleteBtn}
+                        >
+                          <Text style={styles.notesManagerDeleteText}>Delete</Text>
+                        </Pressable>
+                      </View>
+                    ))}
+                  </ScrollView>
+                </View>
+              </View>
+            )}
+
+            {colorPickerOpen && (
+              <View style={styles.colorPickerOverlay}>
+                <Pressable style={styles.colorPickerScrim} onPress={() => setColorPickerOpen(false)} />
+                <View style={styles.colorPickerPanel}>
+                  {utensilColors.map((color) => (
+                    <Pressable
+                      key={color}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Set color ${color}`}
+                      onPress={() => { setActiveColor(color); setColorPickerOpen(false); }}
+                      style={[
+                        styles.colorPickerDot,
+                        { backgroundColor: color },
+                        activeColor === color && styles.colorPickerDotActive,
+                      ]}
+                    />
+                  ))}
+                </View>
+              </View>
+            )}
           </View>
         ) : (
           <>
@@ -1514,23 +1576,24 @@ function createStyles(theme: CalculatorTheme) {
     notesContainer: {
       backgroundColor: '#0f1115',
       flex: 1,
+      overflow: 'hidden',
     },
     notesHeader: {
       alignItems: 'center',
       borderBottomColor: 'rgba(255, 255, 255, 0.06)',
       borderBottomWidth: 1,
       flexDirection: 'row',
-      gap: 12,
-      paddingHorizontal: 16,
-      paddingVertical: 10,
+      gap: 10,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
     },
     notesBackBtn: {
       alignItems: 'center',
       backgroundColor: 'rgba(255, 255, 255, 0.08)',
-      borderRadius: 10,
-      height: 36,
+      borderRadius: 8,
+      height: 30,
       justifyContent: 'center',
-      width: 36,
+      width: 30,
     },
     notesBackIcon: {
       color: '#ffffff',
@@ -1554,93 +1617,36 @@ function createStyles(theme: CalculatorTheme) {
     notesSaveBtn: {
       alignItems: 'center',
       backgroundColor: '#3b82f6',
-      borderRadius: 10,
-      height: 36,
+      borderRadius: 8,
+      height: 30,
       justifyContent: 'center',
-      width: 36,
+      width: 30,
     },
     notesSaveIcon: {
       color: '#ffffff',
       fontSize: 16,
       fontWeight: '700',
     },
-    collectionPanel: {
-      backgroundColor: '#15181d',
-      borderBottomColor: 'rgba(255, 255, 255, 0.06)',
-      borderBottomWidth: 1,
-      paddingBottom: 8,
-      paddingTop: 8,
-    },
-    collectionList: {
-      gap: 8,
-      paddingHorizontal: 12,
-    },
-    collectionChip: {
-      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-      borderColor: 'rgba(255, 255, 255, 0.08)',
-      borderRadius: 10,
-      borderWidth: 1,
-      minWidth: 112,
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-    },
-    collectionChipActive: {
-      backgroundColor: '#22324f',
-      borderColor: '#3b82f6',
-    },
-    collectionChipTitle: {
-      color: 'rgba(255, 255, 255, 0.72)',
-      fontSize: 13,
-      fontWeight: '700',
-    },
-    collectionChipTitleActive: {
-      color: '#ffffff',
-    },
-    collectionChipMeta: {
-      color: 'rgba(255, 255, 255, 0.38)',
-      fontSize: 11,
-      fontWeight: '600',
-      marginTop: 2,
-    },
-    collectionChipMetaActive: {
-      color: 'rgba(255, 255, 255, 0.68)',
-    },
-    collectionSizeRow: {
-      flexDirection: 'row',
-      gap: 8,
-      paddingHorizontal: 12,
-      paddingTop: 8,
-    },
-    collectionSizeButton: {
+    notesManagerBtn: {
       alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-      borderColor: 'rgba(255, 255, 255, 0.08)',
-      borderRadius: 999,
-      borderWidth: 1,
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      borderRadius: 8,
       height: 30,
       justifyContent: 'center',
-      minWidth: 58,
-      paddingHorizontal: 12,
+      width: 30,
     },
-    collectionSizeButtonActive: {
-      backgroundColor: '#3b82f6',
-      borderColor: '#3b82f6',
-    },
-    collectionSizeText: {
-      color: 'rgba(255, 255, 255, 0.62)',
-      fontSize: 13,
-      fontWeight: '800',
-    },
-    collectionSizeTextActive: {
+    notesManagerIcon: {
       color: '#ffffff',
+      fontSize: 17,
+      fontWeight: '800',
     },
     notesCanvasWrap: {
       borderColor: 'rgba(255, 255, 255, 0.06)',
-      borderRadius: 16,
+      borderRadius: 12,
       borderWidth: 1,
       flex: 1,
-      marginHorizontal: 12,
-      marginTop: 8,
+      marginHorizontal: 10,
+      marginTop: 6,
       overflow: 'hidden',
     },
     notesCanvas: {
@@ -1659,6 +1665,11 @@ function createStyles(theme: CalculatorTheme) {
       position: 'absolute',
       transformOrigin: 'left center',
     },
+    canvasTextBlockWrap: {
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      position: 'absolute',
+    },
     canvasTextBlock: {
       backgroundColor: 'rgba(15, 17, 21, 0.72)',
       borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -1666,141 +1677,270 @@ function createStyles(theme: CalculatorTheme) {
       borderWidth: StyleSheet.hairlineWidth,
       fontSize: 22,
       fontWeight: '600',
-      maxWidth: '80%',
+      maxWidth: 280,
       paddingHorizontal: 12,
       paddingVertical: 8,
-      position: 'absolute',
+    },
+    textBlockDelete: {
+      alignItems: 'center',
+      backgroundColor: '#ef4444',
+      borderRadius: 999,
+      height: 20,
+      justifyContent: 'center',
+      marginLeft: -10,
+      marginTop: -6,
+      width: 20,
+    },
+    textBlockDeleteIcon: {
+      color: '#ffffff',
+      fontSize: 10,
+      fontWeight: '700',
     },
     notesTextBar: {
       alignItems: 'center',
       backgroundColor: '#1a1d22',
       borderColor: 'rgba(255, 255, 255, 0.08)',
-      borderRadius: 12,
+      borderRadius: 10,
       borderWidth: 1,
       flexDirection: 'row',
-      gap: 8,
-      marginHorizontal: 12,
-      marginTop: 8,
-      padding: 6,
+      gap: 6,
+      marginHorizontal: 10,
+      marginTop: 6,
+      padding: 5,
     },
     notesTextInput: {
       color: '#ffffff',
       flex: 1,
-      fontSize: 15,
-      minHeight: 38,
-      paddingHorizontal: 12,
+      fontSize: 14,
+      minHeight: 32,
+      paddingHorizontal: 10,
     },
     notesTextAddBtn: {
       alignItems: 'center',
       backgroundColor: '#3b82f6',
-      borderRadius: 8,
+      borderRadius: 6,
       justifyContent: 'center',
-      minHeight: 38,
-      paddingHorizontal: 18,
+      minHeight: 32,
+      paddingHorizontal: 14,
     },
     notesTextAddLabel: {
       color: '#ffffff',
       fontSize: 14,
       fontWeight: '700',
     },
-    notesToolbar: {
-      alignItems: 'center',
-      backgroundColor: '#1a1d22',
-      borderColor: 'rgba(255, 255, 255, 0.06)',
-      borderRadius: 14,
-      borderWidth: 1,
-      flexDirection: 'row',
+    notesBottomBar: {
       gap: 6,
-      marginHorizontal: 12,
-      marginTop: 8,
-      paddingHorizontal: 8,
-      paddingVertical: 6,
+      paddingBottom: 8,
+      paddingHorizontal: 10,
+      paddingTop: 6,
     },
     notesToolRow: {
       alignItems: 'center',
+      backgroundColor: '#1a1d22',
+      borderColor: 'rgba(255, 255, 255, 0.06)',
+      borderRadius: 12,
+      borderWidth: 1,
       flexDirection: 'row',
-      gap: 2,
+      gap: 4,
+      paddingHorizontal: 6,
+      paddingVertical: 5,
     },
     notesToolBtn: {
       alignItems: 'center',
       borderRadius: 8,
-      height: 34,
+      height: 32,
       justifyContent: 'center',
-      width: 34,
+      paddingHorizontal: 10,
     },
     notesToolBtnActive: {
       backgroundColor: '#3b82f6',
     },
-    notesToolIcon: {
+    notesToolLabel: {
       color: 'rgba(255, 255, 255, 0.5)',
-      fontSize: 18,
+      fontSize: 13,
       fontWeight: '700',
     },
-    notesToolIconActive: {
+    notesToolLabelActive: {
       color: '#ffffff',
     },
     notesToolDivider: {
       backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      height: 24,
+      height: 22,
       marginHorizontal: 4,
       width: 1,
     },
-    notesColorRow: {
+    notesColorBtn: {
       alignItems: 'center',
-      flex: 1,
-      flexDirection: 'row',
-      gap: 6,
-      justifyContent: 'flex-end',
-    },
-    notesColorDot: {
-      borderColor: 'rgba(255, 255, 255, 0.15)',
+      borderColor: 'rgba(255, 255, 255, 0.2)',
       borderRadius: 999,
-      borderWidth: 1.5,
+      borderWidth: 2,
+      height: 30,
+      justifyContent: 'center',
+      marginLeft: 'auto',
+      width: 30,
+    },
+    notesColorBtnDot: {
+      borderRadius: 999,
       height: 20,
       width: 20,
     },
-    notesColorDotActive: {
-      borderColor: '#ffffff',
-      borderWidth: 2.5,
-      transform: [{ scale: 1.15 }],
+    colorPickerOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: 'flex-end',
     },
-    notesPageNav: {
+    colorPickerScrim: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    colorPickerPanel: {
+      alignItems: 'center',
+      alignSelf: 'center',
+      backgroundColor: '#1a1d22',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 16,
+      borderWidth: 1,
+      bottom: 100,
+      flexDirection: 'row',
+      gap: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      position: 'absolute',
+    },
+    colorPickerDot: {
+      borderColor: 'rgba(255, 255, 255, 0.15)',
+      borderRadius: 999,
+      borderWidth: 2,
+      height: 32,
+      width: 32,
+    },
+    colorPickerDotActive: {
+      borderColor: '#ffffff',
+      borderWidth: 3,
+      transform: [{ scale: 1.1 }],
+    },
+    notesPageRow: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: 10,
+      gap: 8,
       justifyContent: 'center',
-      paddingBottom: 16,
-      paddingTop: 8,
     },
     notesPageBtn: {
       alignItems: 'center',
       backgroundColor: 'rgba(255, 255, 255, 0.08)',
-      borderRadius: 10,
-      height: 32,
+      borderRadius: 8,
+      height: 28,
       justifyContent: 'center',
-      width: 32,
+      width: 28,
     },
     notesPageBtnDisabled: {
       opacity: 0.25,
     },
     notesPageBtnText: {
       color: '#ffffff',
-      fontSize: 20,
+      fontSize: 16,
       fontWeight: '600',
-      lineHeight: 22,
+      lineHeight: 18,
     },
     notesNewPageBtn: {
       alignItems: 'center',
       backgroundColor: 'rgba(255, 255, 255, 0.08)',
-      borderRadius: 10,
+      borderRadius: 8,
       justifyContent: 'center',
-      paddingHorizontal: 14,
-      paddingVertical: 7,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+    },
+    notesNewPageBtnDisabled: {
+      opacity: 0.42,
     },
     notesNewPageText: {
       color: 'rgba(255, 255, 255, 0.6)',
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: '600',
+    },
+    notesManagerOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: 'flex-end',
+    },
+    notesManagerScrim: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.56)',
+    },
+    notesManagerSheet: {
+      backgroundColor: '#15181d',
+      borderTopColor: 'rgba(255, 255, 255, 0.08)',
+      borderTopLeftRadius: 18,
+      borderTopRightRadius: 18,
+      borderTopWidth: 1,
+      maxHeight: '58%',
+      paddingHorizontal: 14,
+      paddingTop: 14,
+    },
+    notesManagerHeader: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+    },
+    notesManagerTitle: {
+      color: '#ffffff',
+      fontSize: 18,
+      fontWeight: '800',
+    },
+    notesManagerNewBtn: {
+      alignItems: 'center',
+      backgroundColor: '#3b82f6',
+      borderRadius: 8,
+      justifyContent: 'center',
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    },
+    notesManagerNewText: {
+      color: '#ffffff',
+      fontSize: 13,
+      fontWeight: '800',
+    },
+    notesManagerList: {
+      gap: 8,
+      paddingBottom: 18,
+    },
+    notesManagerItem: {
+      alignItems: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+      borderColor: 'rgba(255, 255, 255, 0.08)',
+      borderRadius: 10,
+      borderWidth: 1,
+      flexDirection: 'row',
+      padding: 10,
+    },
+    notesManagerItemActive: {
+      backgroundColor: '#22324f',
+      borderColor: '#3b82f6',
+    },
+    notesManagerItemMain: {
+      flex: 1,
+      paddingRight: 10,
+    },
+    notesManagerItemTitle: {
+      color: '#ffffff',
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    notesManagerItemMeta: {
+      color: 'rgba(255, 255, 255, 0.5)',
+      fontSize: 12,
+      fontWeight: '600',
+      marginTop: 3,
+    },
+    notesManagerDeleteBtn: {
+      borderColor: 'rgba(248, 113, 113, 0.42)',
+      borderRadius: 8,
+      borderWidth: 1,
+      paddingHorizontal: 10,
+      paddingVertical: 7,
+    },
+    notesManagerDeleteText: {
+      color: '#fca5a5',
+      fontSize: 12,
+      fontWeight: '800',
     },
     sciFnSection: {
       gap: 0,
