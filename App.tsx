@@ -207,6 +207,13 @@ const notePagesStorageKey = 'calculator-math-note-pages';
 const noteCollectionsStorageKey = 'calculator-math-note-collections';
 const utensilColors = ['#ffffff', '#1495ff', '#facc15', '#fb7185', '#34d399', '#a78bfa'];
 const maxPagesPerNote = 20;
+const trayTools: { tool: NoteTool; label: string }[] = [
+  { tool: 'pen', label: 'Pen' },
+  { tool: 'marker', label: 'Marker' },
+  { tool: 'highlighter', label: 'Highlighter' },
+  { tool: 'eraser', label: 'Eraser' },
+  { tool: 'text', label: 'Text' },
+];
 const noteDots = Array.from({ length: 360 }, (_, index) => ({
   id: index,
   left: (index % 24) * 18 + 12,
@@ -1105,6 +1112,56 @@ export default function App() {
     });
   }
 
+  function renderUtensil(tool: NoteTool, isActive: boolean) {
+    const tint = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.55)';
+    const band = isActive ? activeColor : 'rgba(255, 255, 255, 0.2)';
+
+    if (tool === 'pen') {
+      return (
+        <View style={styles.utensilWrap}>
+          <View style={[styles.penTip, { borderBottomColor: tint }]} />
+          <View style={[styles.penBarrel, { borderColor: band }]} />
+          <View style={styles.penGrip} />
+        </View>
+      );
+    }
+
+    if (tool === 'marker') {
+      return (
+        <View style={styles.utensilWrap}>
+          <View style={[styles.markerNib, { backgroundColor: tint }]} />
+          <View style={[styles.markerBarrel, { borderColor: band }]} />
+        </View>
+      );
+    }
+
+    if (tool === 'highlighter') {
+      return (
+        <View style={styles.utensilWrap}>
+          <View style={[styles.highlighterTip, { backgroundColor: isActive ? activeColor : 'rgba(255,255,255,0.25)' }]} />
+          <View style={[styles.highlighterBarrel, { borderColor: band }]} />
+        </View>
+      );
+    }
+
+    if (tool === 'eraser') {
+      return (
+        <View style={styles.utensilWrap}>
+          <View style={styles.eraserTop} />
+          <View style={styles.eraserBody} />
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.utensilWrap}>
+        <View style={[styles.textToolBox, { borderColor: tint }]}>
+          <Text style={[styles.textToolLetter, { color: tint }]}>T</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar style={theme.statusBar} />
@@ -1233,36 +1290,24 @@ export default function App() {
 
             <View style={styles.notesBottomBar}>
               <View style={styles.notesToolRow}>
-                {([
-                  { tool: 'pen' as NoteTool, label: 'Pen' },
-                  { tool: 'marker' as NoteTool, label: 'Ink' },
-                  { tool: 'eraser' as NoteTool, label: 'Erase' },
-                  { tool: 'text' as NoteTool, label: 'Aa' },
-                ]).map(({ tool, label }) => (
-                  <Pressable
-                    key={tool}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Select ${tool}`}
-                    onPress={() => { setActiveTool(tool); setColorPickerOpen(false); }}
-                    style={[
-                      styles.notesToolBtn,
-                      activeTool === tool && styles.notesToolBtnActive,
-                    ]}
-                  >
-                    <Text
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
+                {trayTools.map(({ tool, label }) => {
+                  const isActive = activeTool === tool;
+                  return (
+                    <Pressable
+                      key={tool}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Select ${tool}`}
+                      onPress={() => { setActiveTool(tool); setColorPickerOpen(false); }}
                       style={[
-                        styles.notesToolLabel,
-                        activeTool === tool && styles.notesToolLabelActive,
+                        styles.notesToolBtn,
+                        isActive && styles.notesToolBtnActive,
                       ]}
                     >
-                      {label}
-                    </Text>
-                  </Pressable>
-                ))}
-
-                <View style={styles.notesToolDivider} />
+                      {renderUtensil(tool, isActive)}
+                      <Text style={[styles.utensilLabel, isActive && styles.utensilLabelActive]}>{label}</Text>
+                    </Pressable>
+                  );
+                })}
 
                 <Pressable
                   accessibilityRole="button"
@@ -1729,60 +1774,143 @@ function createStyles(theme: CalculatorTheme) {
       fontWeight: '700',
     },
     notesBottomBar: {
-      gap: 6,
-      paddingBottom: 8,
+      backgroundColor: '#18191c',
+      borderTopColor: 'rgba(255, 255, 255, 0.1)',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      gap: 8,
+      paddingBottom: 10,
       paddingHorizontal: 10,
-      paddingTop: 6,
+      paddingTop: 10,
     },
     notesToolRow: {
-      alignItems: 'center',
-      backgroundColor: '#1a1d22',
-      borderColor: 'rgba(255, 255, 255, 0.06)',
-      borderRadius: 12,
-      borderWidth: 1,
+      alignItems: 'flex-end',
       flexDirection: 'row',
       gap: 4,
-      paddingHorizontal: 6,
-      paddingVertical: 5,
+      justifyContent: 'center',
+      paddingHorizontal: 4,
     },
     notesToolBtn: {
       alignItems: 'center',
-      borderRadius: 8,
-      height: 32,
-      justifyContent: 'center',
-      paddingHorizontal: 10,
+      borderColor: 'transparent',
+      borderRadius: 12,
+      borderWidth: 1.5,
+      gap: 3,
+      justifyContent: 'flex-end',
+      paddingBottom: 4,
+      paddingTop: 6,
+      width: 54,
     },
     notesToolBtnActive: {
-      backgroundColor: '#3b82f6',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      borderColor: 'rgba(255, 255, 255, 0.22)',
     },
-    notesToolLabel: {
-      color: 'rgba(255, 255, 255, 0.5)',
-      fontSize: 13,
+    utensilLabel: {
+      color: 'rgba(255, 255, 255, 0.4)',
+      fontSize: 9,
       fontWeight: '700',
+      letterSpacing: 0.3,
     },
-    notesToolLabelActive: {
-      color: '#ffffff',
+    utensilLabelActive: {
+      color: 'rgba(255, 255, 255, 0.85)',
     },
-    notesToolDivider: {
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      height: 22,
-      marginHorizontal: 4,
-      width: 1,
+    utensilWrap: {
+      alignItems: 'center',
+      height: 44,
+      justifyContent: 'flex-end',
+      width: 36,
+    },
+    penTip: {
+      borderBottomWidth: 10,
+      borderLeftColor: 'transparent',
+      borderLeftWidth: 4,
+      borderRightColor: 'transparent',
+      borderRightWidth: 4,
+      height: 0,
+      width: 0,
+    },
+    penBarrel: {
+      backgroundColor: '#2a2d32',
+      borderRadius: 2,
+      borderWidth: 1.5,
+      height: 28,
+      width: 10,
+    },
+    penGrip: {
+      backgroundColor: '#44474d',
+      borderBottomLeftRadius: 2,
+      borderBottomRightRadius: 2,
+      height: 6,
+      marginTop: -1,
+      width: 12,
+    },
+    markerNib: {
+      borderRadius: 1,
+      height: 6,
+      width: 8,
+    },
+    markerBarrel: {
+      backgroundColor: '#2a2d32',
+      borderRadius: 3,
+      borderWidth: 1.5,
+      height: 32,
+      width: 14,
+    },
+    highlighterTip: {
+      borderRadius: 2,
+      height: 8,
+      width: 16,
+    },
+    highlighterBarrel: {
+      backgroundColor: '#2a2d32',
+      borderRadius: 4,
+      borderWidth: 1.5,
+      height: 30,
+      width: 18,
+    },
+    eraserTop: {
+      backgroundColor: '#f28c8c',
+      borderTopLeftRadius: 4,
+      borderTopRightRadius: 4,
+      height: 10,
+      width: 18,
+    },
+    eraserBody: {
+      backgroundColor: '#3a3d42',
+      borderBottomLeftRadius: 2,
+      borderBottomRightRadius: 2,
+      height: 26,
+      width: 18,
+    },
+    textToolBox: {
+      alignItems: 'center',
+      borderRadius: 6,
+      borderWidth: 1.5,
+      height: 32,
+      justifyContent: 'center',
+      width: 28,
+    },
+    textToolLetter: {
+      fontSize: 16,
+      fontWeight: '800',
     },
     notesColorBtn: {
       alignItems: 'center',
-      borderColor: 'rgba(255, 255, 255, 0.2)',
-      borderRadius: 999,
-      borderWidth: 2,
-      height: 30,
+      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+      borderColor: 'rgba(255, 255, 255, 0.15)',
+      borderRadius: 12,
+      borderWidth: 1.5,
+      height: 40,
       justifyContent: 'center',
-      marginLeft: 'auto',
-      width: 30,
+      marginBottom: 4,
+      marginLeft: 2,
+      width: 40,
     },
     notesColorBtnDot: {
+      borderColor: 'rgba(255,255,255,0.3)',
       borderRadius: 999,
-      height: 20,
-      width: 20,
+      borderWidth: 1,
+      height: 22,
+      width: 22,
     },
     colorPickerOverlay: {
       ...StyleSheet.absoluteFillObject,
@@ -1794,62 +1922,71 @@ function createStyles(theme: CalculatorTheme) {
     colorPickerPanel: {
       alignItems: 'center',
       alignSelf: 'center',
-      backgroundColor: '#1a1d22',
-      borderColor: 'rgba(255, 255, 255, 0.1)',
-      borderRadius: 16,
+      backgroundColor: '#1e2028',
+      borderColor: 'rgba(255, 255, 255, 0.14)',
+      borderRadius: 20,
       borderWidth: 1,
-      bottom: 100,
+      bottom: 110,
       flexDirection: 'row',
-      gap: 12,
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+      gap: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
       position: 'absolute',
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.4,
+      shadowRadius: 12,
+      elevation: 8,
     },
     colorPickerDot: {
-      borderColor: 'rgba(255, 255, 255, 0.15)',
+      borderColor: 'rgba(255, 255, 255, 0.12)',
       borderRadius: 999,
       borderWidth: 2,
-      height: 32,
-      width: 32,
+      height: 30,
+      width: 30,
     },
     colorPickerDotActive: {
       borderColor: '#ffffff',
-      borderWidth: 3,
-      transform: [{ scale: 1.1 }],
+      borderWidth: 2.5,
+      transform: [{ scale: 1.15 }],
     },
     notesPageRow: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: 8,
+      gap: 10,
       justifyContent: 'center',
     },
     notesPageBtn: {
       alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
       borderRadius: 8,
-      height: 28,
+      borderWidth: StyleSheet.hairlineWidth,
+      height: 30,
       justifyContent: 'center',
-      width: 28,
+      width: 30,
     },
     notesPageBtnDisabled: {
-      opacity: 0.25,
+      opacity: 0.2,
     },
     notesPageBtnText: {
-      color: '#ffffff',
+      color: 'rgba(255, 255, 255, 0.8)',
       fontSize: 16,
       fontWeight: '600',
       lineHeight: 18,
     },
     notesNewPageBtn: {
       alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
       borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
       justifyContent: 'center',
-      paddingHorizontal: 12,
-      paddingVertical: 6,
+      paddingHorizontal: 14,
+      paddingVertical: 7,
     },
     notesNewPageBtnDisabled: {
-      opacity: 0.42,
+      opacity: 0.3,
     },
     notesNewPageText: {
       color: 'rgba(255, 255, 255, 0.6)',
