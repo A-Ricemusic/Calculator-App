@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Calculator App",
+    "slug": "calculator-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "platforms": ["ios", "android", "web"]
+  }
+}
