@@ -606,14 +606,17 @@ export default function App() {
       <StatusBar style={theme.statusBar} />
       <View style={styles.appShell}>
         <View style={styles.topBar}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Open calculator menu"
-            onPress={() => setMenuOpen(true)}
-            style={styles.iconButton}
-          >
-            <Text style={styles.iconText}>☰</Text>
-          </Pressable>
+          <View style={styles.topBarLeft}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Open calculator menu"
+              onPress={() => setMenuOpen(true)}
+              style={styles.iconButton}
+            >
+              <Text style={styles.iconText}>☰</Text>
+            </Pressable>
+            {mode === 'scientific' && <Text style={styles.angleLabel}>rad</Text>}
+          </View>
           {mode === 'basic' && <Text style={styles.modeTitle}>Calculator</Text>}
           <Pressable
             accessibilityRole="button"
@@ -626,7 +629,6 @@ export default function App() {
         </View>
 
         <View style={[styles.displayPanel, mode === 'scientific' && styles.scientificDisplay]}>
-          {mode === 'scientific' && <Text style={styles.angleLabel}>rad</Text>}
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
@@ -768,6 +770,11 @@ function createStyles(theme: CalculatorTheme) {
       paddingTop: 4,
       paddingBottom: 2,
     },
+    topBarLeft: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 8,
+    },
     iconButton: {
       alignItems: 'center',
       borderRadius: 24,
@@ -798,7 +805,6 @@ function createStyles(theme: CalculatorTheme) {
       paddingBottom: 8,
     },
     angleLabel: {
-      alignSelf: 'flex-start',
       backgroundColor: theme.colors.angleBadge,
       borderRadius: 4,
       color: theme.colors.sciFnText,
