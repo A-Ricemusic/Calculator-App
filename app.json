@@ -3,9 +3,20 @@
     "name": "Calculator App",
     "slug": "calculator-app",
     "version": "1.0.0",
+    "scheme": "calculatorapp",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
-    "platforms": ["ios", "android", "web"]
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.anonymous.calculatorapp"
+    },
+    "ios": {
+      "bundleIdentifier": "com.anonymous.calculatorapp"
+    }
   }
 }

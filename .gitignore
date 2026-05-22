@@ -7,8 +7,16 @@ dist/
 web-build/
 
 # Native build output
-android/
-ios/
+android/app/build/
+android/build/
+android/.gradle/
+ios/build/
+ios/Pods/
+ios/.xcode.env.local
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+ios/DerivedData/
 *.apk
 *.aab
 *.ipa
