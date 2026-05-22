@@ -661,91 +661,73 @@ export default function App() {
         <View style={styles.overlay}>
           <Pressable style={styles.scrim} onPress={() => setMenuOpen(false)} />
           <View style={styles.drawer}>
-            <View style={styles.drawerHeader}>
-              <View>
-                <Text style={styles.drawerEyebrow}>Calculator App</Text>
-                <Text style={styles.drawerTitle}>{mode === 'basic' ? 'Standard' : 'Scientific'}</Text>
+            <SafeAreaView style={styles.drawerInner}>
+              <View style={styles.drawerHeader}>
+                <Text style={styles.drawerTitle}>Calculator</Text>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Close menu"
+                  onPress={() => setMenuOpen(false)}
+                  style={styles.drawerCloseButton}
+                >
+                  <Text style={styles.drawerCloseIcon}>✕</Text>
+                </Pressable>
               </View>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Close menu"
-                onPress={() => setMenuOpen(false)}
+
+              <ScrollView
+                contentContainerStyle={styles.drawerContent}
+                showsVerticalScrollIndicator={false}
               >
-                <Text style={styles.drawerClose}>×</Text>
-              </Pressable>
-            </View>
+                <Text style={styles.drawerSectionLabel}>MODE</Text>
+                <View style={styles.drawerSection}>
+                  {menuItems.map((item, index) => {
+                    const active = item.mode === mode;
+                    const isLast = index === menuItems.length - 1;
+                    return (
+                      <Pressable
+                        key={item.label}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: active }}
+                        disabled={!item.mode}
+                        onPress={() => item.mode && selectMode(item.mode)}
+                        style={[styles.menuItem, !isLast && styles.menuItemBorder]}
+                      >
+                        <Text style={styles.menuIcon}>{item.icon}</Text>
+                        <Text style={[styles.menuText, active && styles.menuTextActive]}>
+                          {item.label}
+                        </Text>
+                        {active && <Text style={styles.menuCheck}>✓</Text>}
+                      </Pressable>
+                    );
+                  })}
+                </View>
 
-            <ScrollView
-              contentContainerStyle={styles.drawerContent}
-              showsVerticalScrollIndicator={false}
-            >
-              <View style={styles.drawerSectionHeader}>
-                <Text style={styles.drawerSectionHeading}>Calculators</Text>
-                <Text style={styles.drawerChevron}>⌄</Text>
-              </View>
-
-              {menuItems.map((item) => {
-                const active = item.mode === mode;
-                return (
-                  <Pressable
-                    key={item.label}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
-                    accessibilityLabel={`Switch to ${item.label} calculator`}
-                    disabled={!item.mode}
-                    onPress={() => item.mode && selectMode(item.mode)}
-                    style={[styles.menuItem, active && styles.menuItemActive]}
-                  >
-                    <Text style={styles.menuIcon}>{item.icon}</Text>
-                    <Text style={styles.menuText}>{item.label}</Text>
-                  </Pressable>
-                );
-              })}
-
-              <View style={styles.drawerDivider} />
-
-              <View style={styles.drawerSectionHeader}>
-                <Text style={styles.drawerSectionHeading}>Preferences</Text>
-                <Text style={styles.drawerChevron}>⌄</Text>
-              </View>
-
-              {themeItems.map((item) => {
-                const active = item.id === themeId;
-
-                return (
-                  <Pressable
-                    key={item.id}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
-                    accessibilityLabel={`Use ${item.label} theme`}
-                    onPress={() => selectTheme(item.id)}
-                    style={[styles.menuItem, active && styles.menuItemActive]}
-                  >
-                    <View style={styles.themeSwatches}>
-                      <View
-                        style={[
-                          styles.themeSwatch,
-                          { backgroundColor: item.colors.buttonNumber },
-                        ]}
-                      />
-                      <View
-                        style={[
-                          styles.themeSwatch,
-                          { backgroundColor: item.colors.buttonUtility },
-                        ]}
-                      />
-                      <View
-                        style={[
-                          styles.themeSwatch,
-                          { backgroundColor: item.colors.buttonOperator },
-                        ]}
-                      />
-                    </View>
-                    <Text style={styles.menuText}>{item.label}</Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
+                <Text style={styles.drawerSectionLabel}>THEME</Text>
+                <View style={styles.drawerSection}>
+                  {themeItems.map((item, index) => {
+                    const active = item.id === themeId;
+                    const isLast = index === themeItems.length - 1;
+                    return (
+                      <Pressable
+                        key={item.id}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: active }}
+                        onPress={() => selectTheme(item.id)}
+                        style={[styles.menuItem, !isLast && styles.menuItemBorder]}
+                      >
+                        <View style={styles.themeDot}>
+                          <View style={[styles.themeDotInner, { backgroundColor: item.colors.buttonOperator }]} />
+                        </View>
+                        <Text style={[styles.menuText, active && styles.menuTextActive]}>
+                          {item.label}
+                        </Text>
+                        {active && <Text style={styles.menuCheck}>✓</Text>}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            </SafeAreaView>
           </View>
         </View>
       )}
@@ -915,98 +897,98 @@ function createStyles(theme: CalculatorTheme) {
     },
     drawer: {
       backgroundColor: theme.colors.drawerBackground,
-      borderBottomRightRadius: 28,
-      borderTopRightRadius: 28,
+      borderBottomRightRadius: 20,
+      borderTopRightRadius: 20,
       height: '100%',
-      paddingHorizontal: 24,
-      paddingTop: 58,
-      width: '76%',
+      width: '72%',
+    },
+    drawerInner: {
+      flex: 1,
+      paddingHorizontal: 20,
+      paddingTop: 12,
     },
     drawerHeader: {
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 18,
-      paddingHorizontal: 4,
-    },
-    drawerEyebrow: {
-      color: theme.colors.mutedText,
-      fontSize: 16,
-      fontWeight: '600',
-      marginBottom: 6,
+      marginBottom: 24,
     },
     drawerTitle: {
       color: theme.colors.topText,
-      fontSize: 32,
+      fontSize: 22,
       fontWeight: '700',
     },
-    drawerClose: {
-      color: theme.colors.topText,
-      fontSize: 42,
-      fontWeight: '300',
+    drawerCloseButton: {
+      alignItems: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+      borderRadius: 999,
+      height: 32,
+      justifyContent: 'center',
+      width: 32,
+    },
+    drawerCloseIcon: {
+      color: theme.colors.mutedText,
+      fontSize: 14,
+      fontWeight: '600',
     },
     drawerContent: {
       paddingBottom: 36,
     },
-    drawerSectionHeader: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      minHeight: 58,
+    drawerSectionLabel: {
+      color: theme.colors.mutedText,
+      fontSize: 12,
+      fontWeight: '700',
+      letterSpacing: 1.2,
+      marginBottom: 6,
+      marginTop: 8,
       paddingHorizontal: 4,
     },
-    drawerSectionHeading: {
-      color: theme.colors.topText,
-      fontSize: 30,
-      fontWeight: '700',
-    },
-    drawerChevron: {
-      color: theme.colors.topText,
-      fontSize: 42,
-      fontWeight: '500',
-      lineHeight: 44,
-    },
-    drawerDivider: {
-      backgroundColor: theme.colors.segmentedActive,
-      height: 2,
-      marginHorizontal: 4,
-      marginBottom: 22,
-      marginTop: 24,
-      opacity: 0.8,
+    drawerSection: {
+      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+      borderRadius: 12,
+      marginBottom: 20,
+      overflow: 'hidden',
     },
     menuItem: {
       alignItems: 'center',
-      borderRadius: 16,
       flexDirection: 'row',
-      minHeight: 64,
-      paddingHorizontal: 16,
+      paddingHorizontal: 14,
+      paddingVertical: 14,
     },
-    menuItemActive: {
-      backgroundColor: theme.colors.drawerActive,
+    menuItemBorder: {
+      borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+      borderBottomWidth: StyleSheet.hairlineWidth,
     },
     menuIcon: {
-      color: theme.colors.topText,
-      fontSize: 32,
-      marginRight: 24,
+      color: theme.colors.mutedText,
+      fontSize: 18,
+      marginRight: 14,
       textAlign: 'center',
-      width: 38,
+      width: 28,
     },
     menuText: {
       color: theme.colors.topText,
-      fontSize: 26,
+      flex: 1,
+      fontSize: 17,
       fontWeight: '400',
     },
-    themeSwatches: {
-      flexDirection: 'row',
-      marginRight: 24,
-      width: 38,
+    menuTextActive: {
+      fontWeight: '600',
     },
-    themeSwatch: {
-      borderColor: 'rgba(255, 255, 255, 0.54)',
+    menuCheck: {
+      color: theme.colors.segmentedActive,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+    themeDot: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 14,
+      width: 28,
+    },
+    themeDotInner: {
       borderRadius: 999,
-      borderWidth: 1,
       height: 18,
-      marginLeft: -4,
       width: 18,
     },
   });
