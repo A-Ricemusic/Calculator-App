@@ -90,7 +90,7 @@ const scientificFnButtons: ButtonConfig[][] = [
     { label: 'mr', action: 'noop', variant: 'scientific' },
   ],
   [
-    { label: '2nd', action: 'noop', variant: 'scientific' },
+    { label: '↑', action: 'noop', variant: 'scientific' },
     { label: 'x²', action: 'square', variant: 'scientific' },
     { label: 'x³', action: 'cube', variant: 'scientific' },
     { label: 'xʸ', action: 'xy', variant: 'scientific' },
@@ -125,22 +125,22 @@ const scientificFnButtons: ButtonConfig[][] = [
 
 const scientificNumButtons: ButtonConfig[][] = [
   [
-    { label: 'AC', action: 'clear', variant: 'utility' },
-    { label: '+/-', action: 'sign', variant: 'utility' },
+    { label: 'ac', action: 'clear', variant: 'utility' },
+    { label: '+/−', action: 'sign', variant: 'utility' },
     { label: '%', action: 'percent', variant: 'utility' },
-    { label: '/', action: '/', variant: 'operator' },
+    { label: '÷', action: '/', variant: 'operator' },
   ],
   [
     { label: '7' },
     { label: '8' },
     { label: '9' },
-    { label: 'x', variant: 'operator' },
+    { label: '×', action: 'x', variant: 'operator' },
   ],
   [
     { label: '4' },
     { label: '5' },
     { label: '6' },
-    { label: '-', variant: 'operator' },
+    { label: '−', action: '-', variant: 'operator' },
   ],
   [
     { label: '1' },
@@ -323,7 +323,12 @@ export default function App() {
 
   const theme = themes[themeId];
   const styles = useMemo(() => createStyles(theme), [theme]);
-  const clearLabel = useMemo(() => (display === '0' ? 'AC' : 'C'), [display]);
+  const clearLabel = useMemo(
+    () => (mode === 'scientific'
+      ? (display === '0' ? 'ac' : 'c')
+      : (display === '0' ? 'AC' : 'C')),
+    [display, mode],
+  );
 
   useEffect(() => {
     AsyncStorage.getItem(themeStorageKey)
@@ -535,7 +540,7 @@ export default function App() {
     }
   }
 
-  function renderButton(button: ButtonConfig, isScientific = false) {
+  function renderSciFnButton(button: ButtonConfig) {
     const label = button.action === 'clear' ? clearLabel : button.label;
 
     return (
@@ -545,10 +550,38 @@ export default function App() {
         accessibilityLabel={label}
         onPress={() => handlePress(button)}
         style={({ pressed }) => [
-          isScientific ? styles.sciFnButton : styles.button,
-          !isScientific && button.wide && styles.buttonWide,
-          !isScientific && button.variant === 'utility' && styles.buttonUtility,
-          !isScientific && button.variant === 'operator' && styles.buttonOperator,
+          styles.sciFnButton,
+          pressed && styles.buttonPressed,
+        ]}
+      >
+        <Text
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.6}
+          style={styles.sciFnButtonText}
+        >
+          {label}
+        </Text>
+      </Pressable>
+    );
+  }
+
+  function renderNumButton(button: ButtonConfig) {
+    const label = button.action === 'clear' ? clearLabel : button.label;
+    const isScientificMode = mode === 'scientific';
+
+    return (
+      <Pressable
+        key={button.label}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        onPress={() => handlePress(button)}
+        style={({ pressed }) => [
+          styles.button,
+          isScientificMode && styles.sciNumButton,
+          button.wide && styles.buttonWide,
+          button.variant === 'utility' && styles.buttonUtility,
+          button.variant === 'operator' && styles.buttonOperator,
           pressed && styles.buttonPressed,
         ]}
       >
@@ -557,8 +590,9 @@ export default function App() {
           adjustsFontSizeToFit
           minimumFontScale={0.6}
           style={[
-            isScientific ? styles.sciFnButtonText : styles.buttonText,
-            !isScientific && button.variant === 'utility' && styles.utilityText,
+            styles.buttonText,
+            isScientificMode && styles.sciNumButtonText,
+            button.variant === 'utility' && styles.utilityText,
           ]}
         >
           {label}
@@ -580,7 +614,7 @@ export default function App() {
           >
             <Text style={styles.iconText}>☰</Text>
           </Pressable>
-          <Text style={styles.modeTitle}>Calculator</Text>
+          {mode === 'basic' && <Text style={styles.modeTitle}>Calculator</Text>}
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Reset calculator"
@@ -592,7 +626,7 @@ export default function App() {
         </View>
 
         <View style={[styles.displayPanel, mode === 'scientific' && styles.scientificDisplay]}>
-          {mode === 'scientific' && <Text style={styles.angleLabel}>DEG</Text>}
+          {mode === 'scientific' && <Text style={styles.angleLabel}>rad</Text>}
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
@@ -606,7 +640,7 @@ export default function App() {
           <View style={styles.sciFnSection}>
             {scientificFnButtons.map((row) => (
               <View key={row.map((b) => b.label).join('-')} style={styles.sciFnRow}>
-                {row.map((button) => renderButton(button, true))}
+                {row.map((button) => renderSciFnButton(button))}
               </View>
             ))}
           </View>
@@ -614,8 +648,8 @@ export default function App() {
 
         <View style={[styles.keypad, mode === 'scientific' && styles.scientificKeypad]}>
           {(mode === 'basic' ? basicButtons : scientificNumButtons).map((row) => (
-            <View key={row.map((b) => b.label).join('-')} style={styles.row}>
-              {row.map((button) => renderButton(button))}
+            <View key={row.map((b) => b.label).join('-')} style={[styles.row, mode === 'scientific' && styles.sciRow]}>
+              {row.map((button) => renderNumButton(button))}
             </View>
           ))}
         </View>
@@ -725,109 +759,107 @@ function createStyles(theme: CalculatorTheme) {
     },
     appShell: {
       flex: 1,
-      justifyContent: 'flex-end',
     },
     topBar: {
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      minHeight: 64,
-      paddingHorizontal: 18,
-      paddingTop: 32,
+      paddingHorizontal: 12,
+      paddingTop: 4,
+      paddingBottom: 2,
     },
     iconButton: {
       alignItems: 'center',
       borderRadius: 24,
-      height: 48,
+      height: 44,
       justifyContent: 'center',
-      width: 48,
+      width: 44,
     },
     iconText: {
       color: theme.colors.topText,
-      fontSize: 32,
+      fontSize: 28,
       fontWeight: '300',
     },
     modeTitle: {
       color: theme.colors.topText,
-      fontSize: 22,
+      fontSize: 20,
       fontWeight: '600',
     },
     displayPanel: {
       alignItems: 'flex-end',
       borderBottomColor: theme.colors.divider,
-      borderBottomWidth: 2,
+      borderBottomWidth: 1,
+      flex: 1,
       justifyContent: 'flex-end',
-      marginHorizontal: 18,
-      minHeight: 150,
-      paddingBottom: 24,
+      marginHorizontal: 16,
+      paddingBottom: 16,
     },
     scientificDisplay: {
-      minHeight: 80,
-      paddingBottom: 12,
+      paddingBottom: 8,
     },
     angleLabel: {
       alignSelf: 'flex-start',
       backgroundColor: theme.colors.angleBadge,
-      borderColor: theme.colors.segmentedActive,
-      borderWidth: 1,
-      borderRadius: 6,
-      color: theme.colors.topText,
-      fontSize: 13,
+      borderRadius: 4,
+      color: theme.colors.sciFnText,
+      fontSize: 14,
       fontWeight: '600',
-      letterSpacing: 1,
-      marginBottom: 8,
       overflow: 'hidden',
-      paddingHorizontal: 10,
-      paddingVertical: 4,
+      paddingHorizontal: 8,
+      paddingVertical: 3,
     },
     display: {
       color: theme.colors.displayText,
-      fontSize: 78,
-      fontWeight: '300',
+      fontSize: 80,
+      fontWeight: '200',
     },
     scientificDisplayText: {
-      fontSize: 52,
+      fontSize: 60,
     },
 
     sciFnSection: {
-      gap: 5,
-      marginHorizontal: 8,
-      marginTop: 8,
-      marginBottom: 4,
+      gap: 0,
+      marginHorizontal: 0,
     },
     sciFnRow: {
       flexDirection: 'row',
-      gap: 5,
+      gap: 0,
     },
     sciFnButton: {
       alignItems: 'center',
-      backgroundColor: theme.colors.buttonScientific,
-      borderRadius: 8,
+      backgroundColor: 'transparent',
+      borderBottomColor: theme.colors.divider,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderRightColor: theme.colors.divider,
+      borderRightWidth: StyleSheet.hairlineWidth,
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: 2,
-      paddingVertical: 10,
+      paddingVertical: 9,
     },
     sciFnButtonText: {
       color: theme.colors.sciFnText,
       fontSize: 15,
-      fontWeight: '500',
+      fontWeight: '400',
     },
 
     keypad: {
       gap: 12,
       paddingBottom: 22,
-      paddingHorizontal: 18,
-      paddingTop: 22,
+      paddingHorizontal: 16,
+      paddingTop: 18,
     },
     scientificKeypad: {
-      gap: 8,
-      paddingBottom: 14,
+      gap: 7,
+      paddingBottom: 12,
       paddingHorizontal: 10,
-      paddingTop: 10,
+      paddingTop: 6,
     },
     row: {
       flexDirection: 'row',
+      gap: 10,
+    },
+    sciRow: {
       gap: 8,
     },
     button: {
@@ -837,6 +869,11 @@ function createStyles(theme: CalculatorTheme) {
       borderRadius: 999,
       flex: 1,
       justifyContent: 'center',
+    },
+    sciNumButton: {
+      aspectRatio: undefined,
+      borderRadius: 10,
+      paddingVertical: 12,
     },
     buttonWide: {
       aspectRatio: undefined,
@@ -855,6 +892,9 @@ function createStyles(theme: CalculatorTheme) {
       color: theme.colors.buttonText,
       fontSize: 34,
       fontWeight: '400',
+    },
+    sciNumButtonText: {
+      fontSize: 26,
     },
     utilityText: {
       color: theme.colors.utilityText,
