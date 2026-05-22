@@ -13,6 +13,9 @@
 		ABB515F8DA4342A69DC20406 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5FDD6A677B1E6CEAD0C1AE /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		D26C413EF7883E772D98A9E9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CE61245727ABC74267A39A72 /* PrivacyInfo.xcprivacy */; };
+		E1A1C0012C00000100000001 /* PencilKitCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1C0042C00000100000001 /* PencilKitCanvasView.swift */; };
+		E1A1C0022C00000100000001 /* PencilKitCanvasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1C0052C00000100000001 /* PencilKitCanvasManager.swift */; };
+		E1A1C0032C00000100000001 /* PencilKitCanvasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A1C0062C00000100000001 /* PencilKitCanvasManager.m */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +29,9 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		C024B525AA553F0A2145FB73 /* Pods-CalculatorApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CalculatorApp.debug.xcconfig"; path = "Target Support Files/Pods-CalculatorApp/Pods-CalculatorApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CE61245727ABC74267A39A72 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CalculatorApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E1A1C0042C00000100000001 /* PencilKitCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PencilKitCanvasView.swift; path = CalculatorApp/PencilKitCanvasView.swift; sourceTree = "<group>"; };
+		E1A1C0052C00000100000001 /* PencilKitCanvasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PencilKitCanvasManager.swift; path = CalculatorApp/PencilKitCanvasManager.swift; sourceTree = "<group>"; };
+		E1A1C0062C00000100000001 /* PencilKitCanvasManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PencilKitCanvasManager.m; path = CalculatorApp/PencilKitCanvasManager.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = CalculatorApp/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* CalculatorApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CalculatorApp-Bridging-Header.h"; path = "CalculatorApp/CalculatorApp-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -48,6 +54,9 @@
 			isa = PBXGroup;
 			children = (
 				F11748412D0307B40044C1D9 /* AppDelegate.swift */,
+				E1A1C0042C00000100000001 /* PencilKitCanvasView.swift */,
+				E1A1C0052C00000100000001 /* PencilKitCanvasManager.swift */,
+				E1A1C0062C00000100000001 /* PencilKitCanvasManager.m */,
 				F11748442D0722820044C1D9 /* CalculatorApp-Bridging-Header.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -328,6 +337,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
+				E1A1C0012C00000100000001 /* PencilKitCanvasView.swift in Sources */,
+				E1A1C0022C00000100000001 /* PencilKitCanvasManager.swift in Sources */,
+				E1A1C0032C00000100000001 /* PencilKitCanvasManager.m in Sources */,
 				ABB515F8DA4342A69DC20406 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

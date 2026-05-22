@@ -3,8 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   GestureResponderEvent,
+  NativeSyntheticEvent,
   PanResponder,
+  Platform,
   Pressable,
+  requireNativeComponent,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -43,6 +46,7 @@ type TextBlock = {
 type NotePage = {
   id: string;
   title: string;
+  pencilKitData?: string;
   strokes: Stroke[];
   textBlocks: TextBlock[];
 };
@@ -86,6 +90,20 @@ type ButtonConfig = {
   variant?: Variant;
   wide?: boolean;
 };
+
+type PencilKitDrawingChangeEvent = {
+  drawingData: string;
+};
+
+type PencilKitCanvasProps = {
+  drawingData?: string;
+  onDrawingChange?: (event: NativeSyntheticEvent<PencilKitDrawingChangeEvent>) => void;
+  style?: object;
+};
+
+const PencilKitCanvas = Platform.OS === 'ios'
+  ? requireNativeComponent<PencilKitCanvasProps>('PencilKitCanvas')
+  : null;
 
 const basicButtons: ButtonConfig[][] = [
   [
@@ -433,6 +451,7 @@ function isNotePage(value: unknown): value is NotePage {
   const page = value as Partial<NotePage>;
   return typeof page.id === 'string'
     && typeof page.title === 'string'
+    && (typeof page.pencilKitData === 'undefined' || typeof page.pencilKitData === 'string')
     && Array.isArray(page.strokes)
     && page.strokes.every(isStroke)
     && Array.isArray(page.textBlocks)
@@ -447,6 +466,7 @@ function createBlankPage(index: number): NotePage {
   return {
     id: createId(`page-${index + 1}`),
     title: `Page ${index + 1}`,
+    pencilKitData: '',
     strokes: [],
     textBlocks: [],
   };
@@ -845,6 +865,13 @@ export default function App() {
     }));
   }
 
+  function updatePencilKitDrawing(drawingData: string) {
+    updateActivePage((page) => ({
+      ...page,
+      pencilKitData: drawingData,
+    }));
+  }
+
   function pointFromEvent(event: GestureResponderEvent) {
     const { locationX, locationY } = event.nativeEvent;
     return { x: locationX, y: locationY };
@@ -1231,43 +1258,51 @@ export default function App() {
             </View>
 
             <View style={styles.notesCanvasWrap}>
-              <View style={styles.notesCanvas} {...notePanResponder.panHandlers}>
-                {noteDots.map((dot) => (
-                  <View
-                    key={dot.id}
-                    pointerEvents="none"
-                    style={[styles.notesDot, { left: dot.left, top: dot.top }]}
-                  />
-                ))}
-                {activePage?.strokes.map((stroke) => renderStroke(stroke))}
-                {drawingStroke && renderStroke(drawingStroke)}
-                {activePage?.textBlocks.map((textBlock) => (
-                  <View
-                    key={textBlock.id}
-                    style={[
-                      styles.canvasTextBlockWrap,
-                      { left: textBlock.x, top: textBlock.y },
-                    ]}
-                  >
-                    <Text style={[styles.canvasTextBlock, { color: activeColor }]}>
-                      {textBlock.body}
-                    </Text>
-                    {activeTool === 'text' && (
-                      <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={`Delete "${textBlock.body}"`}
-                        onPress={() => deleteTextBlock(textBlock.id)}
-                        style={styles.textBlockDelete}
-                      >
-                        <Text style={styles.textBlockDeleteIcon}>✕</Text>
-                      </Pressable>
-                    )}
-                  </View>
-                ))}
-              </View>
+              {PencilKitCanvas ? (
+                <PencilKitCanvas
+                  drawingData={activePage?.pencilKitData ?? ''}
+                  onDrawingChange={(event) => updatePencilKitDrawing(event.nativeEvent.drawingData)}
+                  style={styles.notesCanvas}
+                />
+              ) : (
+                <View style={styles.notesCanvas} {...notePanResponder.panHandlers}>
+                  {noteDots.map((dot) => (
+                    <View
+                      key={dot.id}
+                      pointerEvents="none"
+                      style={[styles.notesDot, { left: dot.left, top: dot.top }]}
+                    />
+                  ))}
+                  {activePage?.strokes.map((stroke) => renderStroke(stroke))}
+                  {drawingStroke && renderStroke(drawingStroke)}
+                  {activePage?.textBlocks.map((textBlock) => (
+                    <View
+                      key={textBlock.id}
+                      style={[
+                        styles.canvasTextBlockWrap,
+                        { left: textBlock.x, top: textBlock.y },
+                      ]}
+                    >
+                      <Text style={[styles.canvasTextBlock, { color: activeColor }]}>
+                        {textBlock.body}
+                      </Text>
+                      {activeTool === 'text' && (
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={`Delete "${textBlock.body}"`}
+                          onPress={() => deleteTextBlock(textBlock.id)}
+                          style={styles.textBlockDelete}
+                        >
+                          <Text style={styles.textBlockDeleteIcon}>✕</Text>
+                        </Pressable>
+                      )}
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
 
-            {activeTool === 'text' && (
+            {!PencilKitCanvas && activeTool === 'text' && (
               <View style={styles.notesTextBar}>
                 <TextInput
                   accessibilityLabel="Text to add to page"
@@ -1288,7 +1323,7 @@ export default function App() {
               </View>
             )}
 
-            <View style={styles.notesBottomBar}>
+            {!PencilKitCanvas && <View style={styles.notesBottomBar}>
               <View style={styles.notesToolRow}>
                 {trayTools.map(({ tool, label }) => {
                   const isActive = activeTool === tool;
@@ -1356,7 +1391,7 @@ export default function App() {
                   <Text style={styles.notesPageBtnText}>›</Text>
                 </Pressable>
               </View>
-            </View>
+            </View>}
 
             {notesManagerOpen && (
               <View style={styles.notesManagerOverlay}>
