@@ -9,7 +9,7 @@ import type { ThemeId } from "@features/theme";
 import type { AppStyles } from "@shared/styles/appTypes";
 
 const ANDROID_TOP_INSET = Platform.OS === "android" ? (StatusBar.currentHeight ?? 0) : 0;
-type DrawerView = "menu" | "personalization";
+type DrawerView = "menu" | "theme";
 
 type DrawerMenuProps = {
   mode: AppMode;
@@ -32,7 +32,7 @@ export function DrawerMenu({
 }: DrawerMenuProps) {
   const [drawerView, setDrawerView] = useState<DrawerView>("menu");
   const selectedTheme = themes[themeId];
-  const isPersonalizationView = drawerView === "personalization";
+  const isThemeView = drawerView === "theme";
 
   return (
     <View style={styles.overlay}>
@@ -45,7 +45,7 @@ export function DrawerMenu({
           ]}
         >
           <View style={styles.drawerHeader}>
-            {isPersonalizationView ? (
+            {isThemeView ? (
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Back to menu"
@@ -55,9 +55,7 @@ export function DrawerMenu({
                 <Text style={styles.drawerBackIcon}>{"<"}</Text>
               </Pressable>
             ) : null}
-            <Text style={styles.drawerTitle}>
-              {isPersonalizationView ? "Personalization" : "Calculator"}
-            </Text>
+            <Text style={styles.drawerTitle}>{isThemeView ? "Theme" : "Calculator"}</Text>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Close menu"
@@ -72,7 +70,7 @@ export function DrawerMenu({
             contentContainerStyle={styles.drawerContent}
             showsVerticalScrollIndicator={false}
           >
-            {isPersonalizationView ? (
+            {isThemeView ? (
               <>
                 <Text style={styles.drawerSectionLabel}>THEMES</Text>
                 <View style={styles.drawerSection}>
@@ -136,12 +134,12 @@ export function DrawerMenu({
                 <View style={styles.drawerSection}>
                   <Pressable
                     accessibilityRole="button"
-                    onPress={() => setDrawerView("personalization")}
+                    onPress={() => setDrawerView("theme")}
                     style={styles.menuItem}
                   >
                     <Text style={styles.menuIcon}>◐</Text>
                     <View style={styles.menuTextStack}>
-                      <Text style={styles.menuText}>Personalization</Text>
+                      <Text style={styles.menuText}>Theme</Text>
                       <Text style={styles.menuSubtext}>{selectedTheme.label}</Text>
                     </View>
                     <Text style={styles.menuCheck}>{">"}</Text>
