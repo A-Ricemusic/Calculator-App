@@ -84,6 +84,9 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       fontSize: 34,
       fontWeight: "400",
     },
+    operatorText: {
+      color: theme.colors.operatorText,
+    },
     sciNumButtonText: {
       fontSize: 26,
     },

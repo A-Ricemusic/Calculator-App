@@ -55,7 +55,7 @@ export function createGraphEquationStyles(theme: CalculatorTheme) {
       opacity: 0.4,
     },
     addEquationText: {
-      color: theme.colors.buttonText,
+      color: theme.colors.operatorText,
       fontSize: 24,
       fontWeight: "400",
       lineHeight: 28,

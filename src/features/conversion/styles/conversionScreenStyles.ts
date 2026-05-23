@@ -80,7 +80,7 @@ export function createConversionScreenStyles(theme: CalculatorTheme) {
       width: 40,
     },
     conversionSwapText: {
-      color: theme.colors.buttonText,
+      color: theme.colors.operatorText,
       fontSize: 20,
       fontWeight: "600",
     },

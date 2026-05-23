@@ -28,6 +28,7 @@ export type CalculatorTheme = {
     buttonScientific: string;
     sciFnText: string;
     buttonText: string;
+    operatorText: string;
     utilityText: string;
     angleBadge: string;
     drawerBackground: string;

@@ -6,7 +6,9 @@ export function createDrawerLayoutStyles(theme: CalculatorTheme) {
   return {
     overlay: {
       ...StyleSheet.absoluteFillObject,
+      elevation: 20,
       flexDirection: "row",
+      zIndex: 100,
     },
     scrim: {
       ...StyleSheet.absoluteFillObject,

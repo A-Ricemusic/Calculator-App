@@ -80,6 +80,7 @@ export function CalculatorButton({
           styles.buttonText,
           isScientificMode && styles.sciNumButtonText,
           button.variant === "utility" && styles.utilityText,
+          button.variant === "operator" && styles.operatorText,
         ]}
       >
         {label}
