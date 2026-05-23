@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 
 import type { AppStyles } from "../../../app/appTypes";
 import type { ButtonConfig, CalculatorMode } from "../types";
@@ -9,6 +9,10 @@ import {
 } from "../constants/calculatorButtons";
 import { CalculatorButton } from "./CalculatorButton";
 
+const COLUMNS = 4;
+const KEYPAD_PADDING_H = 16;
+const BUTTON_GAP = 12;
+
 type CalculatorKeypadProps = {
   clearLabel: string;
   mode: CalculatorMode;
@@ -17,6 +21,12 @@ type CalculatorKeypadProps = {
 };
 
 export function CalculatorKeypad({ clearLabel, mode, onPress, styles }: CalculatorKeypadProps) {
+  const { width } = useWindowDimensions();
+  const buttonSize =
+    mode === "basic"
+      ? Math.floor((width - KEYPAD_PADDING_H * 2 - BUTTON_GAP * (COLUMNS - 1)) / COLUMNS)
+      : undefined;
+
   return (
     <>
       {mode === "scientific" && (
@@ -49,6 +59,7 @@ export function CalculatorKeypad({ clearLabel, mode, onPress, styles }: Calculat
               <CalculatorButton
                 key={button.label}
                 button={button}
+                buttonSize={buttonSize}
                 clearLabel={clearLabel}
                 mode={mode}
                 onPress={onPress}

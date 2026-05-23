@@ -5,6 +5,7 @@ import type { ButtonConfig, CalculatorMode } from "../types";
 
 type CalculatorButtonProps = {
   button: ButtonConfig;
+  buttonSize?: number;
   clearLabel: string;
   mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
@@ -14,6 +15,7 @@ type CalculatorButtonProps = {
 
 export function CalculatorButton({
   button,
+  buttonSize,
   clearLabel,
   mode,
   onPress,
@@ -50,6 +52,11 @@ export function CalculatorButton({
     );
   }
 
+  const fixedSizeStyle =
+    buttonSize && !isScientificMode
+      ? { width: buttonSize, height: buttonSize }
+      : undefined;
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -62,6 +69,7 @@ export function CalculatorButton({
         button.variant === "utility" && styles.buttonUtility,
         button.variant === "operator" && styles.buttonOperator,
         pressed && styles.buttonPressed,
+        fixedSizeStyle,
       ]}
     >
       <Text
