@@ -1,4 +1,4 @@
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import type { AppStyles } from "../../../app/appTypes";
 import type { ButtonConfig, CalculatorMode } from "../types";
@@ -22,6 +22,12 @@ export function CalculatorButton({
 }: CalculatorButtonProps) {
   const label = button.action === "clear" ? clearLabel : button.label;
   const isScientificMode = mode === "scientific";
+
+  if (button.spacer) {
+    return (
+      <View style={[styles.button, isScientificMode && styles.sciNumButton, styles.buttonSpacer]} />
+    );
+  }
 
   if (variant === "function") {
     return (

@@ -88,6 +88,9 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
       aspectRatio: undefined,
       flex: 2.18,
     },
+    buttonSpacer: {
+      backgroundColor: "transparent",
+    },
     buttonUtility: {
       backgroundColor: theme.colors.buttonUtility,
     },

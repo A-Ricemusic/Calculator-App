@@ -11,7 +11,8 @@ export const basicButtons: ButtonConfig[][] = [
   [{ label: "4" }, { label: "5" }, { label: "6" }, { label: "-", variant: "operator" }],
   [{ label: "1" }, { label: "2" }, { label: "3" }, { label: "+", variant: "operator" }],
   [
-    { label: "0", wide: true },
+    { label: "0" },
+    { label: "", spacer: true },
     { label: "." },
     { label: "=", action: "equals", variant: "operator" },
   ],
