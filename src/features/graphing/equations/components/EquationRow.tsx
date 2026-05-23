@@ -1,7 +1,7 @@
 import { Pressable, Text, TextInput, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
-import type { PlottedEquation } from '../types';
+import type { AppStyles } from '../../../../app/appTypes';
+import type { PlottedEquation } from '../../types';
 
 type EquationRowProps = {
   equation: PlottedEquation;

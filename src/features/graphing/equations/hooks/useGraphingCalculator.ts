@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 
-import { createId } from '../../../shared/utils/ids';
+import { createId } from '../../../../shared/utils/ids';
+import { sampleExpression } from '../../canvas/utils/graphSampler';
+import { initialGraphViewport, zoomViewport } from '../../canvas/utils/graphViewport';
+import { parseGraphExpression } from '../../expression/parseGraphExpression';
+import type { GraphEquation, GraphViewport, PlottedEquation } from '../../types';
 import { GRAPH_COLORS, MAX_GRAPH_EQUATIONS } from '../constants/graphColors';
-import type { GraphEquation, GraphViewport, PlottedEquation } from '../types';
-import { parseGraphExpression } from '../utils/expressionParser';
-import { sampleExpression } from '../utils/graphSampler';
-import { initialGraphViewport, zoomViewport } from '../utils/graphViewport';
 
 function createEquation(index: number): GraphEquation {
   return {

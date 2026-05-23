@@ -1,13 +1,13 @@
 import { View } from 'react-native';
 
 import type { AppStyles } from '../../../app/appTypes';
-import type { ButtonConfig, Mode } from '../types';
+import type { ButtonConfig, CalculatorMode } from '../types';
 import { basicButtons, scientificFnButtons, scientificNumButtons } from '../constants/calculatorButtons';
 import { CalculatorButton } from './CalculatorButton';
 
 type CalculatorKeypadProps = {
   clearLabel: string;
-  mode: Mode;
+  mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
   styles: AppStyles;
 };
@@ -58,4 +58,3 @@ export function CalculatorKeypad({ clearLabel, mode, onPress, styles }: Calculat
     </>
   );
 }
-

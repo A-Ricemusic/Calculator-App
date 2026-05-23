@@ -1,4 +1,3 @@
 export { CalculatorScreen } from './components/CalculatorScreen';
 export { useCalculator } from './hooks/useCalculator';
-export type { ButtonConfig, Mode, Operator, Variant } from './types';
-
+export type { ButtonConfig, CalculatorMode, Operator, Variant } from './types';

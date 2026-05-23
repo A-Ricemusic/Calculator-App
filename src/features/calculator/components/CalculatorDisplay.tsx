@@ -1,11 +1,11 @@
 import { Text, View } from 'react-native';
 
 import type { AppStyles } from '../../../app/appTypes';
-import type { Mode } from '../types';
+import type { CalculatorMode } from '../types';
 
 type CalculatorDisplayProps = {
   display: string;
-  mode: Mode;
+  mode: CalculatorMode;
   styles: AppStyles;
 };
 
@@ -22,4 +22,3 @@ export function CalculatorDisplay({ display, mode, styles }: CalculatorDisplayPr
     </View>
   );
 }
-

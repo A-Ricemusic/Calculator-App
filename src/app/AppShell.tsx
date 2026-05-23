@@ -1,16 +1,17 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Pressable, Text, View } from 'react-native';
 
-import { CalculatorScreen, useCalculator, type Mode } from '../features/calculator';
+import { CalculatorScreen, useCalculator } from '../features/calculator';
 import { GraphingScreen } from '../features/graphing';
 import { MathNotesScreen } from '../features/notes';
 import type { CalculatorTheme } from '../features/theme';
+import type { AppMode, CalculatorMode } from './appModes';
 import type { AppStyles } from './appTypes';
 
 type AppShellProps = {
-  mode: Mode;
+  mode: AppMode;
   onOpenMenu: () => void;
-  onSelectMode: (mode: Mode) => void;
+  onSelectMode: (mode: AppMode) => void;
   shellStyle?: StyleProp<ViewStyle>;
   styles: AppStyles;
   theme: CalculatorTheme;
@@ -24,7 +25,7 @@ export function AppShell({
   styles,
   theme,
 }: AppShellProps) {
-  const calculatorMode = mode === 'scientific' ? 'scientific' : 'basic';
+  const calculatorMode: CalculatorMode = mode === 'scientific' ? 'scientific' : 'basic';
   const { clearLabel, display, handlePress, resetAll } = useCalculator(calculatorMode);
 
   return (

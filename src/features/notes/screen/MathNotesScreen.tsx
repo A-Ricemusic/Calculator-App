@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import type { AppStyles } from '../../../app/appTypes';
-import type { Mode } from '../../calculator';
+import type { AppMode } from '../../../app/appModes';
 import type { CalculatorTheme } from '../../theme';
 import { MathNotesCanvas } from '../drawing/components/MathNotesCanvas';
 import { useReactNativeDrawing } from '../drawing/hooks/useReactNativeDrawing';
@@ -16,7 +16,7 @@ import { NotesToolbar } from '../toolbar/components/NotesToolbar';
 import type { NoteTool } from '../types';
 
 type MathNotesScreenProps = {
-  onSelectMode: (mode: Mode) => void;
+  onSelectMode: (mode: AppMode) => void;
   styles: AppStyles;
   theme: CalculatorTheme;
 };

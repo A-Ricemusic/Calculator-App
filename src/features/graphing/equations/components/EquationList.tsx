@@ -1,8 +1,8 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
+import type { AppStyles } from '../../../../app/appTypes';
 import { MAX_GRAPH_EQUATIONS } from '../constants/graphColors';
-import type { PlottedEquation } from '../types';
+import type { PlottedEquation } from '../../types';
 import { EquationRow } from './EquationRow';
 
 type EquationListProps = {

@@ -9,9 +9,9 @@ import { createDrawerStyles } from '../features/menu/styles/drawerStyles';
 import { createCalculatorStyles } from '../features/calculator/styles/calculatorStyles';
 import { createGraphingStyles } from '../features/graphing/styles/graphingStyles';
 import { createNotesStyles } from '../features/notes/styles/notesStyles';
-import type { Mode } from '../features/calculator';
 import { createLayoutStyles } from '../shared/styles/layoutStyles';
 import { AppShell } from './AppShell';
+import type { AppMode } from './appModes';
 
 function createStyles(theme: CalculatorTheme) {
   return {
@@ -25,13 +25,13 @@ function createStyles(theme: CalculatorTheme) {
 }
 
 export default function AppRoot() {
-  const [mode, setMode] = useState<Mode>('basic');
+  const [mode, setMode] = useState<AppMode>('basic');
   const [menuOpen, setMenuOpen] = useState(false);
   const { setThemeId, theme, themeId } = useThemePreference();
   const styles = useMemo(() => createStyles(theme), [theme]);
   const androidTopInset = Platform.OS === 'android' ? NativeStatusBar.currentHeight ?? 0 : 0;
 
-  function selectMode(nextMode: Mode) {
+  function selectMode(nextMode: AppMode) {
     setMode(nextMode);
     setMenuOpen(false);
   }

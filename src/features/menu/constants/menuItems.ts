@@ -1,6 +1,6 @@
-import type { Mode } from '../../calculator';
+import type { AppMode } from '../../../app/appModes';
 
-export const menuItems: { label: string; icon: string; mode?: Mode }[] = [
+export const menuItems: { label: string; icon: string; mode?: AppMode }[] = [
   { label: 'Standard', icon: '+/-', mode: 'basic' },
   { label: 'Scientific', icon: '√x', mode: 'scientific' },
   { label: 'Graphing', icon: 'ƒ(x)', mode: 'graphing' },

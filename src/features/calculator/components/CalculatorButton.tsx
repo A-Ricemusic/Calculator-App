@@ -1,12 +1,12 @@
 import { Pressable, Text } from 'react-native';
 
 import type { AppStyles } from '../../../app/appTypes';
-import type { ButtonConfig, Mode } from '../types';
+import type { ButtonConfig, CalculatorMode } from '../types';
 
 type CalculatorButtonProps = {
   button: ButtonConfig;
   clearLabel: string;
-  mode: Mode;
+  mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
   styles: AppStyles;
   variant: 'function' | 'number';
@@ -75,4 +75,3 @@ export function CalculatorButton({
     </Pressable>
   );
 }
-

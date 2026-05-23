@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 
-import type { ButtonConfig, Mode, Operator } from '../types';
+import type { ButtonConfig, CalculatorMode, Operator } from '../types';
 import { calculate, factorial, formatValue } from '../utils/calculatorMath';
 
-export function useCalculator(mode: Mode) {
+export function useCalculator(mode: CalculatorMode) {
   const [display, setDisplay] = useState('0');
   const [storedValue, setStoredValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<Operator | null>(null);

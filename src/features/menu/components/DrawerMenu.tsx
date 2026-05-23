@@ -10,16 +10,16 @@ import {
 
 import { menuItems } from '../constants/menuItems';
 import { themes } from '../../theme';
-import type { Mode } from '../../calculator';
+import type { AppMode } from '../../../app/appModes';
 import type { ThemeId } from '../../theme';
 import type { AppStyles } from '../../../app/appTypes';
 
 const ANDROID_TOP_INSET = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
 type DrawerMenuProps = {
-  mode: Mode;
+  mode: AppMode;
   onClose: () => void;
-  onSelectMode: (mode: Mode) => void;
+  onSelectMode: (mode: AppMode) => void;
   onSelectTheme: (themeId: ThemeId) => void;
   styles: AppStyles;
   themeId: ThemeId;

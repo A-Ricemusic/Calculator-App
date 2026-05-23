@@ -3,10 +3,10 @@ import { LayoutChangeEvent, View } from 'react-native';
 
 import type { AppStyles } from '../../../app/appTypes';
 import type { CalculatorTheme } from '../../theme';
-import { useGraphingCalculator } from '../hooks/useGraphingCalculator';
-import { EquationList } from './EquationList';
-import { GraphCanvas } from './GraphCanvas';
-import { GraphControls } from './GraphControls';
+import { GraphCanvas } from '../canvas/components/GraphCanvas';
+import { GraphControls } from '../canvas/components/GraphControls';
+import { EquationList } from '../equations/components/EquationList';
+import { useGraphingCalculator } from '../equations/hooks/useGraphingCalculator';
 
 type GraphingScreenProps = {
   styles: AppStyles;
