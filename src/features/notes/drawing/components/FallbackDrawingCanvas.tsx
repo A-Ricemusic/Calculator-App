@@ -1,5 +1,6 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import type { PanResponderInstance } from "react-native";
+import Svg from "react-native-svg";
 
 import type { AppStyles } from "../../../../app/appTypes";
 import type { CalculatorTheme } from "../../../theme";
@@ -38,10 +39,12 @@ export function FallbackDrawingCanvas({
           style={[styles.notesDot, { left: dot.left, top: dot.top }]}
         />
       ))}
-      {activePage?.strokes.map((stroke) => (
-        <StrokeSegment key={stroke.id} stroke={stroke} styles={styles} theme={theme} />
-      ))}
-      {drawingStroke && <StrokeSegment stroke={drawingStroke} styles={styles} theme={theme} />}
+      <Svg pointerEvents="none" style={StyleSheet.absoluteFillObject}>
+        {activePage?.strokes.map((stroke) => (
+          <StrokeSegment key={stroke.id} stroke={stroke} theme={theme} />
+        ))}
+        {drawingStroke && <StrokeSegment stroke={drawingStroke} theme={theme} />}
+      </Svg>
       <TextBlockLayer
         activeColor={activeColor}
         activeTool={activeTool}

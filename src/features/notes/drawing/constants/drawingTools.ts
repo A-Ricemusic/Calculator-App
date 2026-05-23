@@ -19,3 +19,10 @@ export const drawingToolSettings: Record<
   highlighter: { label: "Highlighter", icon: "▰", width: 16 },
   eraser: { label: "Eraser", icon: "⌫", width: 24 },
 };
+
+export const minimumPointDistance: Record<Exclude<NoteTool, "text">, number> = {
+  pen: 2,
+  marker: 3,
+  highlighter: 4,
+  eraser: 4,
+};

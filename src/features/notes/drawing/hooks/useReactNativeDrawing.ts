@@ -4,8 +4,8 @@ import { PanResponder } from "react-native";
 
 import { createId } from "../../../../shared/utils/ids";
 import type { NoteCollection, NotePage, NoteTool, Point, Stroke } from "../../types";
-import { drawingToolSettings } from "../constants/drawingTools";
-import { distanceBetweenPoints } from "../utils/drawingGeometry";
+import { drawingToolSettings, minimumPointDistance } from "../constants/drawingTools";
+import { distanceBetweenPoints, shouldAppendPoint } from "../utils/drawingGeometry";
 
 type UseReactNativeDrawingParams = {
   activeCollectionIndex: number;
@@ -22,32 +22,87 @@ function pointFromEvent(event: GestureResponderEvent) {
 }
 
 export function useReactNativeDrawing({
+  activeCollectionIndex,
   activeColor,
+  activePageIndex,
   activeTool,
+  noteCollections,
   updateActivePage,
 }: UseReactNativeDrawingParams) {
   const [drawingStroke, setDrawingStroke] = useState<Stroke | null>(null);
   const drawingStrokeRef = useRef<Stroke | null>(null);
+  const drawingFrameRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+  const erasedStrokeIdsRef = useRef<Set<string>>(new Set());
+  const eraserFrameRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+
+  const flushDrawingStroke = useCallback(() => {
+    drawingFrameRef.current = null;
+    setDrawingStroke(drawingStrokeRef.current);
+  }, []);
+
+  const scheduleDrawingStrokeUpdate = useCallback(() => {
+    if (drawingFrameRef.current !== null) {
+      return;
+    }
+
+    drawingFrameRef.current = requestAnimationFrame(flushDrawingStroke);
+  }, [flushDrawingStroke]);
+
+  const flushErasedStrokes = useCallback(() => {
+    eraserFrameRef.current = null;
+    const erasedStrokeIds = erasedStrokeIdsRef.current;
+
+    if (erasedStrokeIds.size === 0) {
+      return;
+    }
+
+    updateActivePage((page) => ({
+      ...page,
+      strokes: page.strokes.filter((stroke) => !erasedStrokeIds.has(stroke.id)),
+    }));
+  }, [updateActivePage]);
+
+  const scheduleErasedStrokeUpdate = useCallback(() => {
+    if (eraserFrameRef.current !== null) {
+      return;
+    }
+
+    eraserFrameRef.current = requestAnimationFrame(flushErasedStrokes);
+  }, [flushErasedStrokes]);
 
   const resetDrawingStroke = useCallback(() => {
+    if (drawingFrameRef.current !== null) {
+      cancelAnimationFrame(drawingFrameRef.current);
+      drawingFrameRef.current = null;
+    }
+
     drawingStrokeRef.current = null;
     setDrawingStroke(null);
   }, []);
 
   const eraseAt = useCallback(
     (point: Point) => {
-      updateActivePage((page) => ({
-        ...page,
-        strokes: page.strokes.filter(
-          (stroke) =>
-            !stroke.points.some((strokePoint) => {
-              const distance = distanceBetweenPoints(strokePoint, point);
-              return distance <= drawingToolSettings.eraser.width;
-            }),
-        ),
-      }));
+      const activePage = noteCollections[activeCollectionIndex]?.pages[activePageIndex];
+      const erasedStrokeIds = erasedStrokeIdsRef.current;
+
+      activePage?.strokes.forEach((stroke) => {
+        if (erasedStrokeIds.has(stroke.id)) {
+          return;
+        }
+
+        const shouldErase = stroke.points.some((strokePoint) => {
+          const distance = distanceBetweenPoints(strokePoint, point);
+          return distance <= drawingToolSettings.eraser.width;
+        });
+
+        if (shouldErase) {
+          erasedStrokeIds.add(stroke.id);
+        }
+      });
+
+      scheduleErasedStrokeUpdate();
     },
-    [updateActivePage],
+    [activeCollectionIndex, activePageIndex, noteCollections, scheduleErasedStrokeUpdate],
   );
 
   const beginStroke = useCallback(
@@ -59,6 +114,7 @@ export function useReactNativeDrawing({
       }
 
       if (activeTool === "eraser") {
+        erasedStrokeIdsRef.current = new Set();
         eraseAt(point);
         return;
       }
@@ -95,17 +151,37 @@ export function useReactNativeDrawing({
         return;
       }
 
+      const previousPoint = currentStroke.points[currentStroke.points.length - 1];
+      if (!shouldAppendPoint(previousPoint, point, minimumPointDistance[activeTool])) {
+        return;
+      }
+
       const nextStroke = {
         ...currentStroke,
         points: [...currentStroke.points, point],
       };
       drawingStrokeRef.current = nextStroke;
-      setDrawingStroke(nextStroke);
+      scheduleDrawingStrokeUpdate();
     },
-    [activeTool, eraseAt],
+    [activeTool, eraseAt, scheduleDrawingStrokeUpdate],
   );
 
   const finishStroke = useCallback(() => {
+    if (activeTool === "eraser") {
+      if (eraserFrameRef.current !== null) {
+        cancelAnimationFrame(eraserFrameRef.current);
+        eraserFrameRef.current = null;
+      }
+      flushErasedStrokes();
+      erasedStrokeIdsRef.current = new Set();
+      return;
+    }
+
+    if (drawingFrameRef.current !== null) {
+      cancelAnimationFrame(drawingFrameRef.current);
+      drawingFrameRef.current = null;
+    }
+
     const currentStroke = drawingStrokeRef.current;
 
     if (!currentStroke) {
@@ -120,7 +196,7 @@ export function useReactNativeDrawing({
     }
 
     resetDrawingStroke();
-  }, [resetDrawingStroke, updateActivePage]);
+  }, [activeTool, flushErasedStrokes, resetDrawingStroke, updateActivePage]);
 
   const notePanResponder = useMemo(
     () =>
