@@ -1,16 +1,16 @@
-import type { Operator } from '../types';
+import type { Operator } from "../types";
 
 export function calculate(first: number, second: number, operator: Operator) {
   switch (operator) {
-    case '+':
+    case "+":
       return first + second;
-    case '-':
+    case "-":
       return first - second;
-    case 'x':
+    case "x":
       return first * second;
-    case '/':
+    case "/":
       return second === 0 ? Number.NaN : first / second;
-    case 'xy':
+    case "xy":
       return first ** second;
   }
 }
@@ -29,7 +29,7 @@ export function factorial(value: number) {
 
 export function formatValue(value: number) {
   if (!Number.isFinite(value)) {
-    return 'Error';
+    return "Error";
   }
 
   if (Math.abs(value) >= 1e10 || (Math.abs(value) > 0 && Math.abs(value) < 1e-8)) {

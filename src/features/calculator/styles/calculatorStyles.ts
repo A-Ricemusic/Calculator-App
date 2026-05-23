@@ -1,16 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import type { CalculatorTheme } from '../../theme';
+import type { CalculatorTheme } from "../../theme";
 
 export function createCalculatorStyles(theme: CalculatorTheme) {
   return StyleSheet.create({
     displayPanel: {
-      alignItems: 'flex-end',
+      alignItems: "flex-end",
       borderBottomColor: theme.colors.divider,
       borderBottomWidth: 1,
       flexGrow: 1,
       flexShrink: 1,
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
       marginHorizontal: 16,
       maxHeight: 160,
       paddingBottom: 16,
@@ -21,7 +21,7 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
     display: {
       color: theme.colors.displayText,
       fontSize: 80,
-      fontWeight: '200',
+      fontWeight: "200",
     },
     scientificDisplayText: {
       fontSize: 60,
@@ -31,25 +31,25 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
       marginHorizontal: 0,
     },
     sciFnRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 0,
     },
     sciFnButton: {
-      alignItems: 'center',
-      backgroundColor: 'transparent',
+      alignItems: "center",
+      backgroundColor: "transparent",
       borderBottomColor: theme.colors.divider,
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderRightColor: theme.colors.divider,
       borderRightWidth: StyleSheet.hairlineWidth,
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
       paddingHorizontal: 2,
       paddingVertical: 9,
     },
     sciFnButtonText: {
       color: theme.colors.sciFnText,
       fontSize: 15,
-      fontWeight: '400',
+      fontWeight: "400",
     },
     keypad: {
       gap: 12,
@@ -64,20 +64,20 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
       paddingTop: 4,
     },
     row: {
-      alignItems: 'center',
-      flexDirection: 'row',
+      alignItems: "center",
+      flexDirection: "row",
       gap: 10,
     },
     sciRow: {
       gap: 5,
     },
     button: {
-      alignItems: 'center',
+      alignItems: "center",
       aspectRatio: 1,
       backgroundColor: theme.colors.buttonNumber,
       borderRadius: 999,
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     sciNumButton: {
       aspectRatio: undefined,
@@ -100,7 +100,7 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
     buttonText: {
       color: theme.colors.buttonText,
       fontSize: 34,
-      fontWeight: '400',
+      fontWeight: "400",
     },
     sciNumButtonText: {
       fontSize: 26,
@@ -110,4 +110,3 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
     },
   });
 }
-

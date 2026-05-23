@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native';
+import { Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { NoteTool } from '../../types';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { NoteTool } from "../../types";
 
 type UtensilIconProps = {
   activeColor: string;
@@ -11,10 +11,10 @@ type UtensilIconProps = {
 };
 
 export function UtensilIcon({ activeColor, isActive, styles, tool }: UtensilIconProps) {
-  const tint = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.55)';
-  const band = isActive ? activeColor : 'rgba(255, 255, 255, 0.2)';
+  const tint = isActive ? "#ffffff" : "rgba(255, 255, 255, 0.55)";
+  const band = isActive ? activeColor : "rgba(255, 255, 255, 0.2)";
 
-  if (tool === 'pen') {
+  if (tool === "pen") {
     return (
       <View style={styles.utensilWrap}>
         <View style={[styles.penTip, { borderBottomColor: tint }]} />
@@ -24,7 +24,7 @@ export function UtensilIcon({ activeColor, isActive, styles, tool }: UtensilIcon
     );
   }
 
-  if (tool === 'marker') {
+  if (tool === "marker") {
     return (
       <View style={styles.utensilWrap}>
         <View style={[styles.markerNib, { backgroundColor: tint }]} />
@@ -33,16 +33,21 @@ export function UtensilIcon({ activeColor, isActive, styles, tool }: UtensilIcon
     );
   }
 
-  if (tool === 'highlighter') {
+  if (tool === "highlighter") {
     return (
       <View style={styles.utensilWrap}>
-        <View style={[styles.highlighterTip, { backgroundColor: isActive ? activeColor : 'rgba(255,255,255,0.25)' }]} />
+        <View
+          style={[
+            styles.highlighterTip,
+            { backgroundColor: isActive ? activeColor : "rgba(255,255,255,0.25)" },
+          ]}
+        />
         <View style={[styles.highlighterBarrel, { borderColor: band }]} />
       </View>
     );
   }
 
-  if (tool === 'eraser') {
+  if (tool === "eraser") {
     return (
       <View style={styles.utensilWrap}>
         <View style={styles.eraserTop} />

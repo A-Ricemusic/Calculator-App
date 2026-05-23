@@ -19,7 +19,7 @@ export type GraphPoint = {
 };
 
 export type ParsedGraphExpression = {
-  kind: 'explicit';
+  kind: "explicit";
   source: string;
   evaluate: (x: number) => number;
 };

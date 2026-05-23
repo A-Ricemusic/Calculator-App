@@ -1,12 +1,12 @@
-import type { StyleProp, ViewStyle } from 'react-native';
-import { Pressable, Text, View } from 'react-native';
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
-import { CalculatorScreen, useCalculator } from '../features/calculator';
-import { GraphingScreen } from '../features/graphing';
-import { MathNotesScreen } from '../features/notes';
-import type { CalculatorTheme } from '../features/theme';
-import type { AppMode, CalculatorMode } from './appModes';
-import type { AppStyles } from './appTypes';
+import { CalculatorScreen, useCalculator } from "../features/calculator";
+import { GraphingScreen } from "../features/graphing";
+import { MathNotesScreen } from "../features/notes";
+import type { CalculatorTheme } from "../features/theme";
+import type { AppMode, CalculatorMode } from "./appModes";
+import type { AppStyles } from "./appTypes";
 
 type AppShellProps = {
   mode: AppMode;
@@ -25,7 +25,7 @@ export function AppShell({
   styles,
   theme,
 }: AppShellProps) {
-  const calculatorMode: CalculatorMode = mode === 'scientific' ? 'scientific' : 'basic';
+  const calculatorMode: CalculatorMode = mode === "scientific" ? "scientific" : "basic";
   const { clearLabel, display, handlePress, resetAll } = useCalculator(calculatorMode);
 
   return (
@@ -40,12 +40,12 @@ export function AppShell({
           >
             <Text style={styles.iconText}>☰</Text>
           </Pressable>
-          {mode === 'scientific' && <Text style={styles.angleLabel}>rad</Text>}
+          {mode === "scientific" && <Text style={styles.angleLabel}>rad</Text>}
         </View>
-        {mode === 'basic' && <Text style={styles.modeTitle}>Calculator</Text>}
-        {mode === 'graphing' && <Text style={styles.modeTitle}>Graphing</Text>}
-        {mode === 'notes' && <Text style={styles.modeTitle}>Math Notes</Text>}
-        {mode === 'basic' || mode === 'scientific' ? (
+        {mode === "basic" && <Text style={styles.modeTitle}>Calculator</Text>}
+        {mode === "graphing" && <Text style={styles.modeTitle}>Graphing</Text>}
+        {mode === "notes" && <Text style={styles.modeTitle}>Math Notes</Text>}
+        {mode === "basic" || mode === "scientific" ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Reset calculator"
@@ -59,9 +59,9 @@ export function AppShell({
         )}
       </View>
 
-      {mode === 'graphing' ? (
+      {mode === "graphing" ? (
         <GraphingScreen styles={styles} theme={theme} />
-      ) : mode === 'notes' ? (
+      ) : mode === "notes" ? (
         <MathNotesScreen onSelectMode={onSelectMode} styles={styles} theme={theme} />
       ) : (
         <CalculatorScreen

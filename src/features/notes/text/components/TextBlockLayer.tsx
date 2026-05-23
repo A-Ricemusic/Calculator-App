@@ -1,7 +1,7 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { NoteTool, TextBlock } from '../../types';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { NoteTool, TextBlock } from "../../types";
 
 type TextBlockLayerProps = {
   activeColor: string;
@@ -23,15 +23,10 @@ export function TextBlockLayer({
       {textBlocks.map((textBlock) => (
         <View
           key={textBlock.id}
-          style={[
-            styles.canvasTextBlockWrap,
-            { left: textBlock.x, top: textBlock.y },
-          ]}
+          style={[styles.canvasTextBlockWrap, { left: textBlock.x, top: textBlock.y }]}
         >
-          <Text style={[styles.canvasTextBlock, { color: activeColor }]}>
-            {textBlock.body}
-          </Text>
-          {activeTool === 'text' && (
+          <Text style={[styles.canvasTextBlock, { color: activeColor }]}>{textBlock.body}</Text>
+          {activeTool === "text" && (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Delete "${textBlock.body}"`}

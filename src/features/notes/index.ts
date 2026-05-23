@@ -1,4 +1,4 @@
-export { MathNotesScreen } from './screen/MathNotesScreen';
+export { MathNotesScreen } from "./screen/MathNotesScreen";
 export type {
   MathNote,
   NoteCollection,
@@ -7,4 +7,4 @@ export type {
   Point,
   Stroke,
   TextBlock,
-} from './types';
+} from "./types";

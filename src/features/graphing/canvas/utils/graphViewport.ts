@@ -1,4 +1,4 @@
-import type { GraphViewport } from '../types';
+import type { GraphViewport } from "../../types";
 
 export const initialGraphViewport: GraphViewport = {
   xMin: -10,

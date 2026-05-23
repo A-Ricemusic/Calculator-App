@@ -1,4 +1,4 @@
-import type { GraphPoint, GraphViewport } from '../../types';
+import type { GraphPoint, GraphViewport } from "../../types";
 
 export function niceStep(range: number) {
   const rough = range / 10;
@@ -18,7 +18,7 @@ export function niceStep(range: number) {
 
 export function formatTick(value: number) {
   if (Math.abs(value) < 1e-8) {
-    return '0';
+    return "0";
   }
 
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
@@ -42,14 +42,14 @@ export function pointsToPath(
   viewport: GraphViewport,
 ) {
   const yRange = viewport.yMax - viewport.yMin;
-  let path = '';
+  let path = "";
   let previous: GraphPoint | undefined;
 
   points.forEach((point) => {
     const screenX = toScreenX(point.x);
     const screenY = toScreenY(point.y);
     const isLargeJump = previous ? Math.abs(point.y - previous.y) > yRange * 0.45 : true;
-    const command = !previous || isLargeJump ? 'M' : 'L';
+    const command = !previous || isLargeJump ? "M" : "L";
 
     path += `${command}${screenX.toFixed(2)},${screenY.toFixed(2)}`;
     previous = point;

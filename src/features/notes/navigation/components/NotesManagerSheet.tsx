@@ -1,8 +1,8 @@
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import { maxPagesPerNotebook } from '../../notebook/constants/notebookLimits';
-import type { NoteCollection } from '../../types';
+import type { AppStyles } from "../../../../app/appTypes";
+import { maxPagesPerNotebook } from "../../notebook/constants/notebookLimits";
+import type { NoteCollection } from "../../types";
 
 type NotesManagerSheetProps = {
   activeCollectionIndex: number;

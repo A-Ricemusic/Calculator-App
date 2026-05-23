@@ -1,9 +1,9 @@
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import { MAX_GRAPH_EQUATIONS } from '../constants/graphColors';
-import type { PlottedEquation } from '../../types';
-import { EquationRow } from './EquationRow';
+import type { AppStyles } from "../../../../app/appTypes";
+import { MAX_GRAPH_EQUATIONS } from "../constants/graphColors";
+import type { PlottedEquation } from "../../types";
+import { EquationRow } from "./EquationRow";
 
 type EquationListProps = {
   canAddEquation: boolean;
@@ -35,10 +35,7 @@ export function EquationList({
           accessibilityLabel="Add equation"
           disabled={!canAddEquation}
           onPress={onAdd}
-          style={[
-            styles.addEquationButton,
-            !canAddEquation && styles.addEquationButtonDisabled,
-          ]}
+          style={[styles.addEquationButton, !canAddEquation && styles.addEquationButtonDisabled]}
         >
           <Text style={styles.addEquationText}>+</Text>
         </Pressable>

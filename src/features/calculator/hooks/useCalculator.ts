@@ -1,30 +1,28 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 
-import type { ButtonConfig, CalculatorMode, Operator } from '../types';
-import { calculate, factorial, formatValue } from '../utils/calculatorMath';
+import type { ButtonConfig, CalculatorMode, Operator } from "../types";
+import { calculate, factorial, formatValue } from "../utils/calculatorMath";
 
 export function useCalculator(mode: CalculatorMode) {
-  const [display, setDisplay] = useState('0');
+  const [display, setDisplay] = useState("0");
   const [storedValue, setStoredValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<Operator | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
 
   const clearLabel = useMemo(
-    () => (mode === 'scientific'
-      ? (display === '0' ? 'ac' : 'c')
-      : (display === '0' ? 'AC' : 'C')),
+    () => (mode === "scientific" ? (display === "0" ? "ac" : "c") : display === "0" ? "AC" : "C"),
     [display, mode],
   );
 
   function resetAll() {
-    setDisplay('0');
+    setDisplay("0");
     setStoredValue(null);
     setOperator(null);
     setWaitingForOperand(false);
   }
 
   function inputDigit(digit: string) {
-    if (display === 'Error') {
+    if (display === "Error") {
       setDisplay(digit);
       return;
     }
@@ -35,17 +33,17 @@ export function useCalculator(mode: CalculatorMode) {
       return;
     }
 
-    setDisplay((current) => (current === '0' ? digit : `${current}${digit}`));
+    setDisplay((current) => (current === "0" ? digit : `${current}${digit}`));
   }
 
   function inputDecimal() {
-    if (waitingForOperand || display === 'Error') {
-      setDisplay('0.');
+    if (waitingForOperand || display === "Error") {
+      setDisplay("0.");
       setWaitingForOperand(false);
       return;
     }
 
-    if (!display.includes('.')) {
+    if (!display.includes(".")) {
       setDisplay((current) => `${current}.`);
     }
   }
@@ -105,8 +103,8 @@ export function useCalculator(mode: CalculatorMode) {
   }
 
   function handleClear() {
-    if (display !== '0') {
-      setDisplay('0');
+    if (display !== "0") {
+      setDisplay("0");
       return;
     }
 
@@ -121,79 +119,79 @@ export function useCalculator(mode: CalculatorMode) {
       return;
     }
 
-    if (action === '.') {
+    if (action === ".") {
       inputDecimal();
       return;
     }
 
-    if (action === 'clear') {
+    if (action === "clear") {
       handleClear();
       return;
     }
 
-    if (action === 'sign') {
-      setDisplay((current) => (current.startsWith('-') ? current.slice(1) : `-${current}`));
+    if (action === "sign") {
+      setDisplay((current) => (current.startsWith("-") ? current.slice(1) : `-${current}`));
       return;
     }
 
-    if (action === 'percent') {
+    if (action === "percent") {
       setDisplay((current) => formatValue(Number(current) / 100));
       return;
     }
 
-    if (action === 'equals') {
+    if (action === "equals") {
       handleEquals();
       return;
     }
 
-    if (action === 'backspace') {
-      setDisplay((current) => (current.length > 1 ? current.slice(0, -1) : '0'));
+    if (action === "backspace") {
+      setDisplay((current) => (current.length > 1 ? current.slice(0, -1) : "0"));
       return;
     }
 
-    if (action === 'pi' || action === 'e' || action === 'random') {
+    if (action === "pi" || action === "e" || action === "random") {
       const constants = { pi: Math.PI, e: Math.E, random: Math.random() };
       setDisplay(formatValue(constants[action]));
       setWaitingForOperand(true);
       return;
     }
 
-    if (action === 'ee') {
+    if (action === "ee") {
       setDisplay((current) => `${current}e`);
       setWaitingForOperand(false);
       return;
     }
 
-    if (action === 'root') {
-      performOperation('xy');
+    if (action === "root") {
+      performOperation("xy");
       return;
     }
 
     if (
       [
-        'square',
-        'cube',
-        'reciprocal',
-        'sqrt',
-        'cbrt',
-        'exp',
-        'pow10',
-        'ln',
-        'log10',
-        'factorial',
-        'sin',
-        'cos',
-        'tan',
-        'sinh',
-        'cosh',
-        'tanh',
+        "square",
+        "cube",
+        "reciprocal",
+        "sqrt",
+        "cbrt",
+        "exp",
+        "pow10",
+        "ln",
+        "log10",
+        "factorial",
+        "sin",
+        "cos",
+        "tan",
+        "sinh",
+        "cosh",
+        "tanh",
       ].includes(action)
     ) {
       applyUnary(action);
       return;
     }
 
-    if (['+', '-', 'x', '/', 'xy'].includes(action)) {
+    if (["+", "-", "x", "/", "xy"].includes(action)) {
       performOperation(action as Operator);
     }
   }

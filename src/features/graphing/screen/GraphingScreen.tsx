@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { LayoutChangeEvent, View } from 'react-native';
+import { useState } from "react";
+import { LayoutChangeEvent, View } from "react-native";
 
-import type { AppStyles } from '../../../app/appTypes';
-import type { CalculatorTheme } from '../../theme';
-import { GraphCanvas } from '../canvas/components/GraphCanvas';
-import { GraphControls } from '../canvas/components/GraphControls';
-import { EquationList } from '../equations/components/EquationList';
-import { useGraphingCalculator } from '../equations/hooks/useGraphingCalculator';
+import type { AppStyles } from "../../../app/appTypes";
+import type { CalculatorTheme } from "../../theme";
+import { GraphCanvas } from "../canvas/components/GraphCanvas";
+import { GraphControls } from "../canvas/components/GraphControls";
+import { EquationList } from "../equations/components/EquationList";
+import { useGraphingEquations } from "../equations/hooks/useGraphingEquations";
 
 type GraphingScreenProps = {
   styles: AppStyles;
@@ -15,7 +15,7 @@ type GraphingScreenProps = {
 
 export function GraphingScreen({ styles }: GraphingScreenProps) {
   const [graphSize, setGraphSize] = useState({ width: 1, height: 1 });
-  const graphing = useGraphingCalculator(graphSize.width);
+  const graphing = useGraphingEquations(graphSize.width);
 
   function handleGraphLayout(event: LayoutChangeEvent) {
     const { height, width } = event.nativeEvent.layout;

@@ -1,2 +1,2 @@
-export type AppMode = 'basic' | 'scientific' | 'graphing' | 'notes';
-export type CalculatorMode = Extract<AppMode, 'basic' | 'scientific'>;
+export type AppMode = "basic" | "scientific" | "graphing" | "notes";
+export type CalculatorMode = Extract<AppMode, "basic" | "scientific">;

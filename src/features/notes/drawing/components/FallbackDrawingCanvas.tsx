@@ -1,12 +1,12 @@
-import { View } from 'react-native';
-import type { PanResponderInstance } from 'react-native';
+import { View } from "react-native";
+import type { PanResponderInstance } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { CalculatorTheme } from '../../../theme';
-import { TextBlockLayer } from '../../text/components/TextBlockLayer';
-import type { NotePage, NoteTool, Stroke } from '../../types';
-import { canvasGridDots } from '../constants/canvasGrid';
-import { StrokeSegment } from './StrokeSegment';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { CalculatorTheme } from "../../../theme";
+import { TextBlockLayer } from "../../text/components/TextBlockLayer";
+import type { NotePage, NoteTool, Stroke } from "../../types";
+import { canvasGridDots } from "../constants/canvasGrid";
+import { StrokeSegment } from "./StrokeSegment";
 
 type FallbackDrawingCanvasProps = {
   activeColor: string;

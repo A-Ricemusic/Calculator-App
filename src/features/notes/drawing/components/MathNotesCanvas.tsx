@@ -1,12 +1,12 @@
-import { View } from 'react-native';
-import type { PanResponderInstance } from 'react-native';
+import { View } from "react-native";
+import type { PanResponderInstance } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { CalculatorTheme } from '../../../theme';
-import { PencilKitCanvas } from '../../platform/ios/PencilKitCanvas';
-import { TextEntryBar } from '../../text/components/TextEntryBar';
-import type { NotePage, NoteTool, Stroke } from '../../types';
-import { FallbackDrawingCanvas } from './FallbackDrawingCanvas';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { CalculatorTheme } from "../../../theme";
+import { PencilKitCanvas } from "../../platform/ios/PencilKitCanvas";
+import { TextEntryBar } from "../../text/components/TextEntryBar";
+import type { NotePage, NoteTool, Stroke } from "../../types";
+import { FallbackDrawingCanvas } from "./FallbackDrawingCanvas";
 
 type MathNotesCanvasProps = {
   activeColor: string;
@@ -42,7 +42,7 @@ export function MathNotesCanvas({
       <View style={styles.notesCanvasWrap}>
         {PencilKitCanvas ? (
           <PencilKitCanvas
-            drawingData={activePage?.pencilKitData ?? ''}
+            drawingData={activePage?.pencilKitData ?? ""}
             onDrawingChange={(event) => onUpdatePencilKitDrawing(event.nativeEvent.drawingData)}
             style={styles.notesCanvas}
           />
@@ -60,7 +60,7 @@ export function MathNotesCanvas({
         )}
       </View>
 
-      {!PencilKitCanvas && activeTool === 'text' && (
+      {!PencilKitCanvas && activeTool === "text" && (
         <TextEntryBar
           onAddTextBlock={onAddTextBlock}
           onSetTextDraft={onSetTextDraft}

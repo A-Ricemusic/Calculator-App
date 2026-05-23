@@ -1,6 +1,6 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
+import type { AppStyles } from "../../../../app/appTypes";
 
 type NotesHeaderProps = {
   activePageIndex: number;
@@ -37,7 +37,8 @@ export function NotesHeader({
         </Text>
       </View>
       <Text style={styles.notesPageBadge}>
-        {(activePageIndex + 1).toString().padStart(2, '0')}/{activePagesCount.toString().padStart(2, '0')}
+        {(activePageIndex + 1).toString().padStart(2, "0")}/
+        {activePagesCount.toString().padStart(2, "0")}
       </Text>
       <Pressable
         accessibilityRole="button"

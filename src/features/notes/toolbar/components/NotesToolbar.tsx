@@ -1,9 +1,9 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import { drawingTools } from '../../drawing/constants/drawingTools';
-import type { NoteTool } from '../../types';
-import { UtensilIcon } from './UtensilIcon';
+import type { AppStyles } from "../../../../app/appTypes";
+import { drawingTools } from "../../drawing/constants/drawingTools";
+import type { NoteTool } from "../../types";
+import { UtensilIcon } from "./UtensilIcon";
 
 type NotesToolbarProps = {
   activeColor: string;
@@ -31,10 +31,7 @@ export function NotesToolbar({
               accessibilityRole="button"
               accessibilityLabel={`Select ${tool}`}
               onPress={() => onSelectTool(tool)}
-              style={[
-                styles.notesToolBtn,
-                isActive && styles.notesToolBtnActive,
-              ]}
+              style={[styles.notesToolBtn, isActive && styles.notesToolBtnActive]}
             >
               <UtensilIcon
                 activeColor={activeColor}
@@ -42,7 +39,9 @@ export function NotesToolbar({
                 styles={styles}
                 tool={tool}
               />
-              <Text style={[styles.utensilLabel, isActive && styles.utensilLabelActive]}>{label}</Text>
+              <Text style={[styles.utensilLabel, isActive && styles.utensilLabelActive]}>
+                {label}
+              </Text>
             </Pressable>
           );
         })}

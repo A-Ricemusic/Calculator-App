@@ -1,35 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { useMemo, useState } from 'react';
-import { Platform, SafeAreaView, StatusBar as NativeStatusBar } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { useMemo, useState } from "react";
+import { Platform, SafeAreaView, StatusBar as NativeStatusBar } from "react-native";
 
-import { CalculatorTheme, ThemeId, useThemePreference } from '../features/theme';
-import { createThemeStyles } from '../features/theme/styles/themeStyles';
-import { DrawerMenu } from '../features/menu';
-import { createDrawerStyles } from '../features/menu/styles/drawerStyles';
-import { createCalculatorStyles } from '../features/calculator/styles/calculatorStyles';
-import { createGraphingStyles } from '../features/graphing/styles/graphingStyles';
-import { createNotesStyles } from '../features/notes/styles/notesStyles';
-import { createLayoutStyles } from '../shared/styles/layoutStyles';
-import { AppShell } from './AppShell';
-import type { AppMode } from './appModes';
-
-function createStyles(theme: CalculatorTheme) {
-  return {
-    ...createLayoutStyles(theme),
-    ...createCalculatorStyles(theme),
-    ...createGraphingStyles(theme),
-    ...createNotesStyles(theme),
-    ...createDrawerStyles(theme),
-    ...createThemeStyles(),
-  };
-}
+import { ThemeId, useThemePreference } from "../features/theme";
+import { DrawerMenu } from "../features/menu";
+import { AppShell } from "./AppShell";
+import type { AppMode } from "./appModes";
+import { createAppStyles } from "./appStyles";
 
 export default function AppRoot() {
-  const [mode, setMode] = useState<AppMode>('basic');
+  const [mode, setMode] = useState<AppMode>("basic");
   const [menuOpen, setMenuOpen] = useState(false);
   const { setThemeId, theme, themeId } = useThemePreference();
-  const styles = useMemo(() => createStyles(theme), [theme]);
-  const androidTopInset = Platform.OS === 'android' ? NativeStatusBar.currentHeight ?? 0 : 0;
+  const styles = useMemo(() => createAppStyles(theme), [theme]);
+  const androidTopInset = Platform.OS === "android" ? (NativeStatusBar.currentHeight ?? 0) : 0;
 
   function selectMode(nextMode: AppMode) {
     setMode(nextMode);

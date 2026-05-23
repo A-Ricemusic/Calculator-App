@@ -1,12 +1,12 @@
-import { createId } from '../../../../shared/utils/ids';
-import type { NoteCollection, NotePage } from '../../types';
-import { maxPagesPerNotebook } from '../constants/notebookLimits';
+import { createId } from "../../../../shared/utils/ids";
+import type { NoteCollection, NotePage } from "../../types";
+import { maxPagesPerNotebook } from "../constants/notebookLimits";
 
 export function createBlankPage(index: number): NotePage {
   return {
     id: createId(`page-${index + 1}`),
     title: `Page ${index + 1}`,
-    pencilKitData: '',
+    pencilKitData: "",
     strokes: [],
     textBlocks: [],
   };
@@ -18,7 +18,7 @@ export function createPages(count: number) {
 
 export function createCollection(pageCount: number, index = 0): NoteCollection {
   return {
-    id: createId('collection'),
+    id: createId("collection"),
     title: `Math Notes ${index + 1}`,
     pageCount,
     pages: createPages(pageCount),

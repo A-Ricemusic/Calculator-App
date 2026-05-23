@@ -1,25 +1,25 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 
-import { createId } from '../../../../shared/utils/ids';
-import { sampleExpression } from '../../canvas/utils/graphSampler';
-import { initialGraphViewport, zoomViewport } from '../../canvas/utils/graphViewport';
-import { parseGraphExpression } from '../../expression/parseGraphExpression';
-import type { GraphEquation, GraphViewport, PlottedEquation } from '../../types';
-import { GRAPH_COLORS, MAX_GRAPH_EQUATIONS } from '../constants/graphColors';
+import { createId } from "../../../../shared/utils/ids";
+import { sampleExpression } from "../../canvas/utils/graphSampler";
+import { initialGraphViewport, zoomViewport } from "../../canvas/utils/graphViewport";
+import { parseGraphExpression } from "../../expression/parseGraphExpression";
+import type { GraphEquation, GraphViewport, PlottedEquation } from "../../types";
+import { GRAPH_COLORS, MAX_GRAPH_EQUATIONS } from "../constants/graphColors";
 
 function createEquation(index: number): GraphEquation {
   return {
-    id: createId('graph-equation'),
-    expression: '',
+    id: createId("graph-equation"),
+    expression: "",
     color: GRAPH_COLORS[index % GRAPH_COLORS.length],
     visible: true,
   };
 }
 
-export function useGraphingCalculator(graphWidth: number) {
+export function useGraphingEquations(graphWidth: number) {
   const [equations, setEquations] = useState<GraphEquation[]>([
-    { ...createEquation(0), expression: '3x + 5y = 30' },
-    { ...createEquation(1), expression: 'x^2 + 1' },
+    { ...createEquation(0), expression: "3x + 5y = 30" },
+    { ...createEquation(1), expression: "x^2 + 1" },
   ]);
   const [viewport, setViewport] = useState<GraphViewport>(initialGraphViewport);
 
@@ -37,7 +37,7 @@ export function useGraphingCalculator(graphWidth: number) {
         return {
           ...equation,
           points: [],
-          error: error instanceof Error ? error.message : 'Could not graph this equation.',
+          error: error instanceof Error ? error.message : "Could not graph this equation.",
         };
       }
     });

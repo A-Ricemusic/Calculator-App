@@ -1,7 +1,7 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import { maxPagesPerNotebook } from '../../notebook/constants/notebookLimits';
+import type { AppStyles } from "../../../../app/appTypes";
+import { maxPagesPerNotebook } from "../../notebook/constants/notebookLimits";
 
 type NotesPageControlsProps = {
   activePageIndex: number;
@@ -33,7 +33,8 @@ export function NotesPageControls({
       </Pressable>
       <View style={styles.notesPageStatus}>
         <Text style={styles.notesPageStatusText}>
-          Page {(activePageIndex + 1).toString().padStart(2, '0')} of {activePagesCount.toString().padStart(2, '0')}
+          Page {(activePageIndex + 1).toString().padStart(2, "0")} of{" "}
+          {activePagesCount.toString().padStart(2, "0")}
         </Text>
       </View>
       <Pressable
@@ -59,7 +60,7 @@ export function NotesPageControls({
         ]}
       >
         <Text style={styles.notesPageActionText}>
-          {activePagesCount >= maxPagesPerNotebook ? '20 Max' : '+ Page'}
+          {activePagesCount >= maxPagesPerNotebook ? "20 Max" : "+ Page"}
         </Text>
       </Pressable>
       <Pressable

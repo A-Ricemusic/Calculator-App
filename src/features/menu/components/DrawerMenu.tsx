@@ -1,20 +1,12 @@
-import {
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  View,
-} from 'react-native';
+import { Platform, Pressable, SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 
-import { menuItems } from '../constants/menuItems';
-import { themes } from '../../theme';
-import type { AppMode } from '../../../app/appModes';
-import type { ThemeId } from '../../theme';
-import type { AppStyles } from '../../../app/appTypes';
+import { menuItems } from "../constants/menuItems";
+import { themes } from "../../theme";
+import type { AppMode } from "../../../app/appModes";
+import type { ThemeId } from "../../theme";
+import type { AppStyles } from "../../../app/appTypes";
 
-const ANDROID_TOP_INSET = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
+const ANDROID_TOP_INSET = Platform.OS === "android" ? (StatusBar.currentHeight ?? 0) : 0;
 
 type DrawerMenuProps = {
   mode: AppMode;
@@ -99,7 +91,12 @@ export function DrawerMenu({
                     style={[styles.menuItem, !isLast && styles.menuItemBorder]}
                   >
                     <View style={styles.themeDot}>
-                      <View style={[styles.themeDotInner, { backgroundColor: item.colors.buttonOperator }]} />
+                      <View
+                        style={[
+                          styles.themeDotInner,
+                          { backgroundColor: item.colors.buttonOperator },
+                        ]}
+                      />
                     </View>
                     <Text style={[styles.menuText, active && styles.menuTextActive]}>
                       {item.label}

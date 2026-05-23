@@ -1,7 +1,7 @@
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { PlottedEquation } from '../../types';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { PlottedEquation } from "../../types";
 
 type EquationRowProps = {
   equation: PlottedEquation;
@@ -11,18 +11,12 @@ type EquationRowProps = {
   styles: AppStyles;
 };
 
-export function EquationRow({
-  equation,
-  onDelete,
-  onToggle,
-  onUpdate,
-  styles,
-}: EquationRowProps) {
+export function EquationRow({ equation, onDelete, onToggle, onUpdate, styles }: EquationRowProps) {
   return (
     <View style={styles.equationRow}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={equation.visible ? 'Hide equation' : 'Show equation'}
+        accessibilityLabel={equation.visible ? "Hide equation" : "Show equation"}
         onPress={() => onToggle(equation.id)}
         style={[
           styles.equationColorButton,
@@ -30,7 +24,7 @@ export function EquationRow({
           !equation.visible && styles.equationColorDisabled,
         ]}
       >
-        <Text style={{ color: '#ffffff', fontWeight: '700' }}>~</Text>
+        <Text style={{ color: "#ffffff", fontWeight: "700" }}>~</Text>
       </Pressable>
 
       <View style={styles.equationInputWrap}>

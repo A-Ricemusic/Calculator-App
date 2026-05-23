@@ -1,5 +1,5 @@
 // Drawing
-export type NoteTool = 'pen' | 'marker' | 'highlighter' | 'eraser' | 'text';
+export type NoteTool = "pen" | "marker" | "highlighter" | "eraser" | "text";
 
 export type Point = {
   x: number;
@@ -9,7 +9,7 @@ export type Point = {
 export type Stroke = {
   id: string;
   color: string;
-  tool: Exclude<NoteTool, 'text'>;
+  tool: Exclude<NoteTool, "text">;
   width: number;
   points: Point[];
 };

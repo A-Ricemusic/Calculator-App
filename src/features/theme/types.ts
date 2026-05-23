@@ -1,9 +1,9 @@
-export type ThemeId = 'green' | 'red' | 'pink' | 'classic';
+export type ThemeId = "green" | "red" | "pink" | "classic";
 
 export type CalculatorTheme = {
   id: ThemeId;
   label: string;
-  statusBar: 'light' | 'dark';
+  statusBar: "light" | "dark";
   colors: {
     screen: string;
     topText: string;

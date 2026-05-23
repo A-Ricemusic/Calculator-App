@@ -1,6 +1,6 @@
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
+import type { AppStyles } from "../../../../app/appTypes";
 
 type TextEntryBarProps = {
   onAddTextBlock: () => void;

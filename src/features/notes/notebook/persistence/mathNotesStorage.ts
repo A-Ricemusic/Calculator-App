@@ -2,4 +2,4 @@ export {
   noteCollectionsStorageKey,
   notePagesStorageKey,
   notesStorageKey,
-} from '../../../../shared/constants/storageKeys';
+} from "../../../../shared/constants/storageKeys";

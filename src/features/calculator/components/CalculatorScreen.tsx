@@ -1,7 +1,7 @@
-import type { AppStyles } from '../../../app/appTypes';
-import type { ButtonConfig, CalculatorMode } from '../types';
-import { CalculatorDisplay } from './CalculatorDisplay';
-import { CalculatorKeypad } from './CalculatorKeypad';
+import type { AppStyles } from "../../../app/appTypes";
+import type { ButtonConfig, CalculatorMode } from "../types";
+import { CalculatorDisplay } from "./CalculatorDisplay";
+import { CalculatorKeypad } from "./CalculatorKeypad";
 
 type CalculatorScreenProps = {
   clearLabel: string;
@@ -21,12 +21,7 @@ export function CalculatorScreen({
   return (
     <>
       <CalculatorDisplay display={display} mode={mode} styles={styles} />
-      <CalculatorKeypad
-        clearLabel={clearLabel}
-        mode={mode}
-        onPress={handlePress}
-        styles={styles}
-      />
+      <CalculatorKeypad clearLabel={clearLabel} mode={mode} onPress={handlePress} styles={styles} />
     </>
   );
 }

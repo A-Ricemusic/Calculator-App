@@ -8,7 +8,13 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
     "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "doctor": "expo-doctor"
   },
   "dependencies": {
@@ -26,6 +32,9 @@
   "devDependencies": {
     "@types/react": "~19.1.10",
     "expo-doctor": "^1.19.7",
-    "typescript": "~5.9.2"
+    "oxfmt": "^0.51.0",
+    "oxlint": "^1.66.0",
+    "typescript": "~5.9.2",
+    "vitest": "^4.1.7"
   }
 }

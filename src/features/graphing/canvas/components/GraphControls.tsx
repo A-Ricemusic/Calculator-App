@@ -1,6 +1,6 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
+import type { AppStyles } from "../../../../app/appTypes";
 
 type GraphControlsProps = {
   onReset: () => void;
@@ -12,13 +12,28 @@ type GraphControlsProps = {
 export function GraphControls({ onReset, onZoomIn, onZoomOut, styles }: GraphControlsProps) {
   return (
     <View style={styles.graphControls}>
-      <Pressable accessibilityRole="button" accessibilityLabel="Zoom in" onPress={onZoomIn} style={styles.graphControlButton}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Zoom in"
+        onPress={onZoomIn}
+        style={styles.graphControlButton}
+      >
         <Text style={styles.graphControlText}>+</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" accessibilityLabel="Zoom out" onPress={onZoomOut} style={styles.graphControlButton}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Zoom out"
+        onPress={onZoomOut}
+        style={styles.graphControlButton}
+      >
         <Text style={styles.graphControlText}>−</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" accessibilityLabel="Reset graph" onPress={onReset} style={styles.graphControlButton}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Reset graph"
+        onPress={onReset}
+        style={styles.graphControlButton}
+      >
         <Text style={[styles.graphControlText, { fontSize: 15 }]}>⌂</Text>
       </Pressable>
     </View>

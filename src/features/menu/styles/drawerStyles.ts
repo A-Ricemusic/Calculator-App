@@ -1,12 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import type { CalculatorTheme } from '../../theme';
+import type { CalculatorTheme } from "../../theme";
 
 export function createDrawerStyles(theme: CalculatorTheme) {
   return StyleSheet.create({
     overlay: {
       ...StyleSheet.absoluteFillObject,
-      flexDirection: 'row',
+      flexDirection: "row",
     },
     scrim: {
       ...StyleSheet.absoluteFillObject,
@@ -16,8 +16,8 @@ export function createDrawerStyles(theme: CalculatorTheme) {
       backgroundColor: theme.colors.drawerBackground,
       borderBottomRightRadius: 20,
       borderTopRightRadius: 20,
-      height: '100%',
-      width: '72%',
+      height: "100%",
+      width: "72%",
     },
     drawerInner: {
       flex: 1,
@@ -25,28 +25,28 @@ export function createDrawerStyles(theme: CalculatorTheme) {
       paddingTop: 12,
     },
     drawerHeader: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 24,
     },
     drawerTitle: {
       color: theme.colors.topText,
       fontSize: 22,
-      fontWeight: '700',
+      fontWeight: "700",
     },
     drawerCloseButton: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+      alignItems: "center",
+      backgroundColor: "rgba(255, 255, 255, 0.12)",
       borderRadius: 999,
       height: 32,
-      justifyContent: 'center',
+      justifyContent: "center",
       width: 32,
     },
     drawerCloseIcon: {
       color: theme.colors.mutedText,
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     drawerContent: {
       paddingBottom: 36,
@@ -54,52 +54,52 @@ export function createDrawerStyles(theme: CalculatorTheme) {
     drawerSectionLabel: {
       color: theme.colors.mutedText,
       fontSize: 12,
-      fontWeight: '700',
+      fontWeight: "700",
       letterSpacing: 1.2,
       marginBottom: 6,
       marginTop: 8,
       paddingHorizontal: 4,
     },
     drawerSection: {
-      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+      backgroundColor: "rgba(255, 255, 255, 0.06)",
       borderRadius: 12,
       marginBottom: 20,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     menuItem: {
-      alignItems: 'center',
-      flexDirection: 'row',
+      alignItems: "center",
+      flexDirection: "row",
       paddingHorizontal: 14,
       paddingVertical: 14,
     },
     menuItemBorder: {
-      borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+      borderBottomColor: "rgba(255, 255, 255, 0.08)",
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     menuIcon: {
       color: theme.colors.mutedText,
       fontSize: 18,
       marginRight: 14,
-      textAlign: 'center',
+      textAlign: "center",
       width: 28,
     },
     menuText: {
       color: theme.colors.topText,
       flex: 1,
       fontSize: 17,
-      fontWeight: '400',
+      fontWeight: "400",
     },
     menuTextActive: {
-      fontWeight: '600',
+      fontWeight: "600",
     },
     menuCheck: {
       color: theme.colors.segmentedActive,
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     themeDot: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       marginRight: 14,
       width: 28,
     },
@@ -110,4 +110,3 @@ export function createDrawerStyles(theme: CalculatorTheme) {
     },
   });
 }
-

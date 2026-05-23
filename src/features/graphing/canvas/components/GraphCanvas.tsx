@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
-import { View } from 'react-native';
-import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from 'react-native-svg';
+import { useMemo } from "react";
+import { View } from "react-native";
+import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from "react-native-svg";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { GraphViewport, PlottedEquation } from '../../types';
-import { formatTick, makeTicks, niceStep, pointsToPath } from '../utils/graphGeometry';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { GraphViewport, PlottedEquation } from "../../types";
+import { formatTick, makeTicks, niceStep, pointsToPath } from "../utils/graphGeometry";
 
 type GraphCanvasProps = {
   equations: PlottedEquation[];
@@ -44,7 +44,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
             return (
               <G key={`x-${tick}`}>
                 <Line
-                  stroke={isAxis ? '#202020' : '#d8d8d2'}
+                  stroke={isAxis ? "#202020" : "#d8d8d2"}
                   strokeWidth={isAxis ? 1.4 : 0.8}
                   x1={x}
                   x2={x}
@@ -52,7 +52,13 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
                   y2={height}
                 />
                 {!isAxis && (
-                  <SvgText fill="#555555" fontSize={11} textAnchor="middle" x={x} y={geometry.toScreenY(0) + 16}>
+                  <SvgText
+                    fill="#555555"
+                    fontSize={11}
+                    textAnchor="middle"
+                    x={x}
+                    y={geometry.toScreenY(0) + 16}
+                  >
                     {formatTick(tick)}
                   </SvgText>
                 )}
@@ -67,7 +73,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
             return (
               <G key={`y-${tick}`}>
                 <Line
-                  stroke={isAxis ? '#202020' : '#d8d8d2'}
+                  stroke={isAxis ? "#202020" : "#d8d8d2"}
                   strokeWidth={isAxis ? 1.4 : 0.8}
                   x1={0}
                   x2={width}
@@ -75,7 +81,13 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
                   y2={y}
                 />
                 {!isAxis && (
-                  <SvgText fill="#555555" fontSize={11} textAnchor="end" x={geometry.toScreenX(0) - 5} y={y - 4}>
+                  <SvgText
+                    fill="#555555"
+                    fontSize={11}
+                    textAnchor="end"
+                    x={geometry.toScreenX(0) - 5}
+                    y={y - 4}
+                  >
                     {formatTick(tick)}
                   </SvgText>
                 )}
@@ -91,12 +103,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
 
           return (
             <Path
-              d={pointsToPath(
-                equation.points,
-                geometry.toScreenX,
-                geometry.toScreenY,
-                viewport,
-              )}
+              d={pointsToPath(equation.points, geometry.toScreenX, geometry.toScreenY, viewport)}
               fill="none"
               key={equation.id}
               stroke={equation.color}

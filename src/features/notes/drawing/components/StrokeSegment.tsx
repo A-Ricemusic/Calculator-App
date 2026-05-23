@@ -1,8 +1,8 @@
-import { View } from 'react-native';
+import { View } from "react-native";
 
-import type { AppStyles } from '../../../../app/appTypes';
-import type { CalculatorTheme } from '../../../theme';
-import type { Stroke } from '../../types';
+import type { AppStyles } from "../../../../app/appTypes";
+import type { CalculatorTheme } from "../../../theme";
+import type { Stroke } from "../../types";
 
 type StrokeSegmentProps = {
   stroke: Stroke;
@@ -20,20 +20,17 @@ export function StrokeSegment({ stroke, styles, theme }: StrokeSegmentProps) {
 
         return (
           <View
-            key={`${stroke.id}-${index}`}
+            key={`${stroke.id}-${previousPoint.x}-${previousPoint.y}-${point.x}-${point.y}`}
             pointerEvents="none"
             style={[
               styles.strokeSegment,
               {
-                backgroundColor: stroke.tool === 'eraser' ? theme.colors.screen : stroke.color,
+                backgroundColor: stroke.tool === "eraser" ? theme.colors.screen : stroke.color,
                 height: stroke.width,
                 left: previousPoint.x,
-                opacity: stroke.tool === 'highlighter' ? 0.45 : 1,
+                opacity: stroke.tool === "highlighter" ? 0.45 : 1,
                 top: previousPoint.y - stroke.width / 2,
-                transform: [
-                  { rotateZ: `${angle}rad` },
-                  { translateX: length / 2 },
-                ],
+                transform: [{ rotateZ: `${angle}rad` }, { translateX: length / 2 }],
                 width: length,
               },
             ]}

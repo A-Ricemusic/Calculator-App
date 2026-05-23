@@ -1,4 +1,4 @@
-import type { GraphPoint, GraphViewport, ParsedGraphExpression } from '../../types';
+import type { GraphPoint, GraphViewport, ParsedGraphExpression } from "../../types";
 
 export function sampleExpression(
   expression: ParsedGraphExpression,

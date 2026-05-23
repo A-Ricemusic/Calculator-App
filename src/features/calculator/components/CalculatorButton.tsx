@@ -1,7 +1,7 @@
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text } from "react-native";
 
-import type { AppStyles } from '../../../app/appTypes';
-import type { ButtonConfig, CalculatorMode } from '../types';
+import type { AppStyles } from "../../../app/appTypes";
+import type { ButtonConfig, CalculatorMode } from "../types";
 
 type CalculatorButtonProps = {
   button: ButtonConfig;
@@ -9,7 +9,7 @@ type CalculatorButtonProps = {
   mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
   styles: AppStyles;
-  variant: 'function' | 'number';
+  variant: "function" | "number";
 };
 
 export function CalculatorButton({
@@ -20,19 +20,16 @@ export function CalculatorButton({
   styles,
   variant,
 }: CalculatorButtonProps) {
-  const label = button.action === 'clear' ? clearLabel : button.label;
-  const isScientificMode = mode === 'scientific';
+  const label = button.action === "clear" ? clearLabel : button.label;
+  const isScientificMode = mode === "scientific";
 
-  if (variant === 'function') {
+  if (variant === "function") {
     return (
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={label}
         onPress={() => onPress(button)}
-        style={({ pressed }) => [
-          styles.sciFnButton,
-          pressed && styles.buttonPressed,
-        ]}
+        style={({ pressed }) => [styles.sciFnButton, pressed && styles.buttonPressed]}
       >
         <Text
           numberOfLines={1}
@@ -55,8 +52,8 @@ export function CalculatorButton({
         styles.button,
         isScientificMode && styles.sciNumButton,
         button.wide && styles.buttonWide,
-        button.variant === 'utility' && styles.buttonUtility,
-        button.variant === 'operator' && styles.buttonOperator,
+        button.variant === "utility" && styles.buttonUtility,
+        button.variant === "operator" && styles.buttonOperator,
         pressed && styles.buttonPressed,
       ]}
     >
@@ -67,7 +64,7 @@ export function CalculatorButton({
         style={[
           styles.buttonText,
           isScientificMode && styles.sciNumButtonText,
-          button.variant === 'utility' && styles.utilityText,
+          button.variant === "utility" && styles.utilityText,
         ]}
       >
         {label}
