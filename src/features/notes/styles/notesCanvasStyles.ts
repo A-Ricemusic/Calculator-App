@@ -15,6 +15,10 @@ export function createNotesCanvasStyles() {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: "#121418",
     },
+    notesCanvasContent: {
+      ...StyleSheet.absoluteFillObject,
+      transformOrigin: "center center",
+    },
     notesDot: {
       backgroundColor: "rgba(255, 255, 255, 0.07)",
       borderRadius: 999,

@@ -18,7 +18,9 @@ type FallbackDrawingCanvasProps = {
   activeColor: string;
   activePage: NotePage | undefined;
   activeTool: NoteTool;
+  canvasZoomScale: number;
   drawingStroke: Stroke | null;
+  drawingEnabled: boolean;
   notePanResponder: PanResponderInstance;
   onDeleteTextBlock: (blockId: string) => void;
   styles: NotesStyles;
@@ -59,26 +61,37 @@ export function FallbackDrawingCanvas({
   activeColor,
   activePage,
   activeTool,
+  canvasZoomScale,
   drawingStroke,
+  drawingEnabled,
   notePanResponder,
   onDeleteTextBlock,
   styles,
   theme,
 }: FallbackDrawingCanvasProps) {
   return (
-    <View style={styles.notesCanvas} {...notePanResponder.panHandlers}>
-      <CanvasGrid styles={styles} />
-      <Svg pointerEvents="none" style={StyleSheet.absoluteFillObject}>
-        <SavedStrokeLayer strokes={activePage?.strokes ?? []} theme={theme} />
-        {drawingStroke && <StrokeSegment stroke={drawingStroke} theme={theme} />}
-      </Svg>
-      <TextBlockLayer
-        activeColor={activeColor}
-        activeTool={activeTool}
-        onDeleteTextBlock={onDeleteTextBlock}
-        styles={styles}
-        textBlocks={activePage?.textBlocks ?? []}
-      />
+    <View style={styles.notesCanvas} {...(drawingEnabled ? notePanResponder.panHandlers : {})}>
+      <View
+        style={[
+          styles.notesCanvasContent,
+          {
+            transform: [{ scale: canvasZoomScale }],
+          },
+        ]}
+      >
+        <CanvasGrid styles={styles} />
+        <Svg pointerEvents="none" style={StyleSheet.absoluteFillObject}>
+          <SavedStrokeLayer strokes={activePage?.strokes ?? []} theme={theme} />
+          {drawingStroke && <StrokeSegment stroke={drawingStroke} theme={theme} />}
+        </Svg>
+        <TextBlockLayer
+          activeColor={activeColor}
+          activeTool={activeTool}
+          onDeleteTextBlock={onDeleteTextBlock}
+          styles={styles}
+          textBlocks={activePage?.textBlocks ?? []}
+        />
+      </View>
     </View>
   );
 }

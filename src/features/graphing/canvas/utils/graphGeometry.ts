@@ -26,29 +26,41 @@ function trimTrailingZeros(value: string) {
 }
 
 export function niceStep(range: number) {
-  const rough = range / 10;
+  if (!Number.isFinite(range) || range <= 0) {
+    return 1;
+  }
+
+  const rough = range / 12;
   const power = 10 ** Math.floor(Math.log10(rough));
   const scaled = rough / power;
 
-  if (scaled >= 5) {
-    return 5 * power;
+  if (scaled <= 1) {
+    return power;
   }
 
-  if (scaled >= 2) {
+  if (scaled <= 2) {
     return 2 * power;
   }
 
-  return power;
+  if (scaled <= 3) {
+    return 3 * power;
+  }
+
+  if (scaled <= 5) {
+    return 5 * power;
+  }
+
+  return 10 * power;
 }
 
-export function formatTick(value: number) {
+export function formatTick(value: number, viewportSpan = 0) {
   if (Math.abs(value) < 1e-8) {
     return "0";
   }
 
   const magnitude = Math.abs(value);
 
-  if (magnitude >= 1e6 || magnitude < 1e-3) {
+  if (viewportSpan >= 1000 || magnitude >= 1e6 || magnitude < 1e-3) {
     const exponent = Math.floor(Math.log10(magnitude));
     const coefficient = value / 10 ** exponent;
 

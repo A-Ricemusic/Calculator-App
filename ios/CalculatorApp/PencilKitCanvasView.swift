@@ -36,6 +36,18 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
     }
   }
 
+  @objc var zoomEnabled: Bool = false {
+    didSet {
+      updateZoomAvailability()
+    }
+  }
+
+  @objc var zoomScale: NSNumber = 1 {
+    didSet {
+      updateZoomScale()
+    }
+  }
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureCanvas()
@@ -69,6 +81,7 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
     canvasView.alwaysBounceHorizontal = false
 
     addSubview(canvasView)
+    updateZoomAvailability()
   }
 
   private func updateToolPickerVisibility() {
@@ -94,5 +107,32 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
     let encodedDrawing = canvasView.drawing.dataRepresentation().base64EncodedString()
     lastDrawingData = encodedDrawing
     onDrawingChange?(["drawingData": encodedDrawing])
+  }
+
+  private func updateZoomAvailability() {
+    canvasView.minimumZoomScale = zoomEnabled ? 0.75 : 1
+    canvasView.maximumZoomScale = zoomEnabled ? 3 : 1
+    canvasView.pinchGestureRecognizer?.isEnabled = zoomEnabled
+
+    if !zoomEnabled && canvasView.zoomScale != 1 {
+      canvasView.setZoomScale(1, animated: false)
+    } else if zoomEnabled {
+      updateZoomScale()
+    }
+  }
+
+  private func updateZoomScale() {
+    guard zoomEnabled else {
+      return
+    }
+
+    let boundedScale = min(
+      canvasView.maximumZoomScale,
+      max(canvasView.minimumZoomScale, CGFloat(truncating: zoomScale)),
+    )
+
+    if abs(canvasView.zoomScale - boundedScale) > 0.01 {
+      canvasView.setZoomScale(boundedScale, animated: true)
+    }
   }
 }

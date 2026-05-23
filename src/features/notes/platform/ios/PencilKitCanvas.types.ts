@@ -9,4 +9,6 @@ export type PencilKitCanvasProps = {
   onDrawingChange?: (event: NativeSyntheticEvent<PencilKitDrawingChangeEvent>) => void;
   style?: object;
   toolPickerVisible?: boolean;
+  zoomEnabled?: boolean;
+  zoomScale?: number;
 };

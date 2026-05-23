@@ -93,7 +93,7 @@ export function useGraphingEquations(graphWidth: number) {
     toggleEquation,
     updateEquation,
     viewport,
-    zoomIn: () => setViewport((current) => zoomViewport(current, 0.72)),
-    zoomOut: () => setViewport((current) => zoomViewport(current, 1.28)),
+    zoomIn: () => setViewport((current) => zoomViewport(current, 2 / 3)),
+    zoomOut: () => setViewport((current) => zoomViewport(current, 1.5)),
   };
 }

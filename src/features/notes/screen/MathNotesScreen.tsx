@@ -13,6 +13,8 @@ import { useMathNotesNotebook } from "../notebook/hooks/useMathNotesNotebook";
 import { PencilKitCanvas } from "../platform/ios/PencilKitCanvas";
 import { NotesColorPicker } from "../toolbar/components/NotesColorPicker";
 import { NotesToolbar } from "../toolbar/components/NotesToolbar";
+import { NotesUtensilToggle } from "../toolbar/components/NotesUtensilToggle";
+import { NotesZoomControls } from "../toolbar/components/NotesZoomControls";
 import type { NoteTool } from "../types";
 
 type MathNotesScreenProps = {
@@ -21,8 +23,14 @@ type MathNotesScreenProps = {
   theme: CalculatorTheme;
 };
 
+const minimumCanvasZoom = 0.75;
+const maximumCanvasZoom = 2.5;
+const canvasZoomStep = 0.25;
+
 export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreenProps) {
   const [notesManagerOpen, setNotesManagerOpen] = useState(false);
+  const [utensilsOpen, setUtensilsOpen] = useState(true);
+  const [canvasZoomScale, setCanvasZoomScale] = useState(1);
   const [activeTool, setActiveTool] = useState<NoteTool>("pen");
   const [activeColor, setActiveColor] = useState("#ffffff");
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
@@ -77,6 +85,26 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
     setColorPickerOpen(false);
   }
 
+  function toggleUtensils() {
+    setUtensilsOpen((open) => {
+      const nextOpen = !open;
+
+      if (nextOpen) {
+        setCanvasZoomScale(1);
+      } else {
+        setColorPickerOpen(false);
+      }
+
+      return nextOpen;
+    });
+  }
+
+  function zoomCanvas(direction: -1 | 1) {
+    setCanvasZoomScale((scale) =>
+      Math.min(maximumCanvasZoom, Math.max(minimumCanvasZoom, scale + direction * canvasZoomStep)),
+    );
+  }
+
   return (
     <View style={styles.notesContainer}>
       <NotesHeader
@@ -102,8 +130,11 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
         activeColor={activeColor}
         activePage={activePage}
         activeTool={activeTool}
+        canvasZoomEnabled={!utensilsOpen}
+        canvasZoomScale={canvasZoomScale}
         drawingStroke={drawingStroke}
-        nativeToolPickerVisible={!notesManagerOpen}
+        drawingEnabled={utensilsOpen}
+        nativeToolPickerVisible={utensilsOpen && !notesManagerOpen}
         notePanResponder={notePanResponder}
         onAddTextBlock={addTextBlock}
         onDeleteTextBlock={deleteTextBlock}
@@ -114,13 +145,24 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
         theme={theme}
       />
 
-      {!PencilKitCanvas && (
+      {utensilsOpen && !PencilKitCanvas && (
         <NotesToolbar
           activeColor={activeColor}
           activeTool={activeTool}
           onSelectTool={selectTool}
           onToggleColorPicker={() => setColorPickerOpen((open) => !open)}
           styles={styles}
+        />
+      )}
+
+      <NotesUtensilToggle isOpen={utensilsOpen} onToggle={toggleUtensils} styles={styles} />
+
+      {!utensilsOpen && (
+        <NotesZoomControls
+          onZoomIn={() => zoomCanvas(1)}
+          onZoomOut={() => zoomCanvas(-1)}
+          styles={styles}
+          zoomScale={canvasZoomScale}
         />
       )}
 

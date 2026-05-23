@@ -67,7 +67,9 @@ export function GraphCanvas({
     return {
       toScreenX,
       toScreenY,
+      xSpan: viewport.xMax - viewport.xMin,
       xTicks: makeTicks(viewport.xMin, viewport.xMax, xStep),
+      ySpan: viewport.yMax - viewport.yMin,
       yTicks: makeTicks(viewport.yMin, viewport.yMax, yStep),
     };
   }, [height, viewport, width]);
@@ -167,7 +169,7 @@ export function GraphCanvas({
                     x={x}
                     y={geometry.toScreenY(0) + 16}
                   >
-                    {formatTick(tick)}
+                    {formatTick(tick, geometry.xSpan)}
                   </SvgText>
                 )}
               </G>
@@ -196,7 +198,7 @@ export function GraphCanvas({
                     x={geometry.toScreenX(0) - 5}
                     y={y - 4}
                   >
-                    {formatTick(tick)}
+                    {formatTick(tick, geometry.ySpan)}
                   </SvgText>
                 )}
               </G>
