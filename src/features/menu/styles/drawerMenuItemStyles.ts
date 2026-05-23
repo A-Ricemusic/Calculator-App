@@ -44,6 +44,33 @@ export function createDrawerMenuItemStyles(theme: CalculatorTheme) {
       fontSize: 18,
       fontWeight: "600",
     },
+    themeRow: {
+      alignItems: "center",
+      flexDirection: "row",
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+    },
+    themeRowActive: {
+      backgroundColor: theme.colors.drawerActive,
+    },
+    themeSwatch: {
+      alignItems: "center",
+      borderRadius: 8,
+      height: 36,
+      justifyContent: "center",
+      marginRight: 14,
+      width: 36,
+    },
+    themeSwatchAccent: {
+      borderRadius: 999,
+      height: 16,
+      width: 16,
+    },
+    themeCheck: {
+      color: theme.colors.segmentedActive,
+      fontSize: 16,
+      fontWeight: "700",
+    },
     themeDot: {
       alignItems: "center",
       justifyContent: "center",

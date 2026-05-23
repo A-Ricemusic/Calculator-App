@@ -52,10 +52,10 @@ export function DrawerMenu({
                 onPress={() => setDrawerView("menu")}
                 style={styles.drawerBackButton}
               >
-                <Text style={styles.drawerBackIcon}>{"<"}</Text>
+                <Text style={styles.drawerBackIcon}>‹</Text>
               </Pressable>
             ) : null}
-            <Text style={styles.drawerTitle}>{isThemeView ? "Theme" : "Calculator"}</Text>
+            <Text style={styles.drawerTitle}>{isThemeView ? "Themes" : "Calculator"}</Text>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Close menu"
@@ -71,40 +71,38 @@ export function DrawerMenu({
             showsVerticalScrollIndicator={false}
           >
             {isThemeView ? (
-              <>
-                <Text style={styles.drawerSectionLabel}>THEMES</Text>
-                <View style={styles.drawerSection}>
-                  {themeItems.map((item, index) => {
-                    const active = item.id === themeId;
-                    const isLast = index === themeItems.length - 1;
-                    return (
-                      <Pressable
-                        key={item.id}
-                        accessibilityRole="button"
-                        accessibilityState={{ selected: active }}
-                        onPress={() => onSelectTheme(item.id)}
-                        style={[styles.menuItem, !isLast && styles.menuItemBorder]}
-                      >
-                        <View style={styles.themeDot}>
-                          <View
-                            style={[
-                              styles.themeDotInner,
-                              { backgroundColor: item.colors.buttonOperator },
-                            ]}
-                          />
-                        </View>
-                        <View style={styles.menuTextStack}>
-                          <Text style={[styles.menuText, active && styles.menuTextActive]}>
-                            {item.label}
-                          </Text>
-                          <Text style={styles.menuSubtext}>{item.colors.buttonOperator}</Text>
-                        </View>
-                        {active && <Text style={styles.menuCheck}>✓</Text>}
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              </>
+              <View style={styles.drawerSection}>
+                {themeItems.map((item, index) => {
+                  const active = item.id === themeId;
+                  const isLast = index === themeItems.length - 1;
+                  return (
+                    <Pressable
+                      key={item.id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: active }}
+                      onPress={() => onSelectTheme(item.id)}
+                      style={[
+                        styles.themeRow,
+                        !isLast && styles.menuItemBorder,
+                        active && styles.themeRowActive,
+                      ]}
+                    >
+                      <View style={[styles.themeSwatch, { backgroundColor: item.colors.screen }]}>
+                        <View
+                          style={[
+                            styles.themeSwatchAccent,
+                            { backgroundColor: item.colors.buttonOperator },
+                          ]}
+                        />
+                      </View>
+                      <Text style={[styles.menuText, active && styles.menuTextActive]}>
+                        {item.label}
+                      </Text>
+                      {active && <Text style={styles.themeCheck}>✓</Text>}
+                    </Pressable>
+                  );
+                })}
+              </View>
             ) : (
               <>
                 <Text style={styles.drawerSectionLabel}>MODE</Text>
@@ -142,7 +140,7 @@ export function DrawerMenu({
                       <Text style={styles.menuText}>Theme</Text>
                       <Text style={styles.menuSubtext}>{selectedTheme.label}</Text>
                     </View>
-                    <Text style={styles.menuCheck}>{">"}</Text>
+                    <Text style={styles.menuCheck}>›</Text>
                   </Pressable>
                 </View>
               </>
