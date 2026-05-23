@@ -1,4 +1,4 @@
-export type Mode = 'basic' | 'scientific' | 'notes';
+export type Mode = 'basic' | 'scientific' | 'notes' | 'graphing';
 export type Operator = '+' | '-' | 'x' | '/' | 'xy';
 export type Variant = 'utility' | 'operator' | 'number' | 'scientific';
 

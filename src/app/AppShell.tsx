@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import { Pressable, Text, View } from 'react-native';
 
 import { CalculatorScreen, useCalculator, type Mode } from '../features/calculator';
+import { GraphingScreen } from '../features/graphing';
 import { NotesScreen } from '../features/notes';
 import type { CalculatorTheme } from '../features/theme';
 import type { AppStyles } from './appTypes';
@@ -23,7 +24,8 @@ export function AppShell({
   styles,
   theme,
 }: AppShellProps) {
-  const { clearLabel, display, handlePress, resetAll } = useCalculator(mode);
+  const calculatorMode = mode === 'scientific' ? 'scientific' : 'basic';
+  const { clearLabel, display, handlePress, resetAll } = useCalculator(calculatorMode);
 
   return (
     <View style={[styles.appShell, shellStyle]}>
@@ -40,18 +42,25 @@ export function AppShell({
           {mode === 'scientific' && <Text style={styles.angleLabel}>rad</Text>}
         </View>
         {mode === 'basic' && <Text style={styles.modeTitle}>Calculator</Text>}
+        {mode === 'graphing' && <Text style={styles.modeTitle}>Graphing</Text>}
         {mode === 'notes' && <Text style={styles.modeTitle}>Math Notes</Text>}
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Reset calculator"
-          onPress={resetAll}
-          style={styles.iconButton}
-        >
-          <Text style={styles.iconText}>↺</Text>
-        </Pressable>
+        {mode === 'basic' || mode === 'scientific' ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Reset calculator"
+            onPress={resetAll}
+            style={styles.iconButton}
+          >
+            <Text style={styles.iconText}>↺</Text>
+          </Pressable>
+        ) : (
+          <View style={styles.iconButton} />
+        )}
       </View>
 
-      {mode === 'notes' ? (
+      {mode === 'graphing' ? (
+        <GraphingScreen styles={styles} theme={theme} />
+      ) : mode === 'notes' ? (
         <NotesScreen onSelectMode={onSelectMode} styles={styles} theme={theme} />
       ) : (
         <CalculatorScreen

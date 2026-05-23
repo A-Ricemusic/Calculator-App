@@ -7,6 +7,7 @@ import { createThemeStyles } from '../features/theme/styles/themeStyles';
 import { DrawerMenu } from '../features/menu';
 import { createDrawerStyles } from '../features/menu/styles/drawerStyles';
 import { createCalculatorStyles } from '../features/calculator/styles/calculatorStyles';
+import { createGraphingStyles } from '../features/graphing/styles/graphingStyles';
 import { createNotesStyles } from '../features/notes/styles/notesStyles';
 import type { Mode } from '../features/calculator';
 import { createLayoutStyles } from '../shared/styles/layoutStyles';
@@ -16,6 +17,7 @@ function createStyles(theme: CalculatorTheme) {
   return {
     ...createLayoutStyles(theme),
     ...createCalculatorStyles(theme),
+    ...createGraphingStyles(theme),
     ...createNotesStyles(theme),
     ...createDrawerStyles(theme),
     ...createThemeStyles(),
