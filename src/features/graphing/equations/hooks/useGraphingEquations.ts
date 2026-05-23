@@ -89,6 +89,7 @@ export function useGraphingEquations(graphWidth: number) {
     equations,
     plottedEquations,
     resetGraph,
+    setViewport,
     toggleEquation,
     updateEquation,
     viewport,

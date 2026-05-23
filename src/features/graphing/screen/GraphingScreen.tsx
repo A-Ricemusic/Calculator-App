@@ -44,6 +44,7 @@ export function GraphingScreen({ styles, theme }: GraphingScreenProps) {
             theme={theme}
             viewport={graphing.viewport}
             width={graphSize.width}
+            onViewportChange={graphing.setViewport}
           />
           <GraphControls
             onReset={graphing.resetGraph}

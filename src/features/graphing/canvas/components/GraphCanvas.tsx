@@ -1,11 +1,13 @@
-import { useMemo } from "react";
-import { View } from "react-native";
+import type { Dispatch, SetStateAction } from "react";
+import { useMemo, useRef } from "react";
+import { PanResponder, View } from "react-native";
 import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from "react-native-svg";
 
 import type { AppStyles } from "../../../../app/appTypes";
 import type { CalculatorTheme } from "../../../theme";
 import type { GraphViewport, PlottedEquation } from "../../types";
 import { formatTick, makeTicks, niceStep, pointsToPath } from "../utils/graphGeometry";
+import { panViewport, zoomViewportAtScreenPoint } from "../utils/graphViewport";
 
 type GraphCanvasProps = {
   equations: PlottedEquation[];
@@ -14,7 +16,29 @@ type GraphCanvasProps = {
   theme: CalculatorTheme;
   viewport: GraphViewport;
   width: number;
+  onViewportChange: Dispatch<SetStateAction<GraphViewport>>;
 };
+
+type TouchPoint = {
+  locationX: number;
+  locationY: number;
+};
+
+type PinchState = {
+  distance: number;
+  viewport: GraphViewport;
+};
+
+function getTouchDistance(touchA: TouchPoint, touchB: TouchPoint) {
+  return Math.hypot(touchA.locationX - touchB.locationX, touchA.locationY - touchB.locationY);
+}
+
+function getTouchMidpoint(touchA: TouchPoint, touchB: TouchPoint) {
+  return {
+    x: (touchA.locationX + touchB.locationX) / 2,
+    y: (touchA.locationY + touchB.locationY) / 2,
+  };
+}
 
 export function GraphCanvas({
   equations,
@@ -23,8 +47,11 @@ export function GraphCanvas({
   theme,
   viewport,
   width,
+  onViewportChange,
 }: GraphCanvasProps) {
   const { graphBackground, graphGridLine, graphAxisLine, graphLabelText } = theme.colors;
+  const panStartViewport = useRef<GraphViewport>(viewport);
+  const pinchStart = useRef<PinchState | null>(null);
 
   const geometry = useMemo(() => {
     const xScale = width / (viewport.xMax - viewport.xMin);
@@ -42,8 +69,75 @@ export function GraphCanvas({
     };
   }, [height, viewport, width]);
 
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gestureState) =>
+          Math.abs(gestureState.dx) > 2 || Math.abs(gestureState.dy) > 2,
+        onPanResponderGrant: () => {
+          panStartViewport.current = viewport;
+          pinchStart.current = null;
+        },
+        onPanResponderMove: (event, gestureState) => {
+          const touches = event.nativeEvent.touches;
+
+          if (touches.length >= 2) {
+            const [touchA, touchB] = touches;
+            const distance = getTouchDistance(touchA, touchB);
+
+            if (!pinchStart.current) {
+              pinchStart.current = { distance, viewport };
+            }
+
+            if (distance <= 0 || pinchStart.current.distance <= 0) {
+              return;
+            }
+
+            const midpoint = getTouchMidpoint(touchA, touchB);
+            onViewportChange(
+              zoomViewportAtScreenPoint(
+                pinchStart.current.viewport,
+                pinchStart.current.distance / distance,
+                midpoint.x,
+                midpoint.y,
+                width,
+                height,
+              ),
+            );
+            return;
+          }
+
+          if (touches.length === 1) {
+            if (pinchStart.current) {
+              panStartViewport.current = viewport;
+              pinchStart.current = null;
+              return;
+            }
+
+            onViewportChange(
+              panViewport(
+                panStartViewport.current,
+                gestureState.dx,
+                gestureState.dy,
+                width,
+                height,
+              ),
+            );
+          }
+        },
+        onPanResponderRelease: () => {
+          pinchStart.current = null;
+        },
+        onPanResponderTerminate: () => {
+          pinchStart.current = null;
+        },
+        onStartShouldSetPanResponder: (event) => event.nativeEvent.touches.length >= 2,
+      }),
+    [height, onViewportChange, viewport, width],
+  );
+
   return (
-    <View style={styles.graphArea}>
+    <View style={styles.graphArea} {...panResponder.panHandlers}>
       <Svg height={height} width={width}>
         <Rect fill={graphBackground} height={height} width={width} x={0} y={0} />
 

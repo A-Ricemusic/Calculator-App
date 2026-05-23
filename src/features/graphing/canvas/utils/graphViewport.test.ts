@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { initialGraphViewport, zoomViewport } from "./graphViewport";
+import {
+  initialGraphViewport,
+  panViewport,
+  zoomViewport,
+  zoomViewportAtScreenPoint,
+} from "./graphViewport";
 
 describe("graphViewport", () => {
   it("zooms around the current center", () => {
@@ -19,5 +24,23 @@ describe("graphViewport", () => {
     expect((zoomed.yMin + zoomed.yMax) / 2).toBe(5);
     expect(zoomed.xMin).toBeLessThan(zoomed.xMax);
     expect(zoomed.yMin).toBeLessThan(zoomed.yMax);
+  });
+
+  it("pans by screen distance", () => {
+    const panned = panViewport(initialGraphViewport, 100, 50, 400, 280);
+
+    expect(panned.xMin).toBe(-15);
+    expect(panned.xMax).toBe(5);
+    expect(panned.yMin).toBe(-4.5);
+    expect(panned.yMax).toBe(9.5);
+  });
+
+  it("zooms around a screen point", () => {
+    const zoomed = zoomViewportAtScreenPoint(initialGraphViewport, 0.5, 300, 70, 400, 280);
+
+    expect(zoomed.xMin).toBe(-2.5);
+    expect(zoomed.xMax).toBe(7.5);
+    expect(zoomed.yMin).toBe(-1.75);
+    expect(zoomed.yMax).toBe(5.25);
   });
 });

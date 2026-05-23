@@ -20,3 +20,42 @@ export function zoomViewport(viewport: GraphViewport, factor: number): GraphView
     yMax: yCenter + yRadius,
   };
 }
+
+export function panViewport(
+  viewport: GraphViewport,
+  dx: number,
+  dy: number,
+  width: number,
+  height: number,
+): GraphViewport {
+  const xUnitsPerPixel = (viewport.xMax - viewport.xMin) / width;
+  const yUnitsPerPixel = (viewport.yMax - viewport.yMin) / height;
+  const xOffset = dx * xUnitsPerPixel;
+  const yOffset = dy * yUnitsPerPixel;
+
+  return {
+    xMin: viewport.xMin - xOffset,
+    xMax: viewport.xMax - xOffset,
+    yMin: viewport.yMin + yOffset,
+    yMax: viewport.yMax + yOffset,
+  };
+}
+
+export function zoomViewportAtScreenPoint(
+  viewport: GraphViewport,
+  factor: number,
+  screenX: number,
+  screenY: number,
+  width: number,
+  height: number,
+): GraphViewport {
+  const xAnchor = viewport.xMin + (screenX / width) * (viewport.xMax - viewport.xMin);
+  const yAnchor = viewport.yMax - (screenY / height) * (viewport.yMax - viewport.yMin);
+
+  return {
+    xMin: xAnchor + (viewport.xMin - xAnchor) * factor,
+    xMax: xAnchor + (viewport.xMax - xAnchor) * factor,
+    yMin: yAnchor + (viewport.yMin - yAnchor) * factor,
+    yMax: yAnchor + (viewport.yMax - yAnchor) * factor,
+  };
+}

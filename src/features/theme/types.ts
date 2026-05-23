@@ -1,4 +1,14 @@
-export type ThemeId = "green" | "red" | "pink" | "classic";
+export type ThemeId =
+  | "green"
+  | "red"
+  | "pink"
+  | "classic"
+  | "blue"
+  | "violet"
+  | "teal"
+  | "amber"
+  | "slate"
+  | "cream";
 
 export type CalculatorTheme = {
   id: ThemeId;
