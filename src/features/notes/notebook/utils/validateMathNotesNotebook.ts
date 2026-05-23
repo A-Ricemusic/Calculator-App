@@ -1,4 +1,4 @@
-import type { MathNote, NoteCollection, NotePage, Point, Stroke, TextBlock } from '../types';
+import type { MathNote, NoteCollection, NotePage, Point, Stroke, TextBlock } from '../../types';
 
 export function isMathNote(value: unknown): value is MathNote {
   if (typeof value !== 'object' || value === null) {

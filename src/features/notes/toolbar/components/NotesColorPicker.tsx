@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
-import { utensilColors } from '../constants/notes';
+import type { AppStyles } from '../../../../app/appTypes';
+import { utensilColors } from '../../drawing/constants/drawingTools';
 
 type NotesColorPickerProps = {
   activeColor: string;
@@ -32,4 +32,3 @@ export function NotesColorPicker({ activeColor, onClose, onSelectColor, styles }
     </View>
   );
 }
-

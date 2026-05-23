@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
-import type { CalculatorTheme } from '../../theme';
-import type { Stroke } from '../types';
+import type { AppStyles } from '../../../../app/appTypes';
+import type { CalculatorTheme } from '../../../theme';
+import type { Stroke } from '../../types';
 
 type StrokeSegmentProps = {
   stroke: Stroke;
@@ -43,4 +43,3 @@ export function StrokeSegment({ stroke, styles, theme }: StrokeSegmentProps) {
     </>
   );
 }
-

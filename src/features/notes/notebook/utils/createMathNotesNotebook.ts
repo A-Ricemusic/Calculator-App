@@ -1,6 +1,6 @@
-import { maxPagesPerNote } from '../constants/notes';
-import type { NoteCollection, NotePage } from '../types';
-import { createId } from '../../../shared/utils/ids';
+import { createId } from '../../../../shared/utils/ids';
+import type { NoteCollection, NotePage } from '../../types';
+import { maxPagesPerNotebook } from '../constants/notebookLimits';
 
 export function createBlankPage(index: number): NotePage {
   return {
@@ -27,7 +27,7 @@ export function createCollection(pageCount: number, index = 0): NoteCollection {
 }
 
 export function normalizeNoteCollection(collection: NoteCollection): NoteCollection {
-  const pages = collection.pages.slice(0, maxPagesPerNote);
+  const pages = collection.pages.slice(0, maxPagesPerNotebook);
   return {
     ...collection,
     pageCount: pages.length,

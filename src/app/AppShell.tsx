@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { CalculatorScreen, useCalculator, type Mode } from '../features/calculator';
 import { GraphingScreen } from '../features/graphing';
-import { NotesScreen } from '../features/notes';
+import { MathNotesScreen } from '../features/notes';
 import type { CalculatorTheme } from '../features/theme';
 import type { AppStyles } from './appTypes';
 
@@ -61,7 +61,7 @@ export function AppShell({
       {mode === 'graphing' ? (
         <GraphingScreen styles={styles} theme={theme} />
       ) : mode === 'notes' ? (
-        <NotesScreen onSelectMode={onSelectMode} styles={styles} theme={theme} />
+        <MathNotesScreen onSelectMode={onSelectMode} styles={styles} theme={theme} />
       ) : (
         <CalculatorScreen
           clearLabel={clearLabel}

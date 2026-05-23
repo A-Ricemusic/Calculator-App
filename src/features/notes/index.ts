@@ -1,5 +1,4 @@
-export { NotesScreen } from './components/NotesScreen';
-export { useMathNotes } from './hooks/useMathNotes';
+export { MathNotesScreen } from './screen/MathNotesScreen';
 export type {
   MathNote,
   NoteCollection,
@@ -9,4 +8,3 @@ export type {
   Stroke,
   TextBlock,
 } from './types';
-

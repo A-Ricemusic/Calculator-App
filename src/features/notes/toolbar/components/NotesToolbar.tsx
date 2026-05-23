@@ -1,8 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
-import { trayTools } from '../constants/notes';
-import type { NoteTool } from '../types';
+import type { AppStyles } from '../../../../app/appTypes';
+import { drawingTools } from '../../drawing/constants/drawingTools';
+import type { NoteTool } from '../../types';
 import { UtensilIcon } from './UtensilIcon';
 
 type NotesToolbarProps = {
@@ -23,7 +23,7 @@ export function NotesToolbar({
   return (
     <View style={styles.notesBottomBar}>
       <View style={styles.notesToolRow}>
-        {trayTools.map(({ tool, label }) => {
+        {drawingTools.map(({ tool, label }) => {
           const isActive = activeTool === tool;
           return (
             <Pressable

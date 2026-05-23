@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
-import type { NoteTool } from '../types';
+import type { AppStyles } from '../../../../app/appTypes';
+import type { NoteTool } from '../../types';
 
 type UtensilIconProps = {
   activeColor: string;
@@ -59,4 +59,3 @@ export function UtensilIcon({ activeColor, isActive, styles, tool }: UtensilIcon
     </View>
   );
 }
-

@@ -4,24 +4,24 @@ import { View } from 'react-native';
 import type { AppStyles } from '../../../app/appTypes';
 import type { Mode } from '../../calculator';
 import type { CalculatorTheme } from '../../theme';
-import { PencilKitCanvas } from '../native/PencilKitCanvas';
+import { MathNotesCanvas } from '../drawing/components/MathNotesCanvas';
+import { useReactNativeDrawing } from '../drawing/hooks/useReactNativeDrawing';
+import { NotesHeader } from '../navigation/components/NotesHeader';
+import { NotesManagerSheet } from '../navigation/components/NotesManagerSheet';
+import { NotesPageControls } from '../navigation/components/NotesPageControls';
+import { useMathNotesNotebook } from '../notebook/hooks/useMathNotesNotebook';
+import { PencilKitCanvas } from '../platform/ios/PencilKitCanvas';
+import { NotesColorPicker } from '../toolbar/components/NotesColorPicker';
+import { NotesToolbar } from '../toolbar/components/NotesToolbar';
 import type { NoteTool } from '../types';
-import { useFallbackDrawing } from '../hooks/useFallbackDrawing';
-import { useMathNotes } from '../hooks/useMathNotes';
-import { NotesCanvas } from './NotesCanvas';
-import { NotesColorPicker } from './NotesColorPicker';
-import { NotesHeader } from './NotesHeader';
-import { NotesManagerSheet } from './NotesManagerSheet';
-import { NotesPageControls } from './NotesPageControls';
-import { NotesToolbar } from './NotesToolbar';
 
-type NotesScreenProps = {
+type MathNotesScreenProps = {
   onSelectMode: (mode: Mode) => void;
   styles: AppStyles;
   theme: CalculatorTheme;
 };
 
-export function NotesScreen({ onSelectMode, styles, theme }: NotesScreenProps) {
+export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreenProps) {
   const [notesManagerOpen, setNotesManagerOpen] = useState(false);
   const [activeTool, setActiveTool] = useState<NoteTool>('pen');
   const [activeColor, setActiveColor] = useState('#ffffff');
@@ -46,12 +46,12 @@ export function NotesScreen({ onSelectMode, styles, theme }: NotesScreenProps) {
     textDraft,
     updateActivePage,
     updatePencilKitDrawing,
-  } = useMathNotes();
+  } = useMathNotesNotebook();
   const {
     drawingStroke,
     notePanResponder,
     resetDrawingStroke,
-  } = useFallbackDrawing({
+  } = useReactNativeDrawing({
     activeCollectionIndex,
     activeColor,
     activePageIndex,
@@ -102,7 +102,7 @@ export function NotesScreen({ onSelectMode, styles, theme }: NotesScreenProps) {
         styles={styles}
       />
 
-      <NotesCanvas
+      <MathNotesCanvas
         activeColor={activeColor}
         activePage={activePage}
         activeTool={activeTool}

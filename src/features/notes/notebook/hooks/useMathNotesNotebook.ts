@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 
-import { noteCollectionsStorageKey, notePagesStorageKey, notesStorageKey } from '../../../shared/constants/storageKeys';
-import { createId } from '../../../shared/utils/ids';
-import { maxPagesPerNote } from '../constants/notes';
-import type { MathNote, NoteCollection, NotePage } from '../types';
-import { createBlankPage, createCollection, normalizeNoteCollection } from '../utils/noteFactories';
-import { isMathNote, isNoteCollection, isNotePage } from '../utils/noteValidation';
+import { createId } from '../../../../shared/utils/ids';
+import type { MathNote, NoteCollection, NotePage } from '../../types';
+import { maxPagesPerNotebook } from '../constants/notebookLimits';
+import { noteCollectionsStorageKey, notePagesStorageKey, notesStorageKey } from '../persistence/mathNotesStorage';
+import { createBlankPage, createCollection, normalizeNoteCollection } from '../utils/createMathNotesNotebook';
+import { isMathNote, isNoteCollection, isNotePage } from '../utils/validateMathNotesNotebook';
 
-export function useMathNotes() {
+export function useMathNotesNotebook() {
   const [notes, setNotes] = useState<MathNote[]>([]);
   const [notesLoaded, setNotesLoaded] = useState(false);
   const [noteCollections, setNoteCollections] = useState<NoteCollection[]>(() => [createCollection(1)]);
@@ -73,7 +73,7 @@ export function useMathNotes() {
 
         const parsedPages = JSON.parse(storedPages);
         if (Array.isArray(parsedPages)) {
-          const validPages = parsedPages.filter(isNotePage).slice(0, maxPagesPerNote);
+          const validPages = parsedPages.filter(isNotePage).slice(0, maxPagesPerNotebook);
           if (validPages.length > 0) {
             setNoteCollections([{
               id: createId('collection'),
@@ -121,8 +121,8 @@ export function useMathNotes() {
         return collection;
       }
 
-      if (collection.pages.length >= maxPagesPerNote) {
-        setActivePageIndex(maxPagesPerNote - 1);
+      if (collection.pages.length >= maxPagesPerNotebook) {
+        setActivePageIndex(maxPagesPerNotebook - 1);
         return collection;
       }
 

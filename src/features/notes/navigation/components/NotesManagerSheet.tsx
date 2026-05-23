@@ -1,8 +1,8 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
-import { maxPagesPerNote } from '../constants/notes';
-import type { NoteCollection } from '../types';
+import type { AppStyles } from '../../../../app/appTypes';
+import { maxPagesPerNotebook } from '../../notebook/constants/notebookLimits';
+import type { NoteCollection } from '../../types';
 
 type NotesManagerSheetProps = {
   activeCollectionIndex: number;
@@ -64,7 +64,7 @@ export function NotesManagerSheet({
                   {collection.title}
                 </Text>
                 <Text style={styles.notesManagerItemMeta}>
-                  {collection.pages.length}/{maxPagesPerNote} pages
+                  {collection.pages.length}/{maxPagesPerNotebook} pages
                 </Text>
               </Pressable>
               <Pressable
@@ -82,4 +82,3 @@ export function NotesManagerSheet({
     </View>
   );
 }
-

@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 
-import type { AppStyles } from '../../../app/appTypes';
+import type { AppStyles } from '../../../../app/appTypes';
 
 type NotesHeaderProps = {
   activePageIndex: number;
@@ -58,4 +58,3 @@ export function NotesHeader({
     </View>
   );
 }
-

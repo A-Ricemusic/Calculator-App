@@ -1,10 +1,5 @@
+// Drawing
 export type NoteTool = 'pen' | 'marker' | 'highlighter' | 'eraser' | 'text';
-
-export type MathNote = {
-  id: string;
-  body: string;
-  savedAt: string;
-};
 
 export type Point = {
   x: number;
@@ -19,11 +14,19 @@ export type Stroke = {
   points: Point[];
 };
 
+// Text
 export type TextBlock = {
   id: string;
   body: string;
   x: number;
   y: number;
+};
+
+// Notebook
+export type MathNote = {
+  id: string;
+  body: string;
+  savedAt: string;
 };
 
 export type NotePage = {

@@ -2,11 +2,12 @@ import { useMemo, useRef, useState } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { PanResponder } from 'react-native';
 
-import { createId } from '../../../shared/utils/ids';
-import { toolSettings } from '../constants/notes';
-import type { NoteCollection, NotePage, NoteTool, Point, Stroke } from '../types';
+import { createId } from '../../../../shared/utils/ids';
+import type { NoteCollection, NotePage, NoteTool, Point, Stroke } from '../../types';
+import { drawingToolSettings } from '../constants/drawingTools';
+import { distanceBetweenPoints } from '../utils/drawingGeometry';
 
-type UseFallbackDrawingParams = {
+type UseReactNativeDrawingParams = {
   activeCollectionIndex: number;
   activeColor: string;
   activePageIndex: number;
@@ -15,14 +16,14 @@ type UseFallbackDrawingParams = {
   updateActivePage: (updater: (page: NotePage) => NotePage) => void;
 };
 
-export function useFallbackDrawing({
+export function useReactNativeDrawing({
   activeCollectionIndex,
   activeColor,
   activePageIndex,
   activeTool,
   noteCollections,
   updateActivePage,
-}: UseFallbackDrawingParams) {
+}: UseReactNativeDrawingParams) {
   const [drawingStroke, setDrawingStroke] = useState<Stroke | null>(null);
   const drawingStrokeRef = useRef<Stroke | null>(null);
 
@@ -40,8 +41,8 @@ export function useFallbackDrawing({
     updateActivePage((page) => ({
       ...page,
       strokes: page.strokes.filter((stroke) => !stroke.points.some((strokePoint) => {
-        const distance = Math.hypot(strokePoint.x - point.x, strokePoint.y - point.y);
-        return distance <= toolSettings.eraser.width;
+        const distance = distanceBetweenPoints(strokePoint, point);
+        return distance <= drawingToolSettings.eraser.width;
       })),
     }));
   }
@@ -62,7 +63,7 @@ export function useFallbackDrawing({
       id: createId('stroke'),
       color: activeColor,
       tool: activeTool,
-      width: toolSettings[activeTool].width,
+      width: drawingToolSettings[activeTool].width,
       points: [point],
     };
 
@@ -127,4 +128,3 @@ export function useFallbackDrawing({
     resetDrawingStroke,
   };
 }
-
