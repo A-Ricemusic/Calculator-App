@@ -46,7 +46,7 @@ describe("graphing performance", () => {
     const startedAt = performance.now();
 
     for (let index = 0; index < 100; index += 1) {
-      expect(() => parseGraphExpression("$bad(x)")).toThrow();
+      expect(() => parseGraphExpression("$bad(x)")).toThrow("Unsupported token");
     }
 
     expect(performance.now() - startedAt).toBeLessThan(80);

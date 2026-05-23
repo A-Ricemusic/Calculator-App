@@ -1,5 +1,9 @@
-import { Platform, requireNativeComponent } from "react-native";
+import { Platform, UIManager, requireNativeComponent } from "react-native";
 import type { PencilKitCanvasProps } from "./PencilKitCanvas.types";
 
-export const PencilKitCanvas =
-  Platform.OS === "ios" ? requireNativeComponent<PencilKitCanvasProps>("PencilKitCanvas") : null;
+const hasPencilKitCanvas =
+  Platform.OS === "ios" && UIManager.getViewManagerConfig("PencilKitCanvas") != null;
+
+export const PencilKitCanvas = hasPencilKitCanvas
+  ? requireNativeComponent<PencilKitCanvasProps>("PencilKitCanvas")
+  : null;
