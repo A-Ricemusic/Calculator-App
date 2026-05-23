@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import { drawingTools } from "../../drawing/constants/drawingTools";
 import type { NoteTool } from "../../types";
 import { UtensilIcon } from "./UtensilIcon";
@@ -10,7 +10,7 @@ type NotesToolbarProps = {
   activeTool: NoteTool;
   onToggleColorPicker: () => void;
   onSelectTool: (tool: NoteTool) => void;
-  styles: AppStyles;
+  styles: NotesStyles;
 };
 
 export function NotesToolbar({

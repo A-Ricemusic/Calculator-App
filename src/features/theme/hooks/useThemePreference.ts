@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-import { themeStorageKey } from "../../../shared/constants/storageKeys";
+import { themeStorageKey } from "@shared/constants/storageKeys";
 import { themes } from "../constants/themes";
 import type { ThemeId } from "../types";
 

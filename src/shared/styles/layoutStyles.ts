@@ -13,11 +13,13 @@ export function createLayoutStyles(theme: CalculatorTheme) {
     },
     topBar: {
       alignItems: "center",
+      elevation: 4,
       flexDirection: "row",
       justifyContent: "space-between",
       paddingHorizontal: 12,
       paddingTop: 4,
       paddingBottom: 2,
+      zIndex: 10,
     },
     topBarLeft: {
       alignItems: "center",

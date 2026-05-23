@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
 
-import { calculatorHistoryStorageKey } from "../../../shared/constants/storageKeys";
+import { calculatorHistoryStorageKey } from "@shared/constants/storageKeys";
 import type { CalculatorHistoryEntry } from "../types";
 import {
   createHistoryEntry,

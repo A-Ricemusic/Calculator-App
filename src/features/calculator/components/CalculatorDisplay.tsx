@@ -1,12 +1,12 @@
 import { Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import type { CalculatorMode } from "../types";
 
 type CalculatorDisplayProps = {
   display: string;
   mode: CalculatorMode;
-  styles: AppStyles;
+  styles: CalculatorStyles;
 };
 
 export function CalculatorDisplay({ display, mode, styles }: CalculatorDisplayProps) {

@@ -46,6 +46,7 @@ export function AppShell({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Open calculator menu"
+            hitSlop={8}
             onPress={onOpenMenu}
             style={styles.iconButton}
           >

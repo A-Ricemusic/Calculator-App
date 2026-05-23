@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import { maxPagesPerNotebook } from "../../notebook/constants/notebookLimits";
 
 type NotesPageControlsProps = {
@@ -9,7 +9,7 @@ type NotesPageControlsProps = {
   onAddPage: () => void;
   onChangePage: (direction: -1 | 1) => void;
   onDeleteActivePage: () => void;
-  styles: AppStyles;
+  styles: NotesStyles;
 };
 
 export function NotesPageControls({

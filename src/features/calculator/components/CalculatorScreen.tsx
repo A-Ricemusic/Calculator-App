@@ -1,4 +1,4 @@
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import type { ButtonConfig, CalculatorMode } from "../types";
 import { CalculatorDisplay } from "./CalculatorDisplay";
 import { CalculatorKeypad } from "./CalculatorKeypad";
@@ -8,7 +8,7 @@ type CalculatorScreenProps = {
   display: string;
   handlePress: (button: ButtonConfig) => void;
   mode: CalculatorMode;
-  styles: AppStyles;
+  styles: CalculatorStyles;
 };
 
 export function CalculatorScreen({

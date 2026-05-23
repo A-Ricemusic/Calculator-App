@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import { maxPagesPerNotebook } from "../../notebook/constants/notebookLimits";
 import type { NoteCollection } from "../../types";
 
@@ -11,7 +11,7 @@ type NotesManagerSheetProps = {
   onCreateCollection: () => void;
   onDeleteCollection: (collectionId: string) => void;
   onOpenCollection: (collectionIndex: number) => void;
-  styles: AppStyles;
+  styles: NotesStyles;
 };
 
 export function NotesManagerSheet({

@@ -1,6 +1,6 @@
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { ConversionStyles } from "../styles/conversionStyleTypes";
 import { conversionCategories } from "../constants/conversionCategories";
 import type { ConversionCategory } from "../types";
 import type { ConversionPickerTarget } from "../hooks/useConversion";
@@ -13,7 +13,7 @@ type ConversionPickerModalProps = {
   onSelectCategory: (category: ConversionCategory) => void;
   onSelectUnit: (id: string) => void;
   pickerTarget: ConversionPickerTarget | null;
-  styles: AppStyles;
+  styles: ConversionStyles;
 };
 
 function getPickerTitle(pickerTarget: ConversionPickerTarget | null) {

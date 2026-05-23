@@ -1,4 +1,4 @@
-import { createId } from "../../../../shared/utils/ids";
+import { createId } from "@shared/utils/ids";
 import type { NoteCollection, NotePage } from "../../types";
 import { maxPagesPerNotebook } from "../constants/notebookLimits";
 

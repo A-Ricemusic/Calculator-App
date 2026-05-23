@@ -1,12 +1,12 @@
 import { Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import type { NoteTool } from "../../types";
 
 type UtensilIconProps = {
   activeColor: string;
   isActive: boolean;
-  styles: AppStyles;
+  styles: NotesStyles;
   tool: NoteTool;
 };
 

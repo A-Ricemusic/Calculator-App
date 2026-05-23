@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-import { createId } from "../../../../shared/utils/ids";
+import { createId } from "@shared/utils/ids";
 import type { MathNote, NoteCollection } from "../../types";
 import { maxPagesPerNotebook } from "../constants/notebookLimits";
 import { normalizeNoteCollection } from "../utils/createMathNotesNotebook";

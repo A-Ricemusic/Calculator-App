@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { PanResponder } from "react-native";
 
-import { createId } from "../../../../shared/utils/ids";
+import { createId } from "@shared/utils/ids";
 import type { NoteCollection, NotePage, NoteTool, Point, Stroke } from "../../types";
 import { drawingToolSettings, minimumPointDistance } from "../constants/drawingTools";
 import { distanceBetweenPoints, shouldAppendPoint } from "../utils/drawingGeometry";

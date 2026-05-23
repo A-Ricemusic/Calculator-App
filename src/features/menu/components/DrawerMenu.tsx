@@ -3,10 +3,10 @@ import { Platform, Pressable, ScrollView, StatusBar, Text, View } from "react-na
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { menuItems } from "../constants/menuItems";
-import { themes } from "../../theme";
+import { themes } from "@features/theme";
 import type { AppMode } from "@app/appModes";
 import type { ThemeId } from "@features/theme";
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { DrawerStyles } from "../styles/drawerStyleTypes";
 
 const ANDROID_TOP_INSET = Platform.OS === "android" ? (StatusBar.currentHeight ?? 0) : 0;
 type DrawerView = "menu" | "theme";
@@ -16,7 +16,7 @@ type DrawerMenuProps = {
   onClose: () => void;
   onSelectMode: (mode: AppMode) => void;
   onSelectTheme: (themeId: ThemeId) => void;
-  styles: AppStyles;
+  styles: DrawerStyles;
   themeId: ThemeId;
 };
 

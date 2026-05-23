@@ -3,8 +3,8 @@ import { useMemo, useRef } from "react";
 import { PanResponder, View } from "react-native";
 import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from "react-native-svg";
 
-import type { AppStyles } from "../../../../app/appTypes";
-import type { CalculatorTheme } from "../../../theme";
+import type { GraphingStyles } from "../../styles/graphingStyleTypes";
+import type { CalculatorTheme } from "@features/theme";
 import type { GraphViewport, PlottedEquation } from "../../types";
 import { formatTick, makeTicks, niceStep, pointsToPath } from "../utils/graphGeometry";
 import { panViewport, zoomViewportAtScreenPoint } from "../utils/graphViewport";
@@ -12,7 +12,7 @@ import { panViewport, zoomViewportAtScreenPoint } from "../utils/graphViewport";
 type GraphCanvasProps = {
   equations: PlottedEquation[];
   height: number;
-  styles: AppStyles;
+  styles: GraphingStyles;
   theme: CalculatorTheme;
   viewport: GraphViewport;
   width: number;

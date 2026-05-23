@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import type { PanResponderInstance } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import type { CalculatorTheme } from "@features/theme";
 import { PencilKitCanvas } from "../../platform/ios/PencilKitCanvas";
 import { TextEntryBar } from "../../text/components/TextEntryBar";
@@ -19,7 +19,7 @@ type MathNotesCanvasProps = {
   onDeleteTextBlock: (blockId: string) => void;
   onSetTextDraft: (text: string) => void;
   onUpdatePencilKitDrawing: (drawingData: string) => void;
-  styles: AppStyles;
+  styles: NotesStyles;
   textDraft: string;
   theme: CalculatorTheme;
 };

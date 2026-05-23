@@ -3,7 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import { useState } from "react";
 
 import type { CalculatorMode } from "@app/appModes";
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import { CalculatorHistory } from "./CalculatorHistory";
 import { CalculatorScreen } from "./CalculatorScreen";
 import { useCalculator } from "../hooks/useCalculator";
@@ -12,7 +12,7 @@ type CalculatorModeViewProps = {
   mode: CalculatorMode;
   onOpenMenu: () => void;
   shellStyle?: StyleProp<ViewStyle>;
-  styles: AppStyles;
+  styles: CalculatorStyles;
 };
 
 export function CalculatorModeView({
@@ -46,6 +46,7 @@ export function CalculatorModeView({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Open calculator menu"
+            hitSlop={8}
             onPress={onOpenMenu}
             style={styles.iconButton}
           >
@@ -60,6 +61,7 @@ export function CalculatorModeView({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Open calculator history"
+            hitSlop={8}
             onPress={() => setHistoryOpen(true)}
             style={styles.iconButton}
           >
@@ -68,6 +70,7 @@ export function CalculatorModeView({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Reset calculator"
+            hitSlop={8}
             onPress={resetAll}
             style={styles.iconButton}
           >

@@ -1,13 +1,13 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import type { NoteTool, TextBlock } from "../../types";
 
 type TextBlockLayerProps = {
   activeColor: string;
   activeTool: NoteTool;
   onDeleteTextBlock: (blockId: string) => void;
-  styles: AppStyles;
+  styles: NotesStyles;
   textBlocks: TextBlock[];
 };
 

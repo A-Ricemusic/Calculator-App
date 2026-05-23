@@ -1,6 +1,6 @@
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import type { CalculatorHistoryEntry } from "../types";
 
 type CalculatorHistoryProps = {
@@ -8,7 +8,7 @@ type CalculatorHistoryProps = {
   onClose: () => void;
   onClear: () => void;
   onLoad: (entry: CalculatorHistoryEntry) => void;
-  styles: AppStyles;
+  styles: CalculatorStyles;
   visible: boolean;
 };
 

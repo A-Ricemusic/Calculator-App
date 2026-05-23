@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import type { PanResponderInstance } from "react-native";
 import Svg from "react-native-svg";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 import type { CalculatorTheme } from "@features/theme";
 import { TextBlockLayer } from "../../text/components/TextBlockLayer";
 import type { NotePage, NoteTool, Stroke } from "../../types";
@@ -11,7 +11,7 @@ import { canvasGridDots } from "../constants/canvasGrid";
 import { StrokeSegment } from "./StrokeSegment";
 
 type CanvasGridProps = {
-  styles: AppStyles;
+  styles: NotesStyles;
 };
 
 type FallbackDrawingCanvasProps = {
@@ -21,7 +21,7 @@ type FallbackDrawingCanvasProps = {
   drawingStroke: Stroke | null;
   notePanResponder: PanResponderInstance;
   onDeleteTextBlock: (blockId: string) => void;
-  styles: AppStyles;
+  styles: NotesStyles;
   theme: CalculatorTheme;
 };
 

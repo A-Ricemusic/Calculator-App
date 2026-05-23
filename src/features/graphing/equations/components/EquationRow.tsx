@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { GraphingStyles } from "../../styles/graphingStyleTypes";
 import type { PlottedEquation } from "../../types";
 import { GRAPH_COLORS } from "../constants/graphColors";
 
@@ -11,7 +11,7 @@ type EquationRowProps = {
   onDelete: (id: string) => void;
   onToggle: (id: string) => void;
   onUpdate: (id: string, expression: string) => void;
-  styles: AppStyles;
+  styles: GraphingStyles;
 };
 
 export function EquationRow({

@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 
 type NotesHeaderProps = {
   activePageIndex: number;
@@ -8,7 +8,7 @@ type NotesHeaderProps = {
   onBack: () => void;
   onOpenManager: () => void;
   onSave: () => void;
-  styles: AppStyles;
+  styles: NotesStyles;
   title: string;
 };
 

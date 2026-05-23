@@ -1,6 +1,6 @@
 import { useWindowDimensions, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import type { ButtonConfig, CalculatorMode } from "../types";
 import {
   basicButtons,
@@ -17,7 +17,7 @@ type CalculatorKeypadProps = {
   clearLabel: string;
   mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
-  styles: AppStyles;
+  styles: CalculatorStyles;
 };
 
 export function CalculatorKeypad({ clearLabel, mode, onPress, styles }: CalculatorKeypadProps) {

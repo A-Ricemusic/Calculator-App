@@ -1,11 +1,11 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { ConversionStyles } from "../styles/conversionStyleTypes";
 import { ConversionPickerModal } from "./ConversionPickerModal";
 import { useConversion } from "../hooks/useConversion";
 
 type ConversionScreenProps = {
-  styles: AppStyles;
+  styles: ConversionStyles;
 };
 
 export function ConversionScreen({ styles }: ConversionScreenProps) {

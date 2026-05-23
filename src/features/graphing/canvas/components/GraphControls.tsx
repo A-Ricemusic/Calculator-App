@@ -1,12 +1,12 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { GraphingStyles } from "../../styles/graphingStyleTypes";
 
 type GraphControlsProps = {
   onReset: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
-  styles: AppStyles;
+  styles: GraphingStyles;
 };
 
 export function GraphControls({ onReset, onZoomIn, onZoomOut, styles }: GraphControlsProps) {

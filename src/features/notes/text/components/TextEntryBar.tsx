@@ -1,11 +1,11 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { NotesStyles } from "../../styles/notesStyleTypes";
 
 type TextEntryBarProps = {
   onAddTextBlock: () => void;
   onSetTextDraft: (text: string) => void;
-  styles: AppStyles;
+  styles: NotesStyles;
   textDraft: string;
 };
 

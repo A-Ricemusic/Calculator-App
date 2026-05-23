@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { createId } from "../../../../shared/utils/ids";
+import { createId } from "@shared/utils/ids";
 import { sampleExpression } from "../../canvas/utils/graphSampler";
 import { initialGraphViewport, zoomViewport } from "../../canvas/utils/graphViewport";
 import { parseGraphExpression } from "../../expression/parseGraphExpression";

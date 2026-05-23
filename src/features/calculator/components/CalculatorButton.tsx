@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import type { ButtonConfig, CalculatorMode } from "../types";
 
 type CalculatorButtonProps = {
@@ -9,7 +9,7 @@ type CalculatorButtonProps = {
   clearLabel: string;
   mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
-  styles: AppStyles;
+  styles: CalculatorStyles;
   variant: "function" | "number";
 };
 

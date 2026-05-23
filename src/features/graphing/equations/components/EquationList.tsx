@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from "@shared/styles/appTypes";
+import type { GraphingStyles } from "../../styles/graphingStyleTypes";
 import type { PlottedEquation } from "../../types";
 import { EquationRow } from "./EquationRow";
 
@@ -13,7 +13,7 @@ type EquationListProps = {
   onDelete: (id: string) => void;
   onToggle: (id: string) => void;
   onUpdate: (id: string, expression: string) => void;
-  styles: AppStyles;
+  styles: GraphingStyles;
 };
 
 export function EquationList({
