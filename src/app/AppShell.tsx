@@ -59,7 +59,9 @@ export function AppShell({
           >
             <Text style={styles.iconText}>☰</Text>
           </Pressable>
-          {mode === "scientific" && <Text style={styles.angleLabel}>rad</Text>}
+          {mode === "scientific" && (
+            <Text style={styles.angleLabel}>{isRadians ? "rad" : "deg"}</Text>
+          )}
         </View>
         {mode === "basic" && <Text style={styles.modeTitle}>Calculator</Text>}
         {mode === "conversion" && <Text style={styles.modeTitle}>Conversion</Text>}
