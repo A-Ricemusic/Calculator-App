@@ -1,10 +1,20 @@
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
 
 import { menuItems } from '../constants/menuItems';
 import { themes } from '../../theme';
 import type { Mode } from '../../calculator';
 import type { ThemeId } from '../../theme';
 import type { AppStyles } from '../../../app/appTypes';
+
+const ANDROID_TOP_INSET = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
 
 type DrawerMenuProps = {
   mode: Mode;
@@ -29,7 +39,12 @@ export function DrawerMenu({
     <View style={styles.overlay}>
       <Pressable style={styles.scrim} onPress={onClose} />
       <View style={styles.drawer}>
-        <SafeAreaView style={styles.drawerInner}>
+        <SafeAreaView
+          style={[
+            styles.drawerInner,
+            ANDROID_TOP_INSET > 0 && { paddingTop: ANDROID_TOP_INSET + 12 },
+          ]}
+        >
           <View style={styles.drawerHeader}>
             <Text style={styles.drawerTitle}>Calculator</Text>
             <Pressable
