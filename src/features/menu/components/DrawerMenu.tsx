@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Platform, Pressable, SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 
 import { menuItems } from "../constants/menuItems";
@@ -27,6 +28,9 @@ export function DrawerMenu({
   styles,
   themeId,
 }: DrawerMenuProps) {
+  const [personalizationOpen, setPersonalizationOpen] = useState(false);
+  const selectedTheme = themes[themeId];
+
   return (
     <View style={styles.overlay}>
       <Pressable style={styles.scrim} onPress={onClose} />
@@ -77,34 +81,52 @@ export function DrawerMenu({
               })}
             </View>
 
-            <Text style={styles.drawerSectionLabel}>THEME</Text>
             <View style={styles.drawerSection}>
-              {themeItems.map((item, index) => {
-                const active = item.id === themeId;
-                const isLast = index === themeItems.length - 1;
-                return (
-                  <Pressable
-                    key={item.id}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
-                    onPress={() => onSelectTheme(item.id)}
-                    style={[styles.menuItem, !isLast && styles.menuItemBorder]}
-                  >
-                    <View style={styles.themeDot}>
-                      <View
-                        style={[
-                          styles.themeDotInner,
-                          { backgroundColor: item.colors.buttonOperator },
-                        ]}
-                      />
-                    </View>
-                    <Text style={[styles.menuText, active && styles.menuTextActive]}>
-                      {item.label}
-                    </Text>
-                    {active && <Text style={styles.menuCheck}>✓</Text>}
-                  </Pressable>
-                );
-              })}
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ expanded: personalizationOpen }}
+                onPress={() => setPersonalizationOpen((open) => !open)}
+                style={[styles.menuItem, personalizationOpen && styles.menuItemBorder]}
+              >
+                <Text style={styles.menuIcon}>◐</Text>
+                <View style={styles.menuTextStack}>
+                  <Text style={styles.menuText}>Personalization</Text>
+                  <Text style={styles.menuSubtext}>{selectedTheme.label}</Text>
+                </View>
+                <Text style={styles.menuCheck}>{personalizationOpen ? "⌃" : "⌄"}</Text>
+              </Pressable>
+
+              {personalizationOpen &&
+                themeItems.map((item, index) => {
+                  const active = item.id === themeId;
+                  const isLast = index === themeItems.length - 1;
+                  return (
+                    <Pressable
+                      key={item.id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: active }}
+                      onPress={() => onSelectTheme(item.id)}
+                      style={[
+                        styles.menuItem,
+                        styles.themeMenuItem,
+                        !isLast && styles.menuItemBorder,
+                      ]}
+                    >
+                      <View style={styles.themeDot}>
+                        <View
+                          style={[
+                            styles.themeDotInner,
+                            { backgroundColor: item.colors.buttonOperator },
+                          ]}
+                        />
+                      </View>
+                      <Text style={[styles.menuText, active && styles.menuTextActive]}>
+                        {item.label}
+                      </Text>
+                      {active && <Text style={styles.menuCheck}>✓</Text>}
+                    </Pressable>
+                  );
+                })}
             </View>
           </ScrollView>
         </SafeAreaView>

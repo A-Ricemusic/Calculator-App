@@ -89,6 +89,15 @@ export function createDrawerStyles(theme: CalculatorTheme) {
       fontSize: 17,
       fontWeight: "400",
     },
+    menuTextStack: {
+      flex: 1,
+      gap: 2,
+    },
+    menuSubtext: {
+      color: theme.colors.mutedText,
+      fontSize: 13,
+      fontWeight: "500",
+    },
     menuTextActive: {
       fontWeight: "600",
     },
@@ -102,6 +111,9 @@ export function createDrawerStyles(theme: CalculatorTheme) {
       justifyContent: "center",
       marginRight: 14,
       width: 28,
+    },
+    themeMenuItem: {
+      paddingLeft: 28,
     },
     themeDotInner: {
       borderRadius: 999,

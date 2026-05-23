@@ -2,14 +2,14 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text, View } from "react-native";
 import { useState } from "react";
 
-import type { AppMode, CalculatorMode } from "../../../app/appModes";
+import type { CalculatorMode } from "../../../app/appModes";
 import type { AppStyles } from "../../../app/appTypes";
 import { CalculatorHistory } from "./CalculatorHistory";
 import { CalculatorScreen } from "./CalculatorScreen";
 import { useCalculator } from "../hooks/useCalculator";
 
 type CalculatorModeViewProps = {
-  mode: AppMode;
+  mode: CalculatorMode;
   onOpenMenu: () => void;
   shellStyle?: StyleProp<ViewStyle>;
   styles: AppStyles;

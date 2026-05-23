@@ -127,10 +127,7 @@ export function useMathNotesNotebook() {
 
     updateActivePage((page) => ({
       ...page,
-      textBlocks: [
-        ...page.textBlocks,
-        createTextBlock(body, page.textBlocks.length),
-      ],
+      textBlocks: [...page.textBlocks, createTextBlock(body, page.textBlocks.length)],
     }));
     setTextDraft("");
   }
