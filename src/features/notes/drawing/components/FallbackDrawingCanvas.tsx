@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { StyleSheet, View } from "react-native";
 import type { PanResponderInstance } from "react-native";
 import Svg from "react-native-svg";
@@ -9,6 +10,10 @@ import type { NotePage, NoteTool, Stroke } from "../../types";
 import { canvasGridDots } from "../constants/canvasGrid";
 import { StrokeSegment } from "./StrokeSegment";
 
+type CanvasGridProps = {
+  styles: AppStyles;
+};
+
 type FallbackDrawingCanvasProps = {
   activeColor: string;
   activePage: NotePage | undefined;
@@ -19,6 +24,36 @@ type FallbackDrawingCanvasProps = {
   styles: AppStyles;
   theme: CalculatorTheme;
 };
+
+const CanvasGrid = memo(function CanvasGrid({ styles }: CanvasGridProps) {
+  return (
+    <>
+      {canvasGridDots.map((dot) => (
+        <View
+          key={dot.id}
+          pointerEvents="none"
+          style={[styles.notesDot, { left: dot.left, top: dot.top }]}
+        />
+      ))}
+    </>
+  );
+});
+
+const SavedStrokeLayer = memo(function SavedStrokeLayer({
+  strokes,
+  theme,
+}: {
+  strokes: Stroke[];
+  theme: CalculatorTheme;
+}) {
+  return (
+    <>
+      {strokes.map((stroke) => (
+        <StrokeSegment key={stroke.id} stroke={stroke} theme={theme} />
+      ))}
+    </>
+  );
+});
 
 export function FallbackDrawingCanvas({
   activeColor,
@@ -32,17 +67,9 @@ export function FallbackDrawingCanvas({
 }: FallbackDrawingCanvasProps) {
   return (
     <View style={styles.notesCanvas} {...notePanResponder.panHandlers}>
-      {canvasGridDots.map((dot) => (
-        <View
-          key={dot.id}
-          pointerEvents="none"
-          style={[styles.notesDot, { left: dot.left, top: dot.top }]}
-        />
-      ))}
+      <CanvasGrid styles={styles} />
       <Svg pointerEvents="none" style={StyleSheet.absoluteFillObject}>
-        {activePage?.strokes.map((stroke) => (
-          <StrokeSegment key={stroke.id} stroke={stroke} theme={theme} />
-        ))}
+        <SavedStrokeLayer strokes={activePage?.strokes ?? []} theme={theme} />
         {drawingStroke && <StrokeSegment stroke={drawingStroke} theme={theme} />}
       </Svg>
       <TextBlockLayer

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Path } from "react-native-svg";
 
 import type { CalculatorTheme } from "../../../theme";
@@ -9,7 +10,7 @@ type StrokeSegmentProps = {
   theme: CalculatorTheme;
 };
 
-export function StrokeSegment({ stroke, theme }: StrokeSegmentProps) {
+export const StrokeSegment = memo(function StrokeSegment({ stroke, theme }: StrokeSegmentProps) {
   const path = pointsToSvgPath(stroke.points);
 
   if (!path) {
@@ -28,4 +29,4 @@ export function StrokeSegment({ stroke, theme }: StrokeSegmentProps) {
       strokeWidth={stroke.width}
     />
   );
-}
+});
