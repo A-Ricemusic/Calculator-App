@@ -63,6 +63,12 @@ export function useGraphingEquations(graphWidth: number) {
     setEquations((current) => current.filter((equation) => equation.id !== id));
   }
 
+  function changeColor(id: string, color: string) {
+    setEquations((current) =>
+      current.map((equation) => (equation.id === id ? { ...equation, color } : equation)),
+    );
+  }
+
   function toggleEquation(id: string) {
     setEquations((current) =>
       current.map((equation) =>
@@ -78,6 +84,7 @@ export function useGraphingEquations(graphWidth: number) {
   return {
     addEquation,
     canAddEquation: equations.length < MAX_GRAPH_EQUATIONS,
+    changeColor,
     deleteEquation,
     equations,
     plottedEquations,

@@ -13,7 +13,7 @@ type GraphingScreenProps = {
   theme: CalculatorTheme;
 };
 
-export function GraphingScreen({ styles }: GraphingScreenProps) {
+export function GraphingScreen({ styles, theme }: GraphingScreenProps) {
   const [graphSize, setGraphSize] = useState({ width: 1, height: 1 });
   const graphing = useGraphingEquations(graphSize.width);
 
@@ -29,6 +29,7 @@ export function GraphingScreen({ styles }: GraphingScreenProps) {
           canAddEquation={graphing.canAddEquation}
           equations={graphing.plottedEquations}
           onAdd={graphing.addEquation}
+          onChangeColor={graphing.changeColor}
           onDelete={graphing.deleteEquation}
           onToggle={graphing.toggleEquation}
           onUpdate={graphing.updateEquation}
@@ -40,6 +41,7 @@ export function GraphingScreen({ styles }: GraphingScreenProps) {
             equations={graphing.plottedEquations}
             height={graphSize.height}
             styles={styles}
+            theme={theme}
             viewport={graphing.viewport}
             width={graphSize.width}
           />

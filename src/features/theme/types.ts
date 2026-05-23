@@ -23,5 +23,9 @@ export type CalculatorTheme = {
     drawerBackground: string;
     drawerScrim: string;
     drawerActive: string;
+    graphBackground: string;
+    graphGridLine: string;
+    graphAxisLine: string;
+    graphLabelText: string;
   };
 };

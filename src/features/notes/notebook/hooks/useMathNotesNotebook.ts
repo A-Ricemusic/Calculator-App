@@ -1,28 +1,24 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { createId } from "../../../../shared/utils/ids";
 import type { MathNote, NoteCollection, NotePage } from "../../types";
 import { maxPagesPerNotebook } from "../constants/notebookLimits";
+import { useStoredMathNotes } from "../persistence/useStoredMathNotes";
 import {
-  noteCollectionsStorageKey,
-  notePagesStorageKey,
-  notesStorageKey,
-} from "../persistence/mathNotesStorage";
-import {
-  createBlankPage,
-  createCollection,
-  normalizeNoteCollection,
-} from "../utils/createMathNotesNotebook";
-import { isMathNote, isNoteCollection, isNotePage } from "../utils/validateMathNotesNotebook";
+  addPageToCollection,
+  createNextCollection,
+  createNotebookSnapshot,
+  createTextBlock,
+  deletePageFromCollection,
+  ensureCollectionExists,
+  updateCollectionPage,
+} from "../utils/notebookActions";
+import { createCollection } from "../utils/createMathNotesNotebook";
 
 export function useMathNotesNotebook() {
   const [notes, setNotes] = useState<MathNote[]>([]);
-  const [notesLoaded, setNotesLoaded] = useState(false);
   const [noteCollections, setNoteCollections] = useState<NoteCollection[]>(() => [
     createCollection(1),
   ]);
-  const [noteCollectionsLoaded, setNoteCollectionsLoaded] = useState(false);
   const [activeCollectionIndex, setActiveCollectionIndex] = useState(0);
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [textDraft, setTextDraft] = useState("");
@@ -31,103 +27,18 @@ export function useMathNotesNotebook() {
   const activePages = activeCollection?.pages ?? [];
   const activePage = activePages[activePageIndex] ?? activePages[0];
 
-  useEffect(() => {
-    AsyncStorage.getItem(notesStorageKey)
-      .then((storedNotes) => {
-        if (!storedNotes) {
-          return;
-        }
-
-        const parsedNotes = JSON.parse(storedNotes);
-        if (Array.isArray(parsedNotes)) {
-          setNotes(parsedNotes.filter(isMathNote));
-        }
-      })
-      .catch(() => undefined)
-      .finally(() => setNotesLoaded(true));
+  const replaceNotes = useCallback((nextNotes: MathNote[]) => setNotes(nextNotes), []);
+  const replaceNoteCollections = useCallback((nextCollections: NoteCollection[]) => {
+    setNoteCollections(nextCollections);
+    setActiveCollectionIndex(0);
+    setActivePageIndex(0);
   }, []);
 
-  useEffect(() => {
-    if (!notesLoaded) {
-      return;
-    }
-
-    AsyncStorage.setItem(notesStorageKey, JSON.stringify(notes)).catch(() => undefined);
-  }, [notes, notesLoaded]);
-
-  useEffect(() => {
-    AsyncStorage.getItem(noteCollectionsStorageKey)
-      .then((storedCollections) => {
-        if (!storedCollections) {
-          return AsyncStorage.getItem(notePagesStorageKey);
-        }
-
-        const parsedCollections = JSON.parse(storedCollections);
-        if (Array.isArray(parsedCollections)) {
-          const validCollections = parsedCollections
-            .filter(isNoteCollection)
-            .map(normalizeNoteCollection);
-          if (validCollections.length > 0) {
-            setNoteCollections(validCollections);
-            setActiveCollectionIndex(0);
-            setActivePageIndex(0);
-          }
-        }
-
-        return null;
-      })
-      .then((storedPages) => {
-        if (!storedPages) {
-          return;
-        }
-
-        const parsedPages = JSON.parse(storedPages);
-        if (Array.isArray(parsedPages)) {
-          const validPages = parsedPages.filter(isNotePage).slice(0, maxPagesPerNotebook);
-          if (validPages.length > 0) {
-            setNoteCollections([
-              {
-                id: createId("collection"),
-                title: "Math Notes 1",
-                pageCount: validPages.length,
-                pages: validPages,
-                updatedAt: new Date().toISOString(),
-              },
-            ]);
-            setActiveCollectionIndex(0);
-            setActivePageIndex(0);
-          }
-        }
-      })
-      .catch(() => undefined)
-      .finally(() => setNoteCollectionsLoaded(true));
-  }, []);
-
-  useEffect(() => {
-    if (!noteCollectionsLoaded) {
-      return;
-    }
-
-    AsyncStorage.setItem(noteCollectionsStorageKey, JSON.stringify(noteCollections)).catch(
-      () => undefined,
-    );
-  }, [noteCollections, noteCollectionsLoaded]);
+  useStoredMathNotes(notes, noteCollections, replaceNotes, replaceNoteCollections);
 
   function updateActivePage(updater: (page: NotePage) => NotePage) {
     setNoteCollections((current) =>
-      current.map((collection, collectionIndex) => {
-        if (collectionIndex !== activeCollectionIndex) {
-          return collection;
-        }
-
-        return {
-          ...collection,
-          pages: collection.pages.map((page, pageIndex) =>
-            pageIndex === activePageIndex ? updater(page) : page,
-          ),
-          updatedAt: new Date().toISOString(),
-        };
-      }),
+      updateCollectionPage(current, activeCollectionIndex, activePageIndex, updater),
     );
   }
 
@@ -138,18 +49,14 @@ export function useMathNotesNotebook() {
           return collection;
         }
 
-        if (collection.pages.length >= maxPagesPerNotebook) {
+        const nextCollection = addPageToCollection(collection);
+        if (nextCollection === collection) {
           setActivePageIndex(maxPagesPerNotebook - 1);
           return collection;
         }
 
         setActivePageIndex(collection.pages.length);
-        return {
-          ...collection,
-          pageCount: collection.pages.length + 1,
-          pages: [...collection.pages, createBlankPage(collection.pages.length)],
-          updatedAt: new Date().toISOString(),
-        };
+        return nextCollection;
       }),
     );
   }
@@ -161,23 +68,11 @@ export function useMathNotesNotebook() {
           return collection;
         }
 
-        if (collection.pages.length <= 1) {
-          return {
-            ...collection,
-            pages: [createBlankPage(0)],
-            pageCount: 1,
-            updatedAt: new Date().toISOString(),
-          };
-        }
-
-        const nextPages = collection.pages.filter((_, pageIndex) => pageIndex !== activePageIndex);
-        setActivePageIndex((currentIndex) => Math.min(currentIndex, nextPages.length - 1));
-        return {
-          ...collection,
-          pageCount: nextPages.length,
-          pages: nextPages,
-          updatedAt: new Date().toISOString(),
-        };
+        const nextCollection = deletePageFromCollection(collection, activePageIndex);
+        setActivePageIndex((currentIndex) =>
+          Math.min(currentIndex, nextCollection.pages.length - 1),
+        );
+        return nextCollection;
       }),
     );
   }
@@ -196,7 +91,7 @@ export function useMathNotesNotebook() {
 
   function createNewCollection(onCreated?: () => void) {
     setNoteCollections((current) => {
-      const nextCollection = createCollection(1, current.length);
+      const nextCollection = createNextCollection(current.length);
       setActiveCollectionIndex(current.length);
       setActivePageIndex(0);
       onCreated?.();
@@ -207,8 +102,7 @@ export function useMathNotesNotebook() {
   function deleteCollection(collectionId: string) {
     setNoteCollections((current) => {
       const nextCollections = current.filter((collection) => collection.id !== collectionId);
-      const resolvedCollections =
-        nextCollections.length > 0 ? nextCollections : [createCollection(1)];
+      const resolvedCollections = ensureCollectionExists(nextCollections);
       setActiveCollectionIndex((currentIndex) =>
         Math.min(currentIndex, resolvedCollections.length - 1),
       );
@@ -218,13 +112,8 @@ export function useMathNotesNotebook() {
   }
 
   function saveNotebookSnapshot() {
-    const pageCount = activePages.length.toString().padStart(2, "0");
     setNotes((current) => [
-      {
-        id: createId("note"),
-        body: `Saved collection mock: ${activeCollection?.title ?? "Math Notes"} (${pageCount} pages)`,
-        savedAt: new Date().toISOString(),
-      },
+      createNotebookSnapshot(activeCollection, activePages.length),
       ...current,
     ]);
   }
@@ -240,12 +129,7 @@ export function useMathNotesNotebook() {
       ...page,
       textBlocks: [
         ...page.textBlocks,
-        {
-          id: createId("text"),
-          body,
-          x: 32,
-          y: 160 + page.textBlocks.length * 42,
-        },
+        createTextBlock(body, page.textBlocks.length),
       ],
     }));
     setTextDraft("");

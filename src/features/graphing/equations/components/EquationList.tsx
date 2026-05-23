@@ -9,6 +9,7 @@ type EquationListProps = {
   canAddEquation: boolean;
   equations: PlottedEquation[];
   onAdd: () => void;
+  onChangeColor: (id: string, color: string) => void;
   onDelete: (id: string) => void;
   onToggle: (id: string) => void;
   onUpdate: (id: string, expression: string) => void;
@@ -19,6 +20,7 @@ export function EquationList({
   canAddEquation,
   equations,
   onAdd,
+  onChangeColor,
   onDelete,
   onToggle,
   onUpdate,
@@ -58,6 +60,7 @@ export function EquationList({
             <EquationRow
               equation={equation}
               key={equation.id}
+              onChangeColor={onChangeColor}
               onDelete={onDelete}
               onToggle={onToggle}
               onUpdate={onUpdate}

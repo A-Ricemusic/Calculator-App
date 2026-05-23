@@ -5,21 +5,21 @@ import type { CalculatorTheme } from "../../theme";
 export function createGraphingStyles(theme: CalculatorTheme) {
   return StyleSheet.create({
     graphingRoot: {
-      backgroundColor: "#f8f8f6",
+      backgroundColor: theme.colors.graphBackground,
       flex: 1,
     },
     graphingBody: {
       flex: 1,
     },
     equationPanel: {
-      backgroundColor: "#ffffff",
-      borderBottomColor: "#d7d7d2",
+      backgroundColor: theme.colors.screen,
+      borderBottomColor: theme.colors.divider,
       borderBottomWidth: 1,
       maxHeight: 230,
     },
     equationPanelHeader: {
       alignItems: "center",
-      borderBottomColor: "#e5e5df",
+      borderBottomColor: theme.colors.divider,
       borderBottomWidth: 1,
       flexDirection: "row",
       justifyContent: "space-between",
@@ -27,7 +27,7 @@ export function createGraphingStyles(theme: CalculatorTheme) {
       paddingVertical: 8,
     },
     equationPanelTitle: {
-      color: "#222222",
+      color: theme.colors.topText,
       fontSize: 15,
       fontWeight: "700",
     },
@@ -38,8 +38,8 @@ export function createGraphingStyles(theme: CalculatorTheme) {
     },
     collapseEquationButton: {
       alignItems: "center",
-      backgroundColor: "#f3f3ef",
-      borderColor: "#d7d7d2",
+      backgroundColor: theme.colors.segmentedBackground,
+      borderColor: theme.colors.divider,
       borderRadius: 16,
       borderWidth: 1,
       height: 32,
@@ -47,7 +47,7 @@ export function createGraphingStyles(theme: CalculatorTheme) {
       width: 32,
     },
     collapseEquationText: {
-      color: "#555555",
+      color: theme.colors.topText,
       fontSize: 20,
       fontWeight: "700",
       lineHeight: 24,
@@ -74,7 +74,7 @@ export function createGraphingStyles(theme: CalculatorTheme) {
     },
     equationRow: {
       alignItems: "center",
-      borderBottomColor: "#eeeeea",
+      borderBottomColor: theme.colors.divider,
       borderBottomWidth: 1,
       flexDirection: "row",
       gap: 8,
@@ -97,13 +97,13 @@ export function createGraphingStyles(theme: CalculatorTheme) {
       gap: 2,
     },
     equationInput: {
-      color: "#1f1f1f",
+      color: theme.colors.topText,
       fontSize: 19,
       minHeight: 34,
       padding: 0,
     },
     equationError: {
-      color: "#b42318",
+      color: "#ef4444",
       fontSize: 11,
     },
     deleteEquationButton: {
@@ -113,7 +113,7 @@ export function createGraphingStyles(theme: CalculatorTheme) {
       width: 34,
     },
     deleteEquationText: {
-      color: "#999999",
+      color: theme.colors.mutedText,
       fontSize: 30,
       fontWeight: "200",
       lineHeight: 32,
@@ -129,8 +129,8 @@ export function createGraphingStyles(theme: CalculatorTheme) {
     },
     graphControlButton: {
       alignItems: "center",
-      backgroundColor: "#ffffff",
-      borderColor: "#d6d6d1",
+      backgroundColor: theme.colors.screen,
+      borderColor: theme.colors.divider,
       borderRadius: 6,
       borderWidth: 1,
       height: 38,
@@ -142,9 +142,31 @@ export function createGraphingStyles(theme: CalculatorTheme) {
       width: 38,
     },
     graphControlText: {
-      color: "#555555",
+      color: theme.colors.topText,
       fontSize: 22,
       fontWeight: "600",
+    },
+    colorPickerRow: {
+      borderBottomColor: theme.colors.divider,
+      borderBottomWidth: 1,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+    },
+    colorPickerSwatch: {
+      alignItems: "center",
+      borderRadius: 14,
+      borderWidth: 2,
+      height: 28,
+      justifyContent: "center",
+      width: 28,
+    },
+    colorPickerCheck: {
+      color: "#ffffff",
+      fontSize: 14,
+      fontWeight: "700",
     },
   });
 }

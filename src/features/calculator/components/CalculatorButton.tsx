@@ -54,7 +54,7 @@ export function CalculatorButton({
 
   const fixedSizeStyle =
     buttonSize && !isScientificMode
-      ? { width: buttonSize, height: buttonSize }
+      ? { width: buttonSize, height: buttonSize, flex: 0 as const, aspectRatio: undefined }
       : undefined;
 
   return (

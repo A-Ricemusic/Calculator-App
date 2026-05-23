@@ -3,6 +3,7 @@ import { View } from "react-native";
 import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from "react-native-svg";
 
 import type { AppStyles } from "../../../../app/appTypes";
+import type { CalculatorTheme } from "../../../theme";
 import type { GraphViewport, PlottedEquation } from "../../types";
 import { formatTick, makeTicks, niceStep, pointsToPath } from "../utils/graphGeometry";
 
@@ -10,11 +11,21 @@ type GraphCanvasProps = {
   equations: PlottedEquation[];
   height: number;
   styles: AppStyles;
+  theme: CalculatorTheme;
   viewport: GraphViewport;
   width: number;
 };
 
-export function GraphCanvas({ equations, height, styles, viewport, width }: GraphCanvasProps) {
+export function GraphCanvas({
+  equations,
+  height,
+  styles,
+  theme,
+  viewport,
+  width,
+}: GraphCanvasProps) {
+  const { graphBackground, graphGridLine, graphAxisLine, graphLabelText } = theme.colors;
+
   const geometry = useMemo(() => {
     const xScale = width / (viewport.xMax - viewport.xMin);
     const yScale = height / (viewport.yMax - viewport.yMin);
@@ -34,7 +45,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
   return (
     <View style={styles.graphArea}>
       <Svg height={height} width={width}>
-        <Rect fill="#fbfbfa" height={height} width={width} x={0} y={0} />
+        <Rect fill={graphBackground} height={height} width={width} x={0} y={0} />
 
         <G>
           {geometry.xTicks.map((tick) => {
@@ -44,7 +55,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
             return (
               <G key={`x-${tick}`}>
                 <Line
-                  stroke={isAxis ? "#202020" : "#d8d8d2"}
+                  stroke={isAxis ? graphAxisLine : graphGridLine}
                   strokeWidth={isAxis ? 1.4 : 0.8}
                   x1={x}
                   x2={x}
@@ -53,7 +64,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
                 />
                 {!isAxis && (
                   <SvgText
-                    fill="#555555"
+                    fill={graphLabelText}
                     fontSize={11}
                     textAnchor="middle"
                     x={x}
@@ -73,7 +84,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
             return (
               <G key={`y-${tick}`}>
                 <Line
-                  stroke={isAxis ? "#202020" : "#d8d8d2"}
+                  stroke={isAxis ? graphAxisLine : graphGridLine}
                   strokeWidth={isAxis ? 1.4 : 0.8}
                   x1={0}
                   x2={width}
@@ -82,7 +93,7 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
                 />
                 {!isAxis && (
                   <SvgText
-                    fill="#555555"
+                    fill={graphLabelText}
                     fontSize={11}
                     textAnchor="end"
                     x={geometry.toScreenX(0) - 5}
@@ -114,7 +125,12 @@ export function GraphCanvas({ equations, height, styles, viewport, width }: Grap
           );
         })}
 
-        <Circle cx={geometry.toScreenX(0)} cy={geometry.toScreenY(0)} fill="#777777" r={2.5} />
+        <Circle
+          cx={geometry.toScreenX(0)}
+          cy={geometry.toScreenY(0)}
+          fill={graphAxisLine}
+          r={2.5}
+        />
       </Svg>
     </View>
   );

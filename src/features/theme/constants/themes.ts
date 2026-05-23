@@ -24,6 +24,10 @@ export const themes: Record<ThemeId, CalculatorTheme> = {
       drawerBackground: "#05a979",
       drawerScrim: "rgba(0, 31, 23, 0.58)",
       drawerActive: "rgba(255, 255, 255, 0.18)",
+      graphBackground: "#003d2d",
+      graphGridLine: "rgba(255, 255, 255, 0.13)",
+      graphAxisLine: "rgba(255, 255, 255, 0.45)",
+      graphLabelText: "rgba(255, 255, 255, 0.6)",
     },
   },
   red: {
@@ -49,6 +53,10 @@ export const themes: Record<ThemeId, CalculatorTheme> = {
       drawerBackground: "#b91c1c",
       drawerScrim: "rgba(39, 6, 6, 0.62)",
       drawerActive: "rgba(255, 255, 255, 0.2)",
+      graphBackground: "#4a0e0e",
+      graphGridLine: "rgba(255, 255, 255, 0.13)",
+      graphAxisLine: "rgba(255, 255, 255, 0.45)",
+      graphLabelText: "rgba(255, 255, 255, 0.6)",
     },
   },
   pink: {
@@ -74,6 +82,10 @@ export const themes: Record<ThemeId, CalculatorTheme> = {
       drawerBackground: "#be185d",
       drawerScrim: "rgba(48, 5, 24, 0.62)",
       drawerActive: "rgba(255, 255, 255, 0.2)",
+      graphBackground: "#4a0e2a",
+      graphGridLine: "rgba(255, 255, 255, 0.13)",
+      graphAxisLine: "rgba(255, 255, 255, 0.45)",
+      graphLabelText: "rgba(255, 255, 255, 0.6)",
     },
   },
   classic: {
@@ -99,6 +111,10 @@ export const themes: Record<ThemeId, CalculatorTheme> = {
       drawerBackground: "#1c1c1e",
       drawerScrim: "rgba(0, 0, 0, 0.68)",
       drawerActive: "rgba(255, 255, 255, 0.16)",
+      graphBackground: "#1a1a1a",
+      graphGridLine: "rgba(255, 255, 255, 0.12)",
+      graphAxisLine: "rgba(255, 255, 255, 0.5)",
+      graphLabelText: "rgba(255, 255, 255, 0.55)",
     },
   },
 };

@@ -185,6 +185,7 @@ export function createCalculatorStyles(theme: CalculatorTheme) {
       alignItems: "center",
       flexDirection: "row",
       gap: 12,
+      justifyContent: "space-between",
     },
     sciRow: {
       gap: 5,

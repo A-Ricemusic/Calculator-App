@@ -62,7 +62,7 @@ export const scientificFnButtons: ButtonConfig[][] = [
     { label: "cosh", action: "cosh", variant: "scientific" },
     { label: "tanh", action: "tanh", variant: "scientific" },
     { label: "π", action: "pi", variant: "scientific" },
-    { label: "Deg", action: "deg", variant: "scientific" },
+    { label: "deg/rad", action: "deg", variant: "scientific" },
   ],
 ];
 
