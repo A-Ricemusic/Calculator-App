@@ -2,17 +2,22 @@ import type { ButtonConfig } from "../types";
 
 export const basicButtons: ButtonConfig[][] = [
   [
+    { label: "⌫", action: "backspace", accessibilityLabel: "Backspace", variant: "utility" },
     { label: "AC", action: "clear", variant: "utility" },
-    { label: "+/-", action: "sign", variant: "utility" },
     { label: "%", action: "percent", variant: "utility" },
-    { label: "/", action: "/", variant: "operator" },
+    { label: "÷", action: "/", variant: "operator" },
   ],
-  [{ label: "7" }, { label: "8" }, { label: "9" }, { label: "x", variant: "operator" }],
-  [{ label: "4" }, { label: "5" }, { label: "6" }, { label: "-", variant: "operator" }],
-  [{ label: "1" }, { label: "2" }, { label: "3" }, { label: "+", variant: "operator" }],
   [
+    { label: "7" },
+    { label: "8" },
+    { label: "9" },
+    { label: "×", action: "x", variant: "operator" },
+  ],
+  [{ label: "6" }, { label: "5" }, { label: "4" }, { label: "-", variant: "operator" }],
+  [{ label: "3" }, { label: "2" }, { label: "1" }, { label: "+", variant: "operator" }],
+  [
+    { label: "±", action: "sign", variant: "utility" },
     { label: "0" },
-    { label: "", spacer: true },
     { label: "." },
     { label: "=", action: "equals", variant: "operator" },
   ],
@@ -57,7 +62,7 @@ export const scientificFnButtons: ButtonConfig[][] = [
     { label: "cosh", action: "cosh", variant: "scientific" },
     { label: "tanh", action: "tanh", variant: "scientific" },
     { label: "π", action: "pi", variant: "scientific" },
-    { label: "Deg", action: "noop", variant: "scientific" },
+    { label: "Deg", action: "deg", variant: "scientific" },
   ],
 ];
 
@@ -84,7 +89,7 @@ export const scientificNumButtons: ButtonConfig[][] = [
   [
     { label: "0" },
     { label: "." },
-    { label: "⌫", action: "backspace", variant: "utility" },
+    { label: "⌫", action: "backspace", accessibilityLabel: "Backspace", variant: "utility" },
     { label: "=", action: "equals", variant: "operator" },
   ],
 ];

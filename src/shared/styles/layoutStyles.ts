@@ -24,6 +24,11 @@ export function createLayoutStyles(theme: CalculatorTheme) {
       flexDirection: "row",
       gap: 8,
     },
+    topBarRight: {
+      alignItems: "center",
+      flexDirection: "row",
+      gap: 4,
+    },
     iconButton: {
       alignItems: "center",
       borderRadius: 24,

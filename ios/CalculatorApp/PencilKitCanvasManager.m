@@ -4,5 +4,6 @@
 
 RCT_EXPORT_VIEW_PROPERTY(drawingData, NSString)
 RCT_EXPORT_VIEW_PROPERTY(onDrawingChange, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(toolPickerVisible, BOOL)
 
 @end

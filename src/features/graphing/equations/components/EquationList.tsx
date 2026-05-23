@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import type { AppStyles } from "../../../../app/appTypes";
-import { MAX_GRAPH_EQUATIONS } from "../constants/graphColors";
 import type { PlottedEquation } from "../../types";
 import { EquationRow } from "./EquationRow";
 
@@ -24,35 +24,48 @@ export function EquationList({
   onUpdate,
   styles,
 }: EquationListProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
     <View style={styles.equationPanel}>
       <View style={styles.equationPanelHeader}>
-        <Text style={styles.equationPanelTitle}>
-          Equations {equations.length}/{MAX_GRAPH_EQUATIONS}
-        </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Add equation"
-          disabled={!canAddEquation}
-          onPress={onAdd}
-          style={[styles.addEquationButton, !canAddEquation && styles.addEquationButtonDisabled]}
-        >
-          <Text style={styles.addEquationText}>+</Text>
-        </Pressable>
+        <Text style={styles.equationPanelTitle}>Equations</Text>
+        <View style={styles.equationPanelActions}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={isCollapsed ? "Show equations" : "Hide equations"}
+            accessibilityState={{ expanded: !isCollapsed }}
+            onPress={() => setIsCollapsed((current) => !current)}
+            style={styles.collapseEquationButton}
+          >
+            <Text style={styles.collapseEquationText}>{isCollapsed ? "⌄" : "⌃"}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Add equation"
+            disabled={!canAddEquation}
+            onPress={onAdd}
+            style={[styles.addEquationButton, !canAddEquation && styles.addEquationButtonDisabled]}
+          >
+            <Text style={styles.addEquationText}>+</Text>
+          </Pressable>
+        </View>
       </View>
 
-      <ScrollView keyboardShouldPersistTaps="handled" style={styles.equationList}>
-        {equations.map((equation) => (
-          <EquationRow
-            equation={equation}
-            key={equation.id}
-            onDelete={onDelete}
-            onToggle={onToggle}
-            onUpdate={onUpdate}
-            styles={styles}
-          />
-        ))}
-      </ScrollView>
+      {!isCollapsed && (
+        <ScrollView keyboardShouldPersistTaps="handled" style={styles.equationList}>
+          {equations.map((equation) => (
+            <EquationRow
+              equation={equation}
+              key={equation.id}
+              onDelete={onDelete}
+              onToggle={onToggle}
+              onUpdate={onUpdate}
+              styles={styles}
+            />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }

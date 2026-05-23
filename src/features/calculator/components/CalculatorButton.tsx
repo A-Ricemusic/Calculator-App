@@ -21,6 +21,7 @@ export function CalculatorButton({
   variant,
 }: CalculatorButtonProps) {
   const label = button.action === "clear" ? clearLabel : button.label;
+  const accessibilityLabel = button.accessibilityLabel ?? label;
   const isScientificMode = mode === "scientific";
 
   if (button.spacer) {
@@ -33,7 +34,7 @@ export function CalculatorButton({
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={label}
+        accessibilityLabel={accessibilityLabel}
         onPress={() => onPress(button)}
         style={({ pressed }) => [styles.sciFnButton, pressed && styles.buttonPressed]}
       >
@@ -52,7 +53,7 @@ export function CalculatorButton({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel}
       onPress={() => onPress(button)}
       style={({ pressed }) => [
         styles.button,

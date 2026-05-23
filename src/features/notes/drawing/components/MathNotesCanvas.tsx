@@ -14,6 +14,7 @@ type MathNotesCanvasProps = {
   activeTool: NoteTool;
   drawingStroke: Stroke | null;
   notePanResponder: PanResponderInstance;
+  nativeToolPickerVisible: boolean;
   onAddTextBlock: () => void;
   onDeleteTextBlock: (blockId: string) => void;
   onSetTextDraft: (text: string) => void;
@@ -29,6 +30,7 @@ export function MathNotesCanvas({
   activeTool,
   drawingStroke,
   notePanResponder,
+  nativeToolPickerVisible,
   onAddTextBlock,
   onDeleteTextBlock,
   onSetTextDraft,
@@ -45,6 +47,7 @@ export function MathNotesCanvas({
             drawingData={activePage?.pencilKitData ?? ""}
             onDrawingChange={(event) => onUpdatePencilKitDrawing(event.nativeEvent.drawingData)}
             style={styles.notesCanvas}
+            toolPickerVisible={nativeToolPickerVisible}
           />
         ) : (
           <FallbackDrawingCanvas

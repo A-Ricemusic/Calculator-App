@@ -5,9 +5,17 @@ export type Operator = "+" | "-" | "x" | "/" | "xy";
 export type Variant = "utility" | "operator" | "number" | "scientific";
 
 export type ButtonConfig = {
+  accessibilityLabel?: string;
   label: string;
   action?: string;
   spacer?: boolean;
   variant?: Variant;
   wide?: boolean;
+};
+
+export type CalculatorHistoryEntry = {
+  id: string;
+  expression: string;
+  result: string;
+  createdAt: number;
 };

@@ -8,6 +8,7 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   private var toolPicker: PKToolPicker?
   private var lastDrawingData: String?
   private var hasWindow = false
+  private var wantsToolPickerVisible = true
 
   @objc var drawingData: NSString? {
     didSet {
@@ -27,6 +28,13 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   }
 
   @objc var onDrawingChange: RCTDirectEventBlock?
+
+  @objc var toolPickerVisible: Bool = true {
+    didSet {
+      wantsToolPickerVisible = toolPickerVisible
+      updateToolPickerVisibility()
+    }
+  }
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -65,13 +73,20 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
 
   private func updateToolPickerVisibility() {
     guard hasWindow else {
+      toolPicker?.setVisible(false, forFirstResponder: canvasView)
       return
     }
 
-    let picker = PKToolPicker()
+    let picker = toolPicker ?? PKToolPicker()
     picker.addObserver(canvasView)
-    picker.setVisible(true, forFirstResponder: canvasView)
-    canvasView.becomeFirstResponder()
+    picker.setVisible(wantsToolPickerVisible, forFirstResponder: canvasView)
+
+    if wantsToolPickerVisible {
+      canvasView.becomeFirstResponder()
+    } else {
+      canvasView.resignFirstResponder()
+    }
+
     toolPicker = picker
   }
 

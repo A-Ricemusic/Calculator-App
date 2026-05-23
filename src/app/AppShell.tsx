@@ -1,7 +1,10 @@
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text, View } from "react-native";
+import { useState } from "react";
 
 import { CalculatorScreen, useCalculator } from "../features/calculator";
+import { CalculatorHistory } from "../features/calculator/components/CalculatorHistory";
+import { ConversionScreen } from "../features/conversion";
 import { GraphingScreen } from "../features/graphing";
 import { MathNotesScreen } from "../features/notes";
 import type { CalculatorTheme } from "../features/theme";
@@ -25,8 +28,24 @@ export function AppShell({
   styles,
   theme,
 }: AppShellProps) {
+  const [historyOpen, setHistoryOpen] = useState(false);
   const calculatorMode: CalculatorMode = mode === "scientific" ? "scientific" : "basic";
-  const { clearLabel, display, handlePress, resetAll } = useCalculator(calculatorMode);
+  const {
+    clearHistory,
+    clearLabel,
+    display,
+    handlePress,
+    history,
+    isRadians,
+    loadHistoryEntry,
+    resetAll,
+  } = useCalculator(calculatorMode);
+  const isCalculatorMode = mode === "basic" || mode === "scientific";
+
+  function loadHistoryAndClose(entry: (typeof history)[number]) {
+    loadHistoryEntry(entry);
+    setHistoryOpen(false);
+  }
 
   return (
     <View style={[styles.appShell, shellStyle]}>
@@ -43,17 +62,28 @@ export function AppShell({
           {mode === "scientific" && <Text style={styles.angleLabel}>rad</Text>}
         </View>
         {mode === "basic" && <Text style={styles.modeTitle}>Calculator</Text>}
+        {mode === "conversion" && <Text style={styles.modeTitle}>Conversion</Text>}
         {mode === "graphing" && <Text style={styles.modeTitle}>Graphing</Text>}
         {mode === "notes" && <Text style={styles.modeTitle}>Math Notes</Text>}
-        {mode === "basic" || mode === "scientific" ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Reset calculator"
-            onPress={resetAll}
-            style={styles.iconButton}
-          >
-            <Text style={styles.iconText}>↺</Text>
-          </Pressable>
+        {isCalculatorMode ? (
+          <View style={styles.topBarRight}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Open calculator history"
+              onPress={() => setHistoryOpen(true)}
+              style={styles.iconButton}
+            >
+              <Text style={styles.iconText}>◷</Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Reset calculator"
+              onPress={resetAll}
+              style={styles.iconButton}
+            >
+              <Text style={styles.iconText}>↺</Text>
+            </Pressable>
+          </View>
         ) : (
           <View style={styles.iconButton} />
         )}
@@ -63,6 +93,8 @@ export function AppShell({
         <GraphingScreen styles={styles} theme={theme} />
       ) : mode === "notes" ? (
         <MathNotesScreen onSelectMode={onSelectMode} styles={styles} theme={theme} />
+      ) : mode === "conversion" ? (
+        <ConversionScreen styles={styles} />
       ) : (
         <CalculatorScreen
           clearLabel={clearLabel}
@@ -70,6 +102,17 @@ export function AppShell({
           handlePress={handlePress}
           mode={mode}
           styles={styles}
+        />
+      )}
+
+      {isCalculatorMode && (
+        <CalculatorHistory
+          history={history}
+          onClear={clearHistory}
+          onClose={() => setHistoryOpen(false)}
+          onLoad={loadHistoryAndClose}
+          styles={styles}
+          visible={historyOpen}
         />
       )}
     </View>

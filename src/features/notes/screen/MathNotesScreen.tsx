@@ -103,6 +103,7 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
         activePage={activePage}
         activeTool={activeTool}
         drawingStroke={drawingStroke}
+        nativeToolPickerVisible={!notesManagerOpen}
         notePanResponder={notePanResponder}
         onAddTextBlock={addTextBlock}
         onDeleteTextBlock={deleteTextBlock}

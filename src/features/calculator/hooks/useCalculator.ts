@@ -1,18 +1,113 @@
-import { useMemo, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { ButtonConfig, CalculatorMode, Operator } from "../types";
+import { calculatorHistoryStorageKey } from "../../../shared/constants/storageKeys";
+import type { ButtonConfig, CalculatorHistoryEntry, CalculatorMode, Operator } from "../types";
 import { calculate, factorial, formatValue } from "../utils/calculatorMath";
+
+const maxHistoryEntries = 25;
+
+const unaryLabels: Record<string, string> = {
+  square: "sqr",
+  cube: "cube",
+  reciprocal: "1/",
+  sqrt: "sqrt",
+  cbrt: "cbrt",
+  exp: "exp",
+  pow10: "10^",
+  ln: "ln",
+  log10: "log",
+  factorial: "!",
+  sin: "sin",
+  cos: "cos",
+  tan: "tan",
+  sinh: "sinh",
+  cosh: "cosh",
+  tanh: "tanh",
+};
+
+function isHistoryEntry(value: unknown): value is CalculatorHistoryEntry {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const entry = value as Record<string, unknown>;
+  return (
+    typeof entry.id === "string" &&
+    typeof entry.expression === "string" &&
+    typeof entry.result === "string" &&
+    typeof entry.createdAt === "number"
+  );
+}
+
+function createHistoryEntry(expression: string, result: string): CalculatorHistoryEntry {
+  const createdAt = Date.now();
+  return {
+    createdAt,
+    expression,
+    id: `${createdAt}-${Math.random().toString(36).slice(2)}`,
+    result,
+  };
+}
 
 export function useCalculator(mode: CalculatorMode) {
   const [display, setDisplay] = useState("0");
+  const [history, setHistory] = useState<CalculatorHistoryEntry[]>([]);
   const [storedValue, setStoredValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<Operator | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
+  const [isRadians, setIsRadians] = useState(true);
+  const historyLoadedRef = useRef(false);
 
   const clearLabel = useMemo(
     () => (mode === "scientific" ? (display === "0" ? "ac" : "c") : display === "0" ? "AC" : "C"),
     [display, mode],
   );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadHistory() {
+      try {
+        const storedHistory = await AsyncStorage.getItem(calculatorHistoryStorageKey);
+        const parsedHistory = storedHistory ? JSON.parse(storedHistory) : [];
+
+        if (!cancelled && Array.isArray(parsedHistory)) {
+          setHistory(parsedHistory.filter(isHistoryEntry).slice(0, maxHistoryEntries));
+        }
+      } catch {
+        if (!cancelled) {
+          setHistory([]);
+        }
+      } finally {
+        historyLoadedRef.current = true;
+      }
+    }
+
+    loadHistory();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!historyLoadedRef.current) {
+      return;
+    }
+
+    AsyncStorage.setItem(calculatorHistoryStorageKey, JSON.stringify(history)).catch(() => {});
+  }, [history]);
+
+  function addHistoryEntry(expression: string, result: string) {
+    if (result === "Error" || !Number.isFinite(Number(result))) {
+      return;
+    }
+
+    setHistory((current) =>
+      [createHistoryEntry(expression, result), ...current].slice(0, maxHistoryEntries),
+    );
+  }
 
   function resetAll() {
     setDisplay("0");
@@ -50,7 +145,7 @@ export function useCalculator(mode: CalculatorMode) {
 
   function applyUnary(action: string) {
     const value = Number(display);
-    const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
+    const trigInput = isRadians ? value : (value * Math.PI) / 180;
 
     const resultByAction: Record<string, number> = {
       square: value ** 2,
@@ -63,16 +158,21 @@ export function useCalculator(mode: CalculatorMode) {
       ln: Math.log(value),
       log10: Math.log10(value),
       factorial: factorial(value),
-      sin: Math.sin(degreesToRadians(value)),
-      cos: Math.cos(degreesToRadians(value)),
-      tan: Math.tan(degreesToRadians(value)),
+      sin: Math.sin(trigInput),
+      cos: Math.cos(trigInput),
+      tan: Math.tan(trigInput),
       sinh: Math.sinh(value),
       cosh: Math.cosh(value),
       tanh: Math.tanh(value),
     };
 
-    setDisplay(formatValue(resultByAction[action]));
+    const result = formatValue(resultByAction[action]);
+    const label = unaryLabels[action] ?? action;
+    const expression = action === "factorial" ? `${display}!` : `${label}(${display})`;
+
+    setDisplay(result);
     setWaitingForOperand(true);
+    addHistoryEntry(expression, result);
   }
 
   function performOperation(nextOperator: Operator) {
@@ -82,8 +182,11 @@ export function useCalculator(mode: CalculatorMode) {
       setStoredValue(inputValue);
     } else if (operator) {
       const result = calculate(storedValue, inputValue, operator);
-      setDisplay(formatValue(result));
+      const formattedResult = formatValue(result);
+
+      setDisplay(formattedResult);
       setStoredValue(result);
+      addHistoryEntry(`${formatValue(storedValue)} ${operator} ${display}`, formattedResult);
     }
 
     setOperator(nextOperator);
@@ -96,10 +199,13 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     const result = calculate(storedValue, Number(display), operator);
-    setDisplay(formatValue(result));
+    const formattedResult = formatValue(result);
+
+    setDisplay(formattedResult);
     setStoredValue(null);
     setOperator(null);
     setWaitingForOperand(true);
+    addHistoryEntry(`${formatValue(storedValue)} ${operator} ${display}`, formattedResult);
   }
 
   function handleClear() {
@@ -109,6 +215,22 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     resetAll();
+  }
+
+  function handleBackspace() {
+    if (display === "Error" || waitingForOperand) {
+      setDisplay("0");
+      setWaitingForOperand(false);
+      return;
+    }
+
+    setDisplay((current) => {
+      if (current.length <= 1 || (current.startsWith("-") && current.length === 2)) {
+        return "0";
+      }
+
+      return current.slice(0, -1);
+    });
   }
 
   function handlePress(button: ButtonConfig) {
@@ -145,7 +267,7 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     if (action === "backspace") {
-      setDisplay((current) => (current.length > 1 ? current.slice(0, -1) : "0"));
+      handleBackspace();
       return;
     }
 
@@ -153,6 +275,11 @@ export function useCalculator(mode: CalculatorMode) {
       const constants = { pi: Math.PI, e: Math.E, random: Math.random() };
       setDisplay(formatValue(constants[action]));
       setWaitingForOperand(true);
+      return;
+    }
+
+    if (action === "deg") {
+      setIsRadians((current) => !current);
       return;
     }
 
@@ -196,10 +323,25 @@ export function useCalculator(mode: CalculatorMode) {
     }
   }
 
+  function loadHistoryEntry(entry: CalculatorHistoryEntry) {
+    setDisplay(entry.result);
+    setStoredValue(null);
+    setOperator(null);
+    setWaitingForOperand(true);
+  }
+
+  function clearHistory() {
+    setHistory([]);
+  }
+
   return {
+    clearHistory,
     clearLabel,
     display,
     handlePress,
+    history,
+    isRadians,
+    loadHistoryEntry,
     resetAll,
   };
 }

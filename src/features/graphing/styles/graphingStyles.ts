@@ -31,6 +31,27 @@ export function createGraphingStyles(theme: CalculatorTheme) {
       fontSize: 15,
       fontWeight: "700",
     },
+    equationPanelActions: {
+      alignItems: "center",
+      flexDirection: "row",
+      gap: 8,
+    },
+    collapseEquationButton: {
+      alignItems: "center",
+      backgroundColor: "#f3f3ef",
+      borderColor: "#d7d7d2",
+      borderRadius: 16,
+      borderWidth: 1,
+      height: 32,
+      justifyContent: "center",
+      width: 32,
+    },
+    collapseEquationText: {
+      color: "#555555",
+      fontSize: 20,
+      fontWeight: "700",
+      lineHeight: 24,
+    },
     addEquationButton: {
       alignItems: "center",
       backgroundColor: theme.colors.buttonOperator,

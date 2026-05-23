@@ -444,7 +444,6 @@ export function createNotesStyles(_theme: CalculatorTheme) {
     },
     notesManagerOverlay: {
       ...StyleSheet.absoluteFillObject,
-      justifyContent: "flex-end",
     },
     notesManagerScrim: {
       ...StyleSheet.absoluteFillObject,
@@ -452,13 +451,22 @@ export function createNotesStyles(_theme: CalculatorTheme) {
     },
     notesManagerSheet: {
       backgroundColor: "#15181d",
-      borderTopColor: "rgba(255, 255, 255, 0.08)",
-      borderTopLeftRadius: 18,
-      borderTopRightRadius: 18,
-      borderTopWidth: 1,
-      maxHeight: "58%",
+      borderColor: "rgba(255, 255, 255, 0.1)",
+      borderRadius: 14,
+      borderWidth: 1,
+      left: 10,
+      maxHeight: "42%",
+      paddingBottom: 12,
       paddingHorizontal: 14,
       paddingTop: 14,
+      position: "absolute",
+      right: 10,
+      shadowColor: "#000000",
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.38,
+      shadowRadius: 18,
+      top: 102,
+      elevation: 10,
     },
     notesManagerHeader: {
       alignItems: "center",
@@ -486,7 +494,7 @@ export function createNotesStyles(_theme: CalculatorTheme) {
     },
     notesManagerList: {
       gap: 8,
-      paddingBottom: 18,
+      paddingBottom: 2,
     },
     notesManagerItem: {
       alignItems: "center",

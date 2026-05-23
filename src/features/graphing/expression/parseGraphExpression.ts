@@ -82,7 +82,7 @@ export function parseGraphExpression(input: string): ParsedGraphExpression | und
   }
 
   if (!ALLOWED_EXPRESSION.test(normalized)) {
-    throw new Error("Use numbers, x, y, operators, and common functions.");
+    throw new Error("Unsupported token. Use numbers, x, y, operators, and common functions.");
   }
 
   const [left, right, extra] = normalized.split("=");
