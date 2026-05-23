@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
-import type { AppStyles } from "../../../../app/appTypes";
+import type { AppStyles } from "@shared/styles/appTypes";
 import type { PlottedEquation } from "../../types";
 import { GRAPH_COLORS } from "../constants/graphColors";
 

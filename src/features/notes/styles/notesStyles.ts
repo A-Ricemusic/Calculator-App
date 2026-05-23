@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import type { CalculatorTheme } from "../../theme";
+import type { CalculatorTheme } from "@features/theme";
 import { createNotesCanvasStyles } from "./notesCanvasStyles";
 import { createNotesManagerStyles } from "./notesManagerStyles";
 import { createNotesNavigationStyles } from "./notesNavigationStyles";

@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useMemo, useState } from "react";
-import { Platform, SafeAreaView, StatusBar as NativeStatusBar } from "react-native";
+import { Platform, StatusBar as NativeStatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemeId, useThemePreference } from "../features/theme";
 import { DrawerMenu } from "../features/menu";

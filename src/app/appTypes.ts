@@ -1,3 +1,1 @@
-import type { createAppStyles } from "./appStyles";
-
-export type AppStyles = ReturnType<typeof createAppStyles>;
+export type { AppStyles } from "../shared/styles/appTypes";

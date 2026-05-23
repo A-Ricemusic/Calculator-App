@@ -16,6 +16,13 @@ describe("graphGeometry", () => {
     expect(formatTick(2.25)).toBe("2.3");
   });
 
+  it("formats extreme tick labels with compact scientific notation", () => {
+    expect(formatTick(1e48)).toBe("1×10⁴⁸");
+    expect(formatTick(-1.5e48)).toBe("-1.5×10⁴⁸");
+    expect(formatTick(5e47)).toBe("5×10⁴⁷");
+    expect(formatTick(0.000001)).toBe("1×10⁻⁶");
+  });
+
   it("builds stable ticks inside the viewport", () => {
     expect(makeTicks(-5, 5, 2)).toEqual([-4, -2, 0, 2, 4]);
   });

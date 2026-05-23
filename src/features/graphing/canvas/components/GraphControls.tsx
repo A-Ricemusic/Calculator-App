@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import type { AppStyles } from "../../../../app/appTypes";
+import type { AppStyles } from "@shared/styles/appTypes";
 
 type GraphControlsProps = {
   onReset: () => void;

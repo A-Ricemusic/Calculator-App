@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { LayoutChangeEvent, View } from "react-native";
 
-import type { AppStyles } from "../../../app/appTypes";
-import type { CalculatorTheme } from "../../theme";
+import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorTheme } from "@features/theme";
 import { GraphCanvas } from "../canvas/components/GraphCanvas";
 import { GraphControls } from "../canvas/components/GraphControls";
 import { EquationList } from "../equations/components/EquationList";

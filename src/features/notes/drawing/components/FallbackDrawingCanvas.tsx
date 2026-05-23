@@ -3,8 +3,8 @@ import { StyleSheet, View } from "react-native";
 import type { PanResponderInstance } from "react-native";
 import Svg from "react-native-svg";
 
-import type { AppStyles } from "../../../../app/appTypes";
-import type { CalculatorTheme } from "../../../theme";
+import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorTheme } from "@features/theme";
 import { TextBlockLayer } from "../../text/components/TextBlockLayer";
 import type { NotePage, NoteTool, Stroke } from "../../types";
 import { canvasGridDots } from "../constants/canvasGrid";

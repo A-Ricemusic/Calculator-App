@@ -1,5 +1,30 @@
 import type { GraphPoint, GraphViewport } from "../../types";
 
+const superscriptDigits: Record<string, string> = {
+  "-": "⁻",
+  "0": "⁰",
+  "1": "¹",
+  "2": "²",
+  "3": "³",
+  "4": "⁴",
+  "5": "⁵",
+  "6": "⁶",
+  "7": "⁷",
+  "8": "⁸",
+  "9": "⁹",
+};
+
+function formatExponent(exponent: number) {
+  return String(exponent)
+    .split("")
+    .map((character) => superscriptDigits[character] ?? character)
+    .join("");
+}
+
+function trimTrailingZeros(value: string) {
+  return value.replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1");
+}
+
 export function niceStep(range: number) {
   const rough = range / 10;
   const power = 10 ** Math.floor(Math.log10(rough));
@@ -19,6 +44,15 @@ export function niceStep(range: number) {
 export function formatTick(value: number) {
   if (Math.abs(value) < 1e-8) {
     return "0";
+  }
+
+  const magnitude = Math.abs(value);
+
+  if (magnitude >= 1e6 || magnitude < 1e-3) {
+    const exponent = Math.floor(Math.log10(magnitude));
+    const coefficient = value / 10 ** exponent;
+
+    return `${trimTrailingZeros(coefficient.toFixed(1))}×10${formatExponent(exponent)}`;
   }
 
   return Number.isInteger(value) ? String(value) : value.toFixed(1);

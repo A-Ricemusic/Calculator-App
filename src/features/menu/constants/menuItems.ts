@@ -1,4 +1,4 @@
-import type { AppMode } from "../../../app/appModes";
+import type { AppMode } from "@app/appModes";
 
 export const menuItems: { label: string; icon: string; mode?: AppMode }[] = [
   { label: "Standard", icon: "+/-", mode: "basic" },

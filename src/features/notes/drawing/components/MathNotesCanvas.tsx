@@ -1,8 +1,8 @@
 import { View } from "react-native";
 import type { PanResponderInstance } from "react-native";
 
-import type { AppStyles } from "../../../../app/appTypes";
-import type { CalculatorTheme } from "../../../theme";
+import type { AppStyles } from "@shared/styles/appTypes";
+import type { CalculatorTheme } from "@features/theme";
 import { PencilKitCanvas } from "../../platform/ios/PencilKitCanvas";
 import { TextEntryBar } from "../../text/components/TextEntryBar";
 import type { NotePage, NoteTool, Stroke } from "../../types";

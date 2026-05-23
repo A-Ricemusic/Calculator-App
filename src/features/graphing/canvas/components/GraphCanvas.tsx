@@ -50,8 +50,11 @@ export function GraphCanvas({
   onViewportChange,
 }: GraphCanvasProps) {
   const { graphBackground, graphGridLine, graphAxisLine, graphLabelText } = theme.colors;
+  const latestViewport = useRef<GraphViewport>(viewport);
   const panStartViewport = useRef<GraphViewport>(viewport);
   const pinchStart = useRef<PinchState | null>(null);
+
+  latestViewport.current = viewport;
 
   const geometry = useMemo(() => {
     const xScale = width / (viewport.xMax - viewport.xMin);
@@ -75,7 +78,7 @@ export function GraphCanvas({
         onMoveShouldSetPanResponder: (_, gestureState) =>
           Math.abs(gestureState.dx) > 2 || Math.abs(gestureState.dy) > 2,
         onPanResponderGrant: () => {
-          panStartViewport.current = viewport;
+          panStartViewport.current = latestViewport.current;
           pinchStart.current = null;
         },
         onPanResponderMove: (event, gestureState) => {
@@ -86,7 +89,7 @@ export function GraphCanvas({
             const distance = getTouchDistance(touchA, touchB);
 
             if (!pinchStart.current) {
-              pinchStart.current = { distance, viewport };
+              pinchStart.current = { distance, viewport: latestViewport.current };
             }
 
             if (distance <= 0 || pinchStart.current.distance <= 0) {
@@ -109,7 +112,7 @@ export function GraphCanvas({
 
           if (touches.length === 1) {
             if (pinchStart.current) {
-              panStartViewport.current = viewport;
+              panStartViewport.current = latestViewport.current;
               pinchStart.current = null;
               return;
             }
@@ -133,7 +136,7 @@ export function GraphCanvas({
         },
         onStartShouldSetPanResponder: (event) => event.nativeEvent.touches.length >= 2,
       }),
-    [height, onViewportChange, viewport, width],
+    [height, onViewportChange, width],
   );
 
   return (

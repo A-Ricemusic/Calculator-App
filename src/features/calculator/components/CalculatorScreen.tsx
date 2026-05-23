@@ -1,4 +1,4 @@
-import type { AppStyles } from "../../../app/appTypes";
+import type { AppStyles } from "@shared/styles/appTypes";
 import type { ButtonConfig, CalculatorMode } from "../types";
 import { CalculatorDisplay } from "./CalculatorDisplay";
 import { CalculatorKeypad } from "./CalculatorKeypad";

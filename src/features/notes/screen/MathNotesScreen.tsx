@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import type { AppStyles } from "../../../app/appTypes";
-import type { AppMode } from "../../../app/appModes";
-import type { CalculatorTheme } from "../../theme";
+import type { AppStyles } from "@shared/styles/appTypes";
+import type { AppMode } from "@app/appModes";
+import type { CalculatorTheme } from "@features/theme";
 import { MathNotesCanvas } from "../drawing/components/MathNotesCanvas";
 import { useReactNativeDrawing } from "../drawing/hooks/useReactNativeDrawing";
 import { NotesHeader } from "../navigation/components/NotesHeader";

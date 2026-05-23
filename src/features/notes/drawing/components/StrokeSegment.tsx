@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Path } from "react-native-svg";
 
-import type { CalculatorTheme } from "../../../theme";
+import type { CalculatorTheme } from "@features/theme";
 import type { Stroke } from "../../types";
 import { pointsToSvgPath } from "../utils/drawingGeometry";
 

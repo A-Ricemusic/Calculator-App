@@ -1,6 +1,6 @@
 import { Pressable, View } from "react-native";
 
-import type { AppStyles } from "../../../../app/appTypes";
+import type { AppStyles } from "@shared/styles/appTypes";
 import { utensilColors } from "../../drawing/constants/drawingTools";
 
 type NotesColorPickerProps = {

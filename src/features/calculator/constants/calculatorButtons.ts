@@ -13,8 +13,8 @@ export const basicButtons: ButtonConfig[][] = [
     { label: "9" },
     { label: "×", action: "x", variant: "operator" },
   ],
-  [{ label: "6" }, { label: "5" }, { label: "4" }, { label: "-", variant: "operator" }],
-  [{ label: "3" }, { label: "2" }, { label: "1" }, { label: "+", variant: "operator" }],
+  [{ label: "4" }, { label: "5" }, { label: "6" }, { label: "-", variant: "operator" }],
+  [{ label: "1" }, { label: "2" }, { label: "3" }, { label: "+", variant: "operator" }],
   [
     { label: "±", action: "sign", variant: "utility" },
     { label: "0" },

@@ -1,6 +1,6 @@
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 
-import type { AppStyles } from "../../../app/appTypes";
+import type { AppStyles } from "@shared/styles/appTypes";
 import type { CalculatorHistoryEntry } from "../types";
 
 type CalculatorHistoryProps = {

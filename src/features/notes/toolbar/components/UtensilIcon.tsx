@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import type { AppStyles } from "../../../../app/appTypes";
+import type { AppStyles } from "@shared/styles/appTypes";
 import type { NoteTool } from "../../types";
 
 type UtensilIconProps = {
