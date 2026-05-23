@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.10",
+    "@vitest/coverage-v8": "^4.1.7",
     "expo-doctor": "^1.19.7",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
