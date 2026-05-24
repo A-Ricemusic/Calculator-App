@@ -12,6 +12,16 @@ export function calculate(first: number, second: number, operator: Operator) {
       return second === 0 ? Number.NaN : first / second;
     case "xy":
       return first ** second;
+    case "root":
+      if (second === 0) {
+        return Number.NaN;
+      }
+
+      if (first < 0 && Number.isInteger(second) && Math.abs(second % 2) === 1) {
+        return -(Math.abs(first) ** (1 / second));
+      }
+
+      return first ** (1 / second);
   }
 }
 

@@ -9,10 +9,18 @@ describe("calculatorMath", () => {
     expect(calculate(7, 5, "x")).toBe(35);
     expect(calculate(10, 2, "/")).toBe(5);
     expect(calculate(2, 4, "xy")).toBe(16);
+    expect(calculate(81, 4, "root")).toBe(3);
+    expect(calculate(32, 5, "root")).toBe(2);
+    expect(calculate(-8, 3, "root")).toBe(-2);
   });
 
   it("returns NaN when dividing by zero", () => {
     expect(calculate(10, 0, "/")).toBeNaN();
+  });
+
+  it("returns NaN for invalid roots", () => {
+    expect(calculate(10, 0, "root")).toBeNaN();
+    expect(calculate(-16, 2, "root")).toBeNaN();
   });
 
   it("handles factorial boundaries", () => {

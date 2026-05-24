@@ -175,7 +175,7 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     if (action === "root") {
-      performOperation("xy");
+      performOperation("root");
       return;
     }
 
@@ -184,7 +184,7 @@ export function useCalculator(mode: CalculatorMode) {
       return;
     }
 
-    if (["+", "-", "x", "/", "xy"].includes(action)) {
+    if (["+", "-", "x", "/", "xy", "root"].includes(action)) {
       performOperation(action as Operator);
     }
   }

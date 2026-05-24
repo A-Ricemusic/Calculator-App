@@ -1,7 +1,7 @@
 import type { CalculatorMode } from "@app/appModes";
 
 export type { CalculatorMode };
-export type Operator = "+" | "-" | "x" | "/" | "xy";
+export type Operator = "+" | "-" | "x" | "/" | "xy" | "root";
 export type Variant = "utility" | "operator" | "number" | "scientific";
 
 export type ButtonConfig = {
