@@ -99,5 +99,64 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
     utilityText: {
       color: theme.colors.utilityText,
     },
+    fractionKeypad: {
+      gap: 10,
+      paddingBottom: 12,
+      paddingHorizontal: 12,
+      paddingTop: 10,
+    },
+    fractionTopRow: {
+      flexDirection: "row",
+      gap: 10,
+    },
+    fractionBody: {
+      flexDirection: "row",
+      gap: 10,
+    },
+    fractionNumberBlock: {
+      flex: 1,
+      gap: 7,
+    },
+    fractionStackedPads: {
+      flex: 1.55,
+      gap: 7,
+    },
+    fractionOperatorColumn: {
+      flex: 0.72,
+      gap: 10,
+    },
+    fractionSmallRow: {
+      flexDirection: "row",
+      gap: 7,
+    },
+    fractionButton: {
+      alignItems: "center",
+      backgroundColor: theme.colors.buttonNumber,
+      borderRadius: 8,
+      flex: 1,
+      justifyContent: "center",
+      minHeight: 58,
+      paddingHorizontal: 4,
+    },
+    fractionTallButton: {
+      minHeight: 94,
+    },
+    fractionWideButton: {
+      flex: 2.12,
+    },
+    fractionActiveButton: {
+      borderColor: theme.colors.displayText,
+      borderWidth: 1,
+    },
+    fractionButtonText: {
+      color: theme.colors.buttonText,
+      fontSize: 32,
+      fontWeight: "300",
+    },
+    fractionInputBar: {
+      backgroundColor: theme.colors.displayText,
+      height: 3,
+      opacity: 0.8,
+    },
   } as const;
 }

@@ -26,7 +26,7 @@ export function AppShell({
   styles,
   theme,
 }: AppShellProps) {
-  const isCalculatorMode = mode === "basic" || mode === "scientific";
+  const isCalculatorMode = mode === "basic" || mode === "scientific" || mode === "fraction";
 
   if (isCalculatorMode) {
     return (
