@@ -4,37 +4,10 @@ import type { ButtonConfig } from "../types";
 import type { FractionField } from "../hooks/useFractionCalculator";
 import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 
-const fieldTabs: { field: FractionField; label: string }[] = [
-  { field: "whole", label: "Whole" },
-  { field: "numerator", label: "Num" },
-  { field: "denominator", label: "Den" },
-];
-
-const keypadRows: ButtonConfig[][] = [
-  [
-    { label: "7" },
-    { label: "8" },
-    { label: "9" },
-    { label: "×", action: "x", variant: "operator" },
-  ],
-  [
-    { label: "4" },
-    { label: "5" },
-    { label: "6" },
-    { label: "−", action: "-", variant: "operator" },
-  ],
-  [
-    { label: "1" },
-    { label: "2" },
-    { label: "3" },
-    { label: "+", action: "+", variant: "operator" },
-  ],
-];
-
-const bottomRow: ButtonConfig[] = [
-  { label: "0", wide: true },
-  { label: "⌫", action: "backspace", accessibilityLabel: "Backspace", variant: "utility" },
-  { label: "=", action: "equals", variant: "operator" },
+const digits = [
+  ["7", "8", "9"],
+  ["4", "5", "6"],
+  ["1", "2", "3"],
 ];
 
 type FractionKeypadProps = {
@@ -74,7 +47,7 @@ function FractionPadButton({
       <Text
         numberOfLines={1}
         adjustsFontSizeToFit
-        minimumFontScale={0.55}
+        minimumFontScale={0.5}
         style={[
           styles.fractionButtonText,
           button.variant === "operator" && styles.operatorText,
@@ -87,16 +60,64 @@ function FractionPadButton({
   );
 }
 
+function NumberBlock({
+  field,
+  onPress,
+  styles,
+}: {
+  field: FractionField;
+  onPress: (button: ButtonConfig) => void;
+  styles: CalculatorStyles;
+}) {
+  return (
+    <View style={styles.fractionNumberBlock}>
+      {digits.map((row) => (
+        <View key={`${field}-${row.join("")}`} style={styles.fractionSmallRow}>
+          {row.map((digit) => (
+            <FractionPadButton
+              key={`${field}-${digit}`}
+              button={{ label: digit, field }}
+              clearLabel=""
+              onPress={onPress}
+              styles={styles}
+            />
+          ))}
+        </View>
+      ))}
+      <View style={styles.fractionSmallRow}>
+        <FractionPadButton
+          button={{ label: "0", field, wide: field === "whole" }}
+          clearLabel=""
+          onPress={onPress}
+          styles={styles}
+        />
+        <FractionPadButton
+          button={{
+            label: "⌫",
+            action: "backspace",
+            accessibilityLabel: "Backspace",
+            field,
+            variant: "utility",
+          }}
+          clearLabel=""
+          onPress={onPress}
+          styles={styles}
+        />
+      </View>
+    </View>
+  );
+}
+
 export function FractionKeypad({
-  activeField,
+  activeField: _activeField,
   clearLabel,
   onPress,
-  onSelectField,
+  onSelectField: _onSelectField,
   styles,
 }: FractionKeypadProps) {
   return (
     <View style={styles.fractionKeypad}>
-      <View style={styles.fractionRow}>
+      <View style={styles.fractionTopRow}>
         <FractionPadButton
           button={{ label: "AC", action: "clear", variant: "utility" }}
           clearLabel={clearLabel}
@@ -123,54 +144,39 @@ export function FractionKeypad({
         />
       </View>
 
-      <View style={styles.fractionFieldRow}>
-        {fieldTabs.map(({ field, label }) => (
-          <Pressable
-            key={field}
-            accessibilityRole="button"
-            accessibilityLabel={`Edit ${label.toLowerCase()}`}
-            onPress={() => onSelectField(field)}
-            style={[
-              styles.fractionFieldTab,
-              activeField === field && styles.fractionFieldTabActive,
-            ]}
-          >
-            <Text
-              style={[
-                styles.fractionFieldTabText,
-                activeField === field && styles.fractionFieldTabTextActive,
-              ]}
-            >
-              {label}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-
-      {keypadRows.map((row) => (
-        <View key={row.map((b) => b.label).join("-")} style={styles.fractionRow}>
-          {row.map((button) => (
-            <FractionPadButton
-              key={button.label}
-              button={button}
-              clearLabel={clearLabel}
-              onPress={onPress}
-              styles={styles}
-            />
-          ))}
+      <View style={styles.fractionBody}>
+        <NumberBlock field="whole" onPress={onPress} styles={styles} />
+        <View style={styles.fractionStackedPads}>
+          <NumberBlock field="numerator" onPress={onPress} styles={styles} />
+          <View style={styles.fractionInputBar} />
+          <NumberBlock field="denominator" onPress={onPress} styles={styles} />
         </View>
-      ))}
-
-      <View style={styles.fractionRow}>
-        {bottomRow.map((button) => (
+        <View style={styles.fractionOperatorColumn}>
           <FractionPadButton
-            key={button.label}
-            button={button}
+            button={{ label: "×", action: "x", variant: "operator" }}
             clearLabel={clearLabel}
             onPress={onPress}
             styles={styles}
           />
-        ))}
+          <FractionPadButton
+            button={{ label: "−", action: "-", variant: "operator" }}
+            clearLabel={clearLabel}
+            onPress={onPress}
+            styles={styles}
+          />
+          <FractionPadButton
+            button={{ label: "+", action: "+", variant: "operator" }}
+            clearLabel={clearLabel}
+            onPress={onPress}
+            styles={styles}
+          />
+          <FractionPadButton
+            button={{ label: "=", action: "equals", variant: "operator" }}
+            clearLabel={clearLabel}
+            onPress={onPress}
+            styles={styles}
+          />
+        </View>
       </View>
     </View>
   );

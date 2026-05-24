@@ -31,7 +31,7 @@ export function createNotesToolbarStyles() {
       zIndex: 4,
     },
     notesUtensilToggleOpen: {
-      bottom: 94,
+      bottom: 108,
     },
     notesUtensilToggleIcon: {
       color: "#ffffff",

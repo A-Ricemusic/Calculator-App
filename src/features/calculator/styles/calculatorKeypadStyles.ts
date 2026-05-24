@@ -100,59 +100,60 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       color: theme.colors.utilityText,
     },
     fractionKeypad: {
-      gap: 12,
+      flex: 1,
+      gap: 6,
       paddingBottom: 12,
-      paddingHorizontal: 16,
-      paddingTop: 16,
+      paddingHorizontal: 10,
+      paddingTop: 8,
     },
-    fractionRow: {
-      alignItems: "center",
+    fractionTopRow: {
       flexDirection: "row",
-      gap: 12,
-      justifyContent: "space-between",
+      gap: 6,
     },
-    fractionFieldRow: {
+    fractionBody: {
+      flex: 1,
       flexDirection: "row",
-      gap: 8,
+      gap: 6,
     },
-    fractionFieldTab: {
+    fractionNumberBlock: {
+      flex: 1,
+      gap: 4,
+    },
+    fractionStackedPads: {
+      flex: 1.4,
+      gap: 4,
+    },
+    fractionOperatorColumn: {
+      flex: 0.55,
+      gap: 6,
+    },
+    fractionSmallRow: {
+      flex: 1,
+      flexDirection: "row",
+      gap: 4,
+    },
+    fractionButton: {
       alignItems: "center",
       backgroundColor: theme.colors.buttonNumber,
       borderRadius: 8,
       flex: 1,
       justifyContent: "center",
-      opacity: 0.55,
-      paddingVertical: 10,
-    },
-    fractionFieldTabActive: {
-      borderColor: theme.colors.displayText,
-      borderWidth: 2,
-      opacity: 1,
-    },
-    fractionFieldTabText: {
-      color: theme.colors.buttonText,
-      fontSize: 16,
-      fontWeight: "500",
-    },
-    fractionFieldTabTextActive: {
-      fontWeight: "700",
-    },
-    fractionButton: {
-      alignItems: "center",
-      aspectRatio: 1,
-      backgroundColor: theme.colors.buttonNumber,
-      borderRadius: 999,
-      flex: 1,
-      justifyContent: "center",
+      paddingHorizontal: 2,
+      paddingVertical: 14,
     },
     fractionWideButton: {
-      aspectRatio: undefined,
-      flex: 2,
+      flex: 2.07,
     },
     fractionButtonText: {
       color: theme.colors.buttonText,
-      fontSize: 34,
-      fontWeight: "400",
+      fontSize: 22,
+      fontWeight: "300",
+    },
+    fractionInputBar: {
+      backgroundColor: theme.colors.displayText,
+      height: 2,
+      marginHorizontal: 4,
+      opacity: 0.7,
     },
   } as const;
 }
