@@ -29,6 +29,12 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       fontSize: 15,
       fontWeight: "400",
     },
+    sciFnButtonActive: {
+      backgroundColor: theme.colors.buttonScientific,
+    },
+    sciFnButtonActiveText: {
+      color: theme.colors.buttonText,
+    },
     keypad: {
       gap: 12,
       paddingBottom: 12,

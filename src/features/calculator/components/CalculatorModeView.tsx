@@ -30,6 +30,7 @@ export function CalculatorModeView({
     handlePress,
     history,
     isRadians,
+    isSecondFunction,
     loadHistoryEntry,
     resetAll,
   } = useCalculator(calculatorMode);
@@ -83,6 +84,7 @@ export function CalculatorModeView({
         clearLabel={clearLabel}
         display={display}
         handlePress={handlePress}
+        isSecondFunction={isSecondFunction}
         mode={mode}
         styles={styles}
       />

@@ -6,6 +6,7 @@ export type Variant = "utility" | "operator" | "number" | "scientific";
 
 export type ButtonConfig = {
   accessibilityLabel?: string;
+  active?: boolean;
   label: string;
   action?: string;
   spacer?: boolean;

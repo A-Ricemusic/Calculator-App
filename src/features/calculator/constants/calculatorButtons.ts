@@ -25,15 +25,20 @@ export const basicButtons: ButtonConfig[][] = [
 
 export const scientificFnButtons: ButtonConfig[][] = [
   [
-    { label: "(", variant: "scientific" },
-    { label: ")", variant: "scientific" },
-    { label: "mc", action: "noop", variant: "scientific" },
-    { label: "m+", action: "noop", variant: "scientific" },
-    { label: "m−", action: "noop", variant: "scientific" },
-    { label: "mr", action: "noop", variant: "scientific" },
+    { label: "(", action: "openParen", variant: "scientific" },
+    { label: ")", action: "closeParen", variant: "scientific" },
+    { label: "mc", action: "memoryClear", variant: "scientific" },
+    { label: "m+", action: "memoryAdd", variant: "scientific" },
+    { label: "m−", action: "memorySubtract", variant: "scientific" },
+    { label: "mr", action: "memoryRecall", variant: "scientific" },
   ],
   [
-    { label: "↑", action: "noop", variant: "scientific" },
+    {
+      label: "↑",
+      action: "secondFunction",
+      accessibilityLabel: "Second functions",
+      variant: "scientific",
+    },
     { label: "x²", action: "square", variant: "scientific" },
     { label: "x³", action: "cube", variant: "scientific" },
     { label: "xʸ", action: "xy", variant: "scientific" },

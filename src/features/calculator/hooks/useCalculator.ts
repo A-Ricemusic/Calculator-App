@@ -2,15 +2,29 @@ import { useMemo, useState } from "react";
 
 import type { ButtonConfig, CalculatorHistoryEntry, CalculatorMode, Operator } from "../types";
 import { useCalculatorHistory } from "../history/useCalculatorHistory";
-import { calculate, formatValue } from "../utils/calculatorMath";
+import { calculate, evaluateCalculatorExpression, formatValue } from "../utils/calculatorMath";
 import { calculateUnaryAction, isUnaryAction } from "../utils/scientificOperations";
+
+function isExpressionDisplay(value: string) {
+  return /[()+x\/]/.test(value) || value.slice(1).includes("-");
+}
+
+function hasTrailingBinaryOperator(value: string) {
+  return /[+x\/-]$/.test(value);
+}
+
+function appendExpressionValue(current: string, value: string) {
+  return current === "0" || current === "Error" ? value : `${current}${value}`;
+}
 
 export function useCalculator(mode: CalculatorMode) {
   const [display, setDisplay] = useState("0");
+  const [memoryValue, setMemoryValue] = useState(0);
   const [storedValue, setStoredValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<Operator | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [isRadians, setIsRadians] = useState(true);
+  const [isSecondFunction, setIsSecondFunction] = useState(false);
   const { addHistoryEntry, clearHistory, history } = useCalculatorHistory();
 
   const clearLabel = useMemo(
@@ -31,6 +45,11 @@ export function useCalculator(mode: CalculatorMode) {
       return;
     }
 
+    if (isExpressionDisplay(display)) {
+      setDisplay((current) => `${current}${digit}`);
+      return;
+    }
+
     if (waitingForOperand) {
       setDisplay(digit);
       setWaitingForOperand(false);
@@ -41,6 +60,15 @@ export function useCalculator(mode: CalculatorMode) {
   }
 
   function inputDecimal() {
+    if (isExpressionDisplay(display)) {
+      setDisplay((current) => {
+        const currentNumber = current.split(/[()+x\/-]/).at(-1) ?? "";
+
+        return currentNumber.includes(".") ? current : `${current}.`;
+      });
+      return;
+    }
+
     if (waitingForOperand || display === "Error") {
       setDisplay("0.");
       setWaitingForOperand(false);
@@ -79,6 +107,17 @@ export function useCalculator(mode: CalculatorMode) {
   }
 
   function handleEquals() {
+    if (isExpressionDisplay(display)) {
+      const formattedResult = formatValue(evaluateCalculatorExpression(display));
+
+      setDisplay(formattedResult);
+      setStoredValue(null);
+      setOperator(null);
+      setWaitingForOperand(true);
+      addHistoryEntry(display, formattedResult);
+      return;
+    }
+
     if (storedValue === null || operator === null) {
       return;
     }
@@ -116,6 +155,63 @@ export function useCalculator(mode: CalculatorMode) {
 
       return current.slice(0, -1);
     });
+  }
+
+  function appendParenthesis(parenthesis: "(" | ")") {
+    setDisplay((current) => {
+      if (
+        parenthesis === "(" &&
+        current !== "0" &&
+        current !== "Error" &&
+        current.at(-1) !== "(" &&
+        !hasTrailingBinaryOperator(current)
+      ) {
+        return `${current}x(`;
+      }
+
+      return appendExpressionValue(current, parenthesis);
+    });
+    setStoredValue(null);
+    setOperator(null);
+    setWaitingForOperand(false);
+  }
+
+  function handleMemoryAction(action: string) {
+    const value = Number(display);
+
+    if (action === "memoryClear") {
+      setMemoryValue(0);
+      return;
+    }
+
+    if (action === "memoryRecall") {
+      setDisplay(formatValue(memoryValue));
+      setWaitingForOperand(true);
+      return;
+    }
+
+    if (!Number.isFinite(value)) {
+      return;
+    }
+
+    if (action === "memoryAdd") {
+      setMemoryValue((current) => current + value);
+      return;
+    }
+
+    if (action === "memorySubtract") {
+      setMemoryValue((current) => current - value);
+    }
+  }
+
+  function appendExpressionOperator(action: string) {
+    const expressionOperator = action === "x" ? "x" : action;
+
+    setDisplay((current) =>
+      hasTrailingBinaryOperator(current)
+        ? `${current.slice(0, -1)}${expressionOperator}`
+        : `${current}${expressionOperator}`,
+    );
   }
 
   function handlePress(button: ButtonConfig) {
@@ -158,8 +254,33 @@ export function useCalculator(mode: CalculatorMode) {
 
     if (action === "pi" || action === "e" || action === "random") {
       const constants = { pi: Math.PI, e: Math.E, random: Math.random() };
-      setDisplay(formatValue(constants[action]));
+      const formattedValue = formatValue(constants[action]);
+      setDisplay((current) =>
+        isExpressionDisplay(current)
+          ? appendExpressionValue(current, formattedValue)
+          : formattedValue,
+      );
       setWaitingForOperand(true);
+      return;
+    }
+
+    if (action === "openParen" || action === "closeParen") {
+      appendParenthesis(action === "openParen" ? "(" : ")");
+      return;
+    }
+
+    if (
+      action === "memoryClear" ||
+      action === "memoryAdd" ||
+      action === "memorySubtract" ||
+      action === "memoryRecall"
+    ) {
+      handleMemoryAction(action);
+      return;
+    }
+
+    if (action === "secondFunction") {
+      setIsSecondFunction((current) => !current);
       return;
     }
 
@@ -169,7 +290,17 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     if (action === "ee") {
-      setDisplay((current) => `${current}e`);
+      setDisplay((current) => {
+        if (
+          current === "Error" ||
+          isExpressionDisplay(current) ||
+          current.toLowerCase().includes("e")
+        ) {
+          return current;
+        }
+
+        return `${current}e`;
+      });
       setWaitingForOperand(false);
       return;
     }
@@ -185,6 +316,11 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     if (["+", "-", "x", "/", "xy", "root"].includes(action)) {
+      if (isExpressionDisplay(display) && ["+", "-", "x", "/"].includes(action)) {
+        appendExpressionOperator(action);
+        return;
+      }
+
       performOperation(action as Operator);
     }
   }
@@ -203,6 +339,7 @@ export function useCalculator(mode: CalculatorMode) {
     handlePress,
     history,
     isRadians,
+    isSecondFunction,
     loadHistoryEntry,
     resetAll,
   };

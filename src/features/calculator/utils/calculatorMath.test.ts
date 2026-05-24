@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { calculate, factorial, formatValue } from "./calculatorMath";
+import { calculate, evaluateCalculatorExpression, factorial, formatValue } from "./calculatorMath";
 
 describe("calculatorMath", () => {
   it("calculates binary operations", () => {
@@ -29,6 +29,22 @@ describe("calculatorMath", () => {
     expect(factorial(-1)).toBeNaN();
     expect(factorial(2.5)).toBeNaN();
     expect(factorial(171)).toBeNaN();
+  });
+
+  it("evaluates grouped scientific expressions", () => {
+    expect(evaluateCalculatorExpression("(2+3)x4")).toBe(20);
+    expect(evaluateCalculatorExpression("2x(3+4)")).toBe(14);
+    expect(evaluateCalculatorExpression("(8/2)+(3x2)")).toBe(10);
+    expect(evaluateCalculatorExpression("10/(2+3)")).toBe(2);
+    expect(evaluateCalculatorExpression("-2x(3+4)")).toBe(-14);
+    expect(evaluateCalculatorExpression("1e3+(2x5)")).toBe(1010);
+  });
+
+  it("returns NaN for invalid grouped expressions", () => {
+    expect(evaluateCalculatorExpression("(2+3")).toBeNaN();
+    expect(evaluateCalculatorExpression("2x)3(")).toBeNaN();
+    expect(evaluateCalculatorExpression("2+")).toBeNaN();
+    expect(evaluateCalculatorExpression("2/(3-3)")).toBeNaN();
   });
 
   it("formats display values consistently", () => {

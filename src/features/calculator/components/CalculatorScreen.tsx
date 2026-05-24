@@ -7,6 +7,7 @@ type CalculatorScreenProps = {
   clearLabel: string;
   display: string;
   handlePress: (button: ButtonConfig) => void;
+  isSecondFunction: boolean;
   mode: CalculatorMode;
   styles: CalculatorStyles;
 };
@@ -15,13 +16,20 @@ export function CalculatorScreen({
   clearLabel,
   display,
   handlePress,
+  isSecondFunction,
   mode,
   styles,
 }: CalculatorScreenProps) {
   return (
     <>
       <CalculatorDisplay display={display} mode={mode} styles={styles} />
-      <CalculatorKeypad clearLabel={clearLabel} mode={mode} onPress={handlePress} styles={styles} />
+      <CalculatorKeypad
+        clearLabel={clearLabel}
+        isSecondFunction={isSecondFunction}
+        mode={mode}
+        onPress={handlePress}
+        styles={styles}
+      />
     </>
   );
 }

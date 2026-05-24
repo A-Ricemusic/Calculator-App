@@ -15,12 +15,19 @@ const BUTTON_GAP = 12;
 
 type CalculatorKeypadProps = {
   clearLabel: string;
+  isSecondFunction: boolean;
   mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
   styles: CalculatorStyles;
 };
 
-export function CalculatorKeypad({ clearLabel, mode, onPress, styles }: CalculatorKeypadProps) {
+export function CalculatorKeypad({
+  clearLabel,
+  isSecondFunction,
+  mode,
+  onPress,
+  styles,
+}: CalculatorKeypadProps) {
   const { width } = useWindowDimensions();
   const buttonSize =
     mode === "basic"
@@ -33,17 +40,28 @@ export function CalculatorKeypad({ clearLabel, mode, onPress, styles }: Calculat
         <View style={styles.sciFnSection}>
           {scientificFnButtons.map((row) => (
             <View key={row.map((button) => button.label).join("-")} style={styles.sciFnRow}>
-              {row.map((button) => (
-                <CalculatorButton
-                  key={button.label}
-                  button={button}
-                  clearLabel={clearLabel}
-                  mode={mode}
-                  onPress={onPress}
-                  styles={styles}
-                  variant="function"
-                />
-              ))}
+              {row.map((button) => {
+                const renderedButton =
+                  button.action === "secondFunction"
+                    ? {
+                        ...button,
+                        active: isSecondFunction,
+                        label: isSecondFunction ? "↓" : button.label,
+                      }
+                    : button;
+
+                return (
+                  <CalculatorButton
+                    key={button.label}
+                    button={renderedButton}
+                    clearLabel={clearLabel}
+                    mode={mode}
+                    onPress={onPress}
+                    styles={styles}
+                    variant="function"
+                  />
+                );
+              })}
             </View>
           ))}
         </View>

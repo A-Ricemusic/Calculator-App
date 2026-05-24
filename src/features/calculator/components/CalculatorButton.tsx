@@ -38,13 +38,17 @@ export function CalculatorButton({
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         onPress={() => onPress(button)}
-        style={({ pressed }) => [styles.sciFnButton, pressed && styles.buttonPressed]}
+        style={({ pressed }) => [
+          styles.sciFnButton,
+          button.active && styles.sciFnButtonActive,
+          pressed && styles.buttonPressed,
+        ]}
       >
         <Text
           numberOfLines={1}
           adjustsFontSizeToFit
           minimumFontScale={0.6}
-          style={styles.sciFnButtonText}
+          style={[styles.sciFnButtonText, button.active && styles.sciFnButtonActiveText]}
         >
           {label}
         </Text>
