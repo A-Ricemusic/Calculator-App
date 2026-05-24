@@ -182,6 +182,7 @@ export function useFractionCalculator() {
     operator,
     parts,
     resetAll,
+    setActiveField,
     storedValue,
   };
 }

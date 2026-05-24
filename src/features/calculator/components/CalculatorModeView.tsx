@@ -93,6 +93,7 @@ export function CalculatorModeView({
           activeField={fractionCalculator.activeField}
           clearLabel={fractionCalculator.clearLabel}
           onPress={fractionCalculator.handlePress}
+          onSelectField={fractionCalculator.setActiveField}
           styles={styles}
         />
 

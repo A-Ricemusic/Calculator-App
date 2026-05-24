@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useMemo, useState } from "react";
-import { Platform, StatusBar as NativeStatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Platform, StatusBar as NativeStatusBar, View } from "react-native";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ThemeId, useThemePreference } from "../features/theme";
 import { DrawerMenu } from "../features/menu";
@@ -9,12 +9,14 @@ import { AppShell } from "./AppShell";
 import type { AppMode } from "./appModes";
 import { createAppStyles } from "./appStyles";
 
-export default function AppRoot() {
+function AppContent() {
   const [mode, setMode] = useState<AppMode>("basic");
   const [menuOpen, setMenuOpen] = useState(false);
   const { setThemeId, theme, themeId } = useThemePreference();
+  const insets = useSafeAreaInsets();
   const styles = useMemo(() => createAppStyles(theme), [theme]);
   const androidTopInset = Platform.OS === "android" ? (NativeStatusBar.currentHeight ?? 0) : 0;
+  const topInset = Math.max(insets.top, androidTopInset);
 
   function selectMode(nextMode: AppMode) {
     setMode(nextMode);
@@ -26,13 +28,13 @@ export default function AppRoot() {
   }
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={styles.screen}>
       <StatusBar style={theme.statusBar} />
       <AppShell
         mode={mode}
         onOpenMenu={() => setMenuOpen(true)}
         onSelectMode={setMode}
-        shellStyle={androidTopInset > 0 ? { paddingTop: androidTopInset } : undefined}
+        shellStyle={topInset > 0 ? { paddingTop: topInset } : undefined}
         styles={styles}
         theme={theme}
       />
@@ -47,6 +49,14 @@ export default function AppRoot() {
           themeId={themeId}
         />
       )}
-    </SafeAreaView>
+    </View>
+  );
+}
+
+export default function AppRoot() {
+  return (
+    <SafeAreaProvider>
+      <AppContent />
+    </SafeAreaProvider>
   );
 }

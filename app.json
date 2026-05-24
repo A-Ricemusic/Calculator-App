@@ -12,7 +12,7 @@
       "package": "com.anonymous.calculatorapp"
     },
     "ios": {
-      "bundleIdentifier": "com.anonymous.calculatorapp"
+      "bundleIdentifier": "com.anthonyrice.calculatorapp"
     }
   }
 }
