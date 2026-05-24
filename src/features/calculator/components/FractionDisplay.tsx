@@ -1,8 +1,14 @@
 import { Text, View } from "react-native";
 
 import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
+import type { FractionDisplayMode } from "../hooks/useFractionCalculator";
 import type { FractionParts, Rational } from "../utils/fractionMath";
-import { formatFractionParts, rationalToParts } from "../utils/fractionMath";
+import {
+  formatFractionParts,
+  partsToRational,
+  rationalToImproperParts,
+  rationalToParts,
+} from "../utils/fractionMath";
 
 type FractionDisplayProps = {
   currentValue: Rational | null;
@@ -10,6 +16,7 @@ type FractionDisplayProps = {
   parts: FractionParts;
   storedValue: Rational | null;
   waitingForOperand: boolean;
+  displayMode: FractionDisplayMode;
   styles: CalculatorStyles;
 };
 
@@ -33,8 +40,23 @@ function FractionValue({ parts, styles }: { parts: FractionParts; styles: Calcul
   );
 }
 
+function formatPartsForDisplay(parts: FractionParts, displayMode: FractionDisplayMode) {
+  const value = partsToRational(parts);
+
+  if (!value || displayMode === "mixed") {
+    return parts;
+  }
+
+  return rationalToImproperParts(value);
+}
+
+function formatRationalForDisplay(value: Rational, displayMode: FractionDisplayMode) {
+  return displayMode === "mixed" ? rationalToParts(value) : rationalToImproperParts(value);
+}
+
 export function FractionDisplay({
   currentValue,
+  displayMode,
   operator,
   parts,
   storedValue,
@@ -42,15 +64,21 @@ export function FractionDisplay({
   styles,
 }: FractionDisplayProps) {
   const shouldShowCurrentValue = !operator || !waitingForOperand;
+  const displayParts = formatPartsForDisplay(parts, displayMode);
 
   return (
     <View style={[styles.displayPanel, styles.fractionDisplayPanel]}>
       <View style={styles.fractionExpression}>
-        {storedValue && <FractionValue parts={rationalToParts(storedValue)} styles={styles} />}
+        {storedValue && (
+          <FractionValue
+            parts={formatRationalForDisplay(storedValue, displayMode)}
+            styles={styles}
+          />
+        )}
         {operator && (
           <Text style={styles.fractionOperator}>{operator === "x" ? "×" : operator}</Text>
         )}
-        {shouldShowCurrentValue && <FractionValue parts={parts} styles={styles} />}
+        {shouldShowCurrentValue && <FractionValue parts={displayParts} styles={styles} />}
       </View>
       {!waitingForOperand && !currentValue && (
         <Text accessibilityRole="alert" style={styles.fractionWarning}>
@@ -59,7 +87,7 @@ export function FractionDisplay({
       )}
       {shouldShowCurrentValue && (
         <Text numberOfLines={1} adjustsFontSizeToFit style={styles.fractionPlainText}>
-          {formatFractionParts(parts)}
+          {formatFractionParts(displayParts)}
         </Text>
       )}
     </View>

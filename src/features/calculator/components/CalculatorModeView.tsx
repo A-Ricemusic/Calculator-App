@@ -84,6 +84,7 @@ export function CalculatorModeView({
 
         <FractionDisplay
           currentValue={fractionCalculator.currentValue}
+          displayMode={fractionCalculator.displayMode}
           operator={fractionCalculator.operator}
           parts={fractionCalculator.parts}
           storedValue={fractionCalculator.storedValue}
@@ -93,6 +94,7 @@ export function CalculatorModeView({
         <FractionKeypad
           activeField={fractionCalculator.activeField}
           clearLabel={fractionCalculator.clearLabel}
+          displayMode={fractionCalculator.displayMode}
           onPress={fractionCalculator.handlePress}
           onSelectField={fractionCalculator.setActiveField}
           styles={styles}

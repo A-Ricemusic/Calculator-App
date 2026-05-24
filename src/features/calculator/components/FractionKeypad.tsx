@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
 import type { ButtonConfig } from "../types";
-import type { FractionField } from "../hooks/useFractionCalculator";
+import type { FractionDisplayMode, FractionField } from "../hooks/useFractionCalculator";
 import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 
 const digits = [
@@ -13,6 +13,7 @@ const digits = [
 type FractionKeypadProps = {
   activeField: FractionField;
   clearLabel: string;
+  displayMode: FractionDisplayMode;
   onPress: (button: ButtonConfig) => void;
   onSelectField: (field: FractionField) => void;
   styles: CalculatorStyles;
@@ -111,10 +112,15 @@ function NumberBlock({
 export function FractionKeypad({
   activeField: _activeField,
   clearLabel,
+  displayMode,
   onPress,
   onSelectField: _onSelectField,
   styles,
 }: FractionKeypadProps) {
+  const formatToggleLabel = displayMode === "mixed" ? "a/b" : "a b/c";
+  const formatToggleAccessibilityLabel =
+    displayMode === "mixed" ? "Show improper fraction" : "Show mixed number";
+
   return (
     <View style={styles.fractionKeypad}>
       <View style={styles.fractionTopRow}>
@@ -125,9 +131,14 @@ export function FractionKeypad({
           styles={styles}
         />
         <FractionPadButton
-          button={{ label: "▣", accessibilityLabel: "Fraction mode", variant: "utility" }}
+          button={{
+            label: formatToggleLabel,
+            action: "toggleFractionFormat",
+            accessibilityLabel: formatToggleAccessibilityLabel,
+            variant: "utility",
+          }}
           clearLabel={clearLabel}
-          onPress={() => undefined}
+          onPress={onPress}
           styles={styles}
         />
         <FractionPadButton
