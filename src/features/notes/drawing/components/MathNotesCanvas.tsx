@@ -50,6 +50,7 @@ export function MathNotesCanvas({
       <View style={styles.notesCanvasWrap}>
         {PencilKitCanvas ? (
           <PencilKitCanvas
+            drawingEnabled={drawingEnabled}
             drawingData={activePage?.pencilKitData ?? ""}
             onDrawingChange={(event) => onUpdatePencilKitDrawing(event.nativeEvent.drawingData)}
             style={styles.notesCanvas}

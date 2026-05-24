@@ -5,6 +5,7 @@ export type PencilKitDrawingChangeEvent = {
 };
 
 export type PencilKitCanvasProps = {
+  drawingEnabled?: boolean;
   drawingData?: string;
   onDrawingChange?: (event: NativeSyntheticEvent<PencilKitDrawingChangeEvent>) => void;
   style?: object;

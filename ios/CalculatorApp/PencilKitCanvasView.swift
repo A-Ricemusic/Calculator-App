@@ -9,6 +9,7 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   private var lastDrawingData: String?
   private var hasWindow = false
   private var wantsToolPickerVisible = true
+  private let navigationCanvasSize = CGSize(width: 2400, height: 2400)
 
   @objc var drawingData: NSString? {
     didSet {
@@ -28,6 +29,12 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   }
 
   @objc var onDrawingChange: RCTDirectEventBlock?
+
+  @objc var drawingEnabled: Bool = true {
+    didSet {
+      updateInteractionMode()
+    }
+  }
 
   @objc var toolPickerVisible: Bool = true {
     didSet {
@@ -61,6 +68,10 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   override func layoutSubviews() {
     super.layoutSubviews()
     canvasView.frame = bounds
+    canvasView.contentSize = CGSize(
+      width: max(navigationCanvasSize.width, bounds.width * 3),
+      height: max(navigationCanvasSize.height, bounds.height * 3),
+    )
   }
 
   override func didMoveToWindow() {
@@ -81,6 +92,7 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
     canvasView.alwaysBounceHorizontal = false
 
     addSubview(canvasView)
+    updateInteractionMode()
     updateZoomAvailability()
   }
 
@@ -112,6 +124,8 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   private func updateZoomAvailability() {
     canvasView.minimumZoomScale = zoomEnabled ? 0.75 : 1
     canvasView.maximumZoomScale = zoomEnabled ? 3 : 1
+    canvasView.isScrollEnabled = zoomEnabled
+    canvasView.panGestureRecognizer.isEnabled = zoomEnabled
     canvasView.pinchGestureRecognizer?.isEnabled = zoomEnabled
 
     if !zoomEnabled && canvasView.zoomScale != 1 {
@@ -134,5 +148,10 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
     if abs(canvasView.zoomScale - boundedScale) > 0.01 {
       canvasView.setZoomScale(boundedScale, animated: true)
     }
+  }
+
+  private func updateInteractionMode() {
+    canvasView.drawingPolicy = drawingEnabled ? .anyInput : .pencilOnly
+    canvasView.drawingGestureRecognizer.isEnabled = drawingEnabled
   }
 }

@@ -63,14 +63,16 @@ export function NotesPageControls({
           {activePagesCount >= maxPagesPerNotebook ? "20 Max" : "+ Page"}
         </Text>
       </Pressable>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Delete current page"
-        onPress={onDeleteActivePage}
-        style={styles.notesPageDeleteBtn}
-      >
-        <Text style={styles.notesPageDeleteText}>Delete</Text>
-      </Pressable>
+      {activePagesCount > 1 ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Delete current page"
+          onPress={onDeleteActivePage}
+          style={styles.notesPageDeleteBtn}
+        >
+          <Text style={styles.notesPageDeleteText}>Delete</Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 }
