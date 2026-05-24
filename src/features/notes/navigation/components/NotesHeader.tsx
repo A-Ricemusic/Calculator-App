@@ -7,7 +7,6 @@ type NotesHeaderProps = {
   activePagesCount: number;
   onBack: () => void;
   onOpenManager: () => void;
-  onSave: () => void;
   styles: NotesStyles;
   title: string;
 };
@@ -17,7 +16,6 @@ export function NotesHeader({
   activePagesCount,
   onBack,
   onOpenManager,
-  onSave,
   styles,
   title,
 }: NotesHeaderProps) {
@@ -47,14 +45,6 @@ export function NotesHeader({
         style={styles.notesManagerBtn}
       >
         <Text style={styles.notesManagerIcon}>☷</Text>
-      </Pressable>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Save notebook"
-        onPress={onSave}
-        style={styles.notesSaveBtn}
-      >
-        <Text style={styles.notesSaveIcon}>✓</Text>
       </Pressable>
     </View>
   );

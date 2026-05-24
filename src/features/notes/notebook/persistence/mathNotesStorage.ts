@@ -1,5 +1,1 @@
-export {
-  noteCollectionsStorageKey,
-  notePagesStorageKey,
-  notesStorageKey,
-} from "@shared/constants/storageKeys";
+export { noteCollectionsStorageKey, notePagesStorageKey } from "@shared/constants/storageKeys";

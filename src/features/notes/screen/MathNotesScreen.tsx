@@ -7,14 +7,13 @@ import type { CalculatorTheme } from "@features/theme";
 import { MathNotesCanvas } from "../drawing/components/MathNotesCanvas";
 import { useReactNativeDrawing } from "../drawing/hooks/useReactNativeDrawing";
 import { NotesHeader } from "../navigation/components/NotesHeader";
-import { NotesManagerSheet } from "../navigation/components/NotesManagerSheet";
+import { NotesManagerPage } from "../navigation/components/NotesManagerPage";
 import { NotesPageControls } from "../navigation/components/NotesPageControls";
 import { useMathNotesNotebook } from "../notebook/hooks/useMathNotesNotebook";
 import { PencilKitCanvas } from "../platform/ios/PencilKitCanvas";
 import { NotesColorPicker } from "../toolbar/components/NotesColorPicker";
 import { NotesToolbar } from "../toolbar/components/NotesToolbar";
 import { NotesUtensilToggle } from "../toolbar/components/NotesUtensilToggle";
-import { NotesZoomControls } from "../toolbar/components/NotesZoomControls";
 import type { NoteTool } from "../types";
 
 type MathNotesScreenProps = {
@@ -23,14 +22,9 @@ type MathNotesScreenProps = {
   theme: CalculatorTheme;
 };
 
-const minimumCanvasZoom = 0.75;
-const maximumCanvasZoom = 2.5;
-const canvasZoomStep = 0.25;
-
 export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreenProps) {
   const [notesManagerOpen, setNotesManagerOpen] = useState(false);
   const [utensilsOpen, setUtensilsOpen] = useState(true);
-  const [canvasZoomScale, setCanvasZoomScale] = useState(1);
   const [activeTool, setActiveTool] = useState<NoteTool>("pen");
   const [activeColor, setActiveColor] = useState("#ffffff");
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
@@ -48,7 +42,6 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
     deleteCollection,
     deleteTextBlock,
     noteCollections,
-    saveNotebookSnapshot,
     selectCollection,
     setTextDraft,
     textDraft,
@@ -72,6 +65,7 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
 
   function openNotesManager() {
     setColorPickerOpen(false);
+    setUtensilsOpen(false);
     setNotesManagerOpen(true);
   }
 
@@ -89,9 +83,7 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
     setUtensilsOpen((open) => {
       const nextOpen = !open;
 
-      if (nextOpen) {
-        setCanvasZoomScale(1);
-      } else {
+      if (!nextOpen) {
         setColorPickerOpen(false);
       }
 
@@ -99,9 +91,17 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
     });
   }
 
-  function zoomCanvas(direction: -1 | 1) {
-    setCanvasZoomScale((scale) =>
-      Math.min(maximumCanvasZoom, Math.max(minimumCanvasZoom, scale + direction * canvasZoomStep)),
+  if (notesManagerOpen) {
+    return (
+      <NotesManagerPage
+        activeCollectionIndex={activeCollectionIndex}
+        noteCollections={noteCollections}
+        onClose={() => setNotesManagerOpen(false)}
+        onCreateCollection={() => createNewCollection()}
+        onDeleteCollection={deleteCollection}
+        onOpenCollection={openCollection}
+        styles={styles}
+      />
     );
   }
 
@@ -112,7 +112,6 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
         activePagesCount={activePages.length}
         onBack={() => onSelectMode("basic")}
         onOpenManager={openNotesManager}
-        onSave={saveNotebookSnapshot}
         styles={styles}
         title={activeCollection?.title ?? "Math Notes"}
       />
@@ -130,11 +129,9 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
         activeColor={activeColor}
         activePage={activePage}
         activeTool={activeTool}
-        canvasZoomEnabled={!utensilsOpen}
-        canvasZoomScale={canvasZoomScale}
         drawingStroke={drawingStroke}
         drawingEnabled={utensilsOpen}
-        nativeToolPickerVisible={utensilsOpen && !notesManagerOpen}
+        nativeToolPickerVisible={utensilsOpen}
         notePanResponder={notePanResponder}
         onAddTextBlock={addTextBlock}
         onDeleteTextBlock={deleteTextBlock}
@@ -156,27 +153,6 @@ export function MathNotesScreen({ onSelectMode, styles, theme }: MathNotesScreen
       )}
 
       <NotesUtensilToggle isOpen={utensilsOpen} onToggle={toggleUtensils} styles={styles} />
-
-      {!utensilsOpen && (
-        <NotesZoomControls
-          onZoomIn={() => zoomCanvas(1)}
-          onZoomOut={() => zoomCanvas(-1)}
-          styles={styles}
-          zoomScale={canvasZoomScale}
-        />
-      )}
-
-      {notesManagerOpen && (
-        <NotesManagerSheet
-          activeCollectionIndex={activeCollectionIndex}
-          noteCollections={noteCollections}
-          onClose={() => setNotesManagerOpen(false)}
-          onCreateCollection={() => createNewCollection(() => setNotesManagerOpen(false))}
-          onDeleteCollection={deleteCollection}
-          onOpenCollection={openCollection}
-          styles={styles}
-        />
-      )}
 
       {colorPickerOpen && (
         <NotesColorPicker

@@ -12,8 +12,6 @@ type MathNotesCanvasProps = {
   activeColor: string;
   activePage: NotePage | undefined;
   activeTool: NoteTool;
-  canvasZoomEnabled: boolean;
-  canvasZoomScale: number;
   drawingStroke: Stroke | null;
   drawingEnabled: boolean;
   notePanResponder: PanResponderInstance;
@@ -31,8 +29,6 @@ export function MathNotesCanvas({
   activeColor,
   activePage,
   activeTool,
-  canvasZoomEnabled,
-  canvasZoomScale,
   drawingStroke,
   drawingEnabled,
   notePanResponder,
@@ -55,15 +51,12 @@ export function MathNotesCanvas({
             onDrawingChange={(event) => onUpdatePencilKitDrawing(event.nativeEvent.drawingData)}
             style={styles.notesCanvas}
             toolPickerVisible={nativeToolPickerVisible}
-            zoomEnabled={canvasZoomEnabled}
-            zoomScale={canvasZoomScale}
           />
         ) : (
           <FallbackDrawingCanvas
             activeColor={activeColor}
             activePage={activePage}
             activeTool={activeTool}
-            canvasZoomScale={canvasZoomScale}
             drawingStroke={drawingStroke}
             drawingEnabled={drawingEnabled}
             notePanResponder={notePanResponder}

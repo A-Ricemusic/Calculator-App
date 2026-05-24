@@ -1,15 +1,4 @@
-import type { MathNote, NoteCollection, NotePage, Point, Stroke, TextBlock } from "../../types";
-
-export function isMathNote(value: unknown): value is MathNote {
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-
-  const note = value as Partial<MathNote>;
-  return (
-    typeof note.id === "string" && typeof note.body === "string" && typeof note.savedAt === "string"
-  );
-}
+import type { NoteCollection, NotePage, Point, Stroke, TextBlock } from "../../types";
 
 export function isPoint(value: unknown): value is Point {
   if (typeof value !== "object" || value === null) {

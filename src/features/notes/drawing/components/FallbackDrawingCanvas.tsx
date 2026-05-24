@@ -18,7 +18,6 @@ type FallbackDrawingCanvasProps = {
   activeColor: string;
   activePage: NotePage | undefined;
   activeTool: NoteTool;
-  canvasZoomScale: number;
   drawingStroke: Stroke | null;
   drawingEnabled: boolean;
   notePanResponder: PanResponderInstance;
@@ -61,7 +60,6 @@ export function FallbackDrawingCanvas({
   activeColor,
   activePage,
   activeTool,
-  canvasZoomScale,
   drawingStroke,
   drawingEnabled,
   notePanResponder,
@@ -71,14 +69,7 @@ export function FallbackDrawingCanvas({
 }: FallbackDrawingCanvasProps) {
   return (
     <View style={styles.notesCanvas} {...(drawingEnabled ? notePanResponder.panHandlers : {})}>
-      <View
-        style={[
-          styles.notesCanvasContent,
-          {
-            transform: [{ scale: canvasZoomScale }],
-          },
-        ]}
-      >
+      <View style={styles.notesCanvasContent}>
         <CanvasGrid styles={styles} />
         <Svg pointerEvents="none" style={StyleSheet.absoluteFillObject}>
           <SavedStrokeLayer strokes={activePage?.strokes ?? []} theme={theme} />

@@ -1,5 +1,5 @@
 import { createId } from "@shared/utils/ids";
-import type { MathNote, NoteCollection, NotePage } from "../../types";
+import type { NoteCollection, NotePage } from "../../types";
 import { maxPagesPerNotebook } from "../constants/notebookLimits";
 import { createBlankPage, createCollection } from "./createMathNotesNotebook";
 
@@ -62,18 +62,6 @@ export function createNextCollection(collectionCount: number) {
 
 export function ensureCollectionExists(collections: NoteCollection[]) {
   return collections.length > 0 ? collections : [createCollection(1)];
-}
-
-export function createNotebookSnapshot(
-  activeCollection: NoteCollection | undefined,
-  activePagesCount: number,
-): MathNote {
-  const pageCount = activePagesCount.toString().padStart(2, "0");
-  return {
-    id: createId("note"),
-    body: `Saved collection mock: ${activeCollection?.title ?? "Math Notes"} (${pageCount} pages)`,
-    savedAt: new Date().toISOString(),
-  };
 }
 
 export function createTextBlock(body: string, textBlockCount: number) {

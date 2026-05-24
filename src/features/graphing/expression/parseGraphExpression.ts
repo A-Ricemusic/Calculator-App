@@ -37,7 +37,17 @@ function toJavaScriptExpression(input: string) {
 
 function buildEvaluator(expression: string) {
   const jsExpression = toJavaScriptExpression(expression);
-  const evaluator = new Function("x", `"use strict"; return (${jsExpression});`);
+  let evaluator: Function;
+
+  try {
+    evaluator = new Function("x", `"use strict"; return (${jsExpression});`);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error("Invalid expression", { cause: error });
+    }
+
+    throw error;
+  }
 
   return (x: number) => {
     const value = evaluator(x);
@@ -46,16 +56,19 @@ function buildEvaluator(expression: string) {
 }
 
 function solveLinearY(left: string, right: string) {
-  const leftEval = new Function(
-    "x",
-    "y",
-    `"use strict"; return (${toJavaScriptExpression(left)});`,
-  );
-  const rightEval = new Function(
-    "x",
-    "y",
-    `"use strict"; return (${toJavaScriptExpression(right)});`,
-  );
+  let leftEval: Function;
+  let rightEval: Function;
+
+  try {
+    leftEval = new Function("x", "y", `"use strict"; return (${toJavaScriptExpression(left)});`);
+    rightEval = new Function("x", "y", `"use strict"; return (${toJavaScriptExpression(right)});`);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error("Invalid expression", { cause: error });
+    }
+
+    throw error;
+  }
   const f = (x: number, y: number) => {
     return Number(leftEval(x, y)) - Number(rightEval(x, y));
   };

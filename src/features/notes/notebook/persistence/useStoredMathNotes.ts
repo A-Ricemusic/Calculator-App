@@ -2,48 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
 import { createId } from "@shared/utils/ids";
-import type { MathNote, NoteCollection } from "../../types";
+import type { NoteCollection } from "../../types";
 import { maxPagesPerNotebook } from "../constants/notebookLimits";
 import { normalizeNoteCollection } from "../utils/createMathNotesNotebook";
-import { isMathNote, isNoteCollection, isNotePage } from "../utils/validateMathNotesNotebook";
-import {
-  noteCollectionsStorageKey,
-  notePagesStorageKey,
-  notesStorageKey,
-} from "./mathNotesStorage";
+import { isNoteCollection, isNotePage } from "../utils/validateMathNotesNotebook";
+import { noteCollectionsStorageKey, notePagesStorageKey } from "./mathNotesStorage";
 
 export function useStoredMathNotes(
-  notes: MathNote[],
   noteCollections: NoteCollection[],
-  setNotes: (notes: MathNote[]) => void,
   setNoteCollections: (collections: NoteCollection[]) => void,
 ) {
-  const [notesLoaded, setNotesLoaded] = useState(false);
   const [noteCollectionsLoaded, setNoteCollectionsLoaded] = useState(false);
-
-  useEffect(() => {
-    AsyncStorage.getItem(notesStorageKey)
-      .then((storedNotes) => {
-        if (!storedNotes) {
-          return;
-        }
-
-        const parsedNotes = JSON.parse(storedNotes);
-        if (Array.isArray(parsedNotes)) {
-          setNotes(parsedNotes.filter(isMathNote));
-        }
-      })
-      .catch(() => undefined)
-      .finally(() => setNotesLoaded(true));
-  }, [setNotes]);
-
-  useEffect(() => {
-    if (!notesLoaded) {
-      return;
-    }
-
-    AsyncStorage.setItem(notesStorageKey, JSON.stringify(notes)).catch(() => undefined);
-  }, [notes, notesLoaded]);
 
   useEffect(() => {
     AsyncStorage.getItem(noteCollectionsStorageKey)

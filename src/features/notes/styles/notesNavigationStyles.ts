@@ -38,19 +38,6 @@ export function createNotesNavigationStyles() {
       fontSize: 13,
       fontWeight: "600",
     },
-    notesSaveBtn: {
-      alignItems: "center",
-      backgroundColor: "#3b82f6",
-      borderRadius: 8,
-      height: 30,
-      justifyContent: "center",
-      width: 30,
-    },
-    notesSaveIcon: {
-      color: "#ffffff",
-      fontSize: 16,
-      fontWeight: "700",
-    },
     notesManagerBtn: {
       alignItems: "center",
       backgroundColor: "rgba(255, 255, 255, 0.08)",

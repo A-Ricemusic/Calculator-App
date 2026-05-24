@@ -22,13 +22,6 @@ export type TextBlock = {
   y: number;
 };
 
-// Notebook
-export type MathNote = {
-  id: string;
-  body: string;
-  savedAt: string;
-};
-
 export type NotePage = {
   id: string;
   title: string;

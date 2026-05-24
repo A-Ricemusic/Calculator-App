@@ -26,4 +26,8 @@ describe("parseGraphExpression", () => {
   it("rejects equations without y for now", () => {
     expect(() => parseGraphExpression("x = 3")).toThrow("Equations without y");
   });
+
+  it("reports incomplete expressions with a generic validation message", () => {
+    expect(() => parseGraphExpression("3x +")).toThrow("Invalid expression");
+  });
 });

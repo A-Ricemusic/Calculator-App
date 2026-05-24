@@ -1,12 +1,11 @@
 import { useCallback, useState } from "react";
 
-import type { MathNote, NoteCollection, NotePage } from "../../types";
+import type { NoteCollection, NotePage } from "../../types";
 import { maxPagesPerNotebook } from "../constants/notebookLimits";
 import { useStoredMathNotes } from "../persistence/useStoredMathNotes";
 import {
   addPageToCollection,
   createNextCollection,
-  createNotebookSnapshot,
   createTextBlock,
   deletePageFromCollection,
   ensureCollectionExists,
@@ -15,7 +14,6 @@ import {
 import { createCollection } from "../utils/createMathNotesNotebook";
 
 export function useMathNotesNotebook() {
-  const [notes, setNotes] = useState<MathNote[]>([]);
   const [noteCollections, setNoteCollections] = useState<NoteCollection[]>(() => [
     createCollection(1),
   ]);
@@ -27,14 +25,13 @@ export function useMathNotesNotebook() {
   const activePages = activeCollection?.pages ?? [];
   const activePage = activePages[activePageIndex] ?? activePages[0];
 
-  const replaceNotes = useCallback((nextNotes: MathNote[]) => setNotes(nextNotes), []);
   const replaceNoteCollections = useCallback((nextCollections: NoteCollection[]) => {
     setNoteCollections(nextCollections);
     setActiveCollectionIndex(0);
     setActivePageIndex(0);
   }, []);
 
-  useStoredMathNotes(notes, noteCollections, replaceNotes, replaceNoteCollections);
+  useStoredMathNotes(noteCollections, replaceNoteCollections);
 
   function updateActivePage(updater: (page: NotePage) => NotePage) {
     setNoteCollections((current) =>
@@ -111,13 +108,6 @@ export function useMathNotesNotebook() {
     });
   }
 
-  function saveNotebookSnapshot() {
-    setNotes((current) => [
-      createNotebookSnapshot(activeCollection, activePages.length),
-      ...current,
-    ]);
-  }
-
   function addTextBlock() {
     const body = textDraft.trim();
 
@@ -160,7 +150,6 @@ export function useMathNotesNotebook() {
     deleteActivePage,
     deleteTextBlock,
     noteCollections,
-    saveNotebookSnapshot,
     selectCollection,
     setTextDraft,
     textDraft,
