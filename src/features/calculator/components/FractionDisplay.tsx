@@ -9,6 +9,7 @@ type FractionDisplayProps = {
   operator: string | null;
   parts: FractionParts;
   storedValue: Rational | null;
+  waitingForOperand: boolean;
   styles: CalculatorStyles;
 };
 
@@ -37,8 +38,11 @@ export function FractionDisplay({
   operator,
   parts,
   storedValue,
+  waitingForOperand,
   styles,
 }: FractionDisplayProps) {
+  const shouldShowCurrentValue = !operator || !waitingForOperand;
+
   return (
     <View style={[styles.displayPanel, styles.fractionDisplayPanel]}>
       <View style={styles.fractionExpression}>
@@ -46,16 +50,18 @@ export function FractionDisplay({
         {operator && (
           <Text style={styles.fractionOperator}>{operator === "x" ? "×" : operator}</Text>
         )}
-        <FractionValue parts={parts} styles={styles} />
+        {shouldShowCurrentValue && <FractionValue parts={parts} styles={styles} />}
       </View>
-      {!currentValue && (
+      {!waitingForOperand && !currentValue && (
         <Text accessibilityRole="alert" style={styles.fractionWarning}>
           Denominator cannot be 0
         </Text>
       )}
-      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.fractionPlainText}>
-        {formatFractionParts(parts)}
-      </Text>
+      {shouldShowCurrentValue && (
+        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.fractionPlainText}>
+          {formatFractionParts(parts)}
+        </Text>
+      )}
     </View>
   );
 }

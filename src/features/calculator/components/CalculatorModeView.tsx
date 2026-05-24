@@ -87,6 +87,7 @@ export function CalculatorModeView({
           operator={fractionCalculator.operator}
           parts={fractionCalculator.parts}
           storedValue={fractionCalculator.storedValue}
+          waitingForOperand={fractionCalculator.waitingForOperand}
           styles={styles}
         />
         <FractionKeypad
