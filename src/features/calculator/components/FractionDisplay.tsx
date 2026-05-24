@@ -14,7 +14,7 @@ type FractionDisplayProps = {
 };
 
 function FractionValue({ parts, styles }: { parts: FractionParts; styles: CalculatorStyles }) {
-  const isFraction = Boolean(parts.numerator);
+  const isFraction = Boolean(parts.numerator || parts.denominator);
 
   return (
     <View style={styles.fractionValue}>
@@ -22,7 +22,7 @@ function FractionValue({ parts, styles }: { parts: FractionParts; styles: Calcul
       {parts.whole !== "0" && <Text style={styles.fractionWhole}>{parts.whole}</Text>}
       {isFraction ? (
         <View style={styles.fractionStack}>
-          <Text style={styles.fractionPart}>{parts.numerator}</Text>
+          <Text style={styles.fractionPart}>{parts.numerator || " "}</Text>
           <View style={styles.fractionBar} />
           <Text style={styles.fractionPart}>{parts.denominator || "?"}</Text>
         </View>
