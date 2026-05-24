@@ -6,11 +6,11 @@ import { calculate, evaluateCalculatorExpression, formatValue } from "../utils/c
 import { calculateUnaryAction, isUnaryAction } from "../utils/scientificOperations";
 
 function isExpressionDisplay(value: string) {
-  return /[()+x\/]/.test(value) || value.slice(1).includes("-");
+  return /[()+x/]/.test(value) || value.slice(1).includes("-");
 }
 
 function hasTrailingBinaryOperator(value: string) {
-  return /[+x\/-]$/.test(value);
+  return /[+x/-]$/.test(value);
 }
 
 function appendExpressionValue(current: string, value: string) {
@@ -62,7 +62,7 @@ export function useCalculator(mode: CalculatorMode) {
   function inputDecimal() {
     if (isExpressionDisplay(display)) {
       setDisplay((current) => {
-        const currentNumber = current.split(/[()+x\/-]/).at(-1) ?? "";
+        const currentNumber = current.split(/[()+x/-]/).at(-1) ?? "";
 
         return currentNumber.includes(".") ? current : `${current}.`;
       });

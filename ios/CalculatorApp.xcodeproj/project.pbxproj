@@ -28,7 +28,7 @@
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = CalculatorApp/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		C024B525AA553F0A2145FB73 /* Pods-CalculatorApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CalculatorApp.debug.xcconfig"; path = "Target Support Files/Pods-CalculatorApp/Pods-CalculatorApp.debug.xcconfig"; sourceTree = "<group>"; };
-		CE61245727ABC74267A39A72 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CalculatorApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		CE61245727ABC74267A39A72 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = CalculatorApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E1A1C0042C00000100000001 /* PencilKitCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PencilKitCanvasView.swift; path = CalculatorApp/PencilKitCanvasView.swift; sourceTree = "<group>"; };
 		E1A1C0052C00000100000001 /* PencilKitCanvasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PencilKitCanvasManager.swift; path = CalculatorApp/PencilKitCanvasManager.swift; sourceTree = "<group>"; };
 		E1A1C0062C00000100000001 /* PencilKitCanvasManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PencilKitCanvasManager.m; path = CalculatorApp/PencilKitCanvasManager.m; sourceTree = "<group>"; };
@@ -82,7 +82,6 @@
 				C024B525AA553F0A2145FB73 /* Pods-CalculatorApp.debug.xcconfig */,
 				731DAF1A0B01CD286810083D /* Pods-CalculatorApp.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -357,12 +356,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = CalculatorApp/CalculatorApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X9G3YB4KJG;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = CalculatorApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Calculator;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -375,7 +377,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.anonymous.calculatorapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anthonyrice.calculatorapp;
 				PRODUCT_NAME = CalculatorApp;
 				SWIFT_OBJC_BRIDGING_HEADER = "CalculatorApp/CalculatorApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -393,7 +395,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = CalculatorApp/CalculatorApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X9G3YB4KJG;
 				INFOPLIST_FILE = CalculatorApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Calculator;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -406,7 +411,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.anonymous.calculatorapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anthonyrice.calculatorapp;
 				PRODUCT_NAME = CalculatorApp;
 				SWIFT_OBJC_BRIDGING_HEADER = "CalculatorApp/CalculatorApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
