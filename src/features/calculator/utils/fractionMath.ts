@@ -71,6 +71,19 @@ export function rationalToParts(value: Rational): FractionParts {
   };
 }
 
+export function rationalToImproperParts(value: Rational): FractionParts {
+  const reduced = reduceFraction(value);
+  const sign = reduced.numerator < 0 ? -1 : 1;
+  const numerator = Math.abs(reduced.numerator);
+
+  return {
+    denominator: numerator === 0 ? "" : String(reduced.denominator),
+    numerator: numerator === 0 ? "" : String(numerator),
+    sign,
+    whole: "0",
+  };
+}
+
 export function calculateFractions(left: Rational, right: Rational, operator: string): Rational {
   if (operator === "+") {
     return reduceFraction({

@@ -12,6 +12,7 @@ import {
 } from "../utils/fractionMath";
 
 export type FractionField = "whole" | "numerator" | "denominator";
+export type FractionDisplayMode = "mixed" | "improper";
 
 const emptyParts: FractionParts = {
   denominator: "",
@@ -30,6 +31,7 @@ export function useFractionCalculator() {
   const [storedValue, setStoredValue] = useState<Rational | null>(null);
   const [operator, setOperator] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
+  const [displayMode, setDisplayMode] = useState<FractionDisplayMode>("mixed");
   const { addHistoryEntry, clearHistory, history } = useCalculatorHistory();
 
   const clearLabel = useMemo(
@@ -147,6 +149,11 @@ export function useFractionCalculator() {
       return;
     }
 
+    if (action === "toggleFractionFormat") {
+      setDisplayMode((current) => (current === "mixed" ? "improper" : "mixed"));
+      return;
+    }
+
     if (action === "equals") {
       handleEquals();
       return;
@@ -176,6 +183,7 @@ export function useFractionCalculator() {
     clearHistory,
     clearLabel,
     currentValue,
+    displayMode,
     handlePress,
     history,
     loadHistoryEntry,
