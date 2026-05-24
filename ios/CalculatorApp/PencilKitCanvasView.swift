@@ -5,11 +5,22 @@ import UIKit
 @objc(PencilKitCanvasView)
 final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   private let canvasView = PKCanvasView()
+  private lazy var navigationPanGesture = UIPanGestureRecognizer(
+    target: self,
+    action: #selector(handleNavigationPan(_:)),
+  )
+  private lazy var navigationPinchGesture = UIPinchGestureRecognizer(
+    target: self,
+    action: #selector(handleNavigationPinch(_:)),
+  )
   private var toolPicker: PKToolPicker?
   private var lastDrawingData: String?
   private var hasWindow = false
   private var wantsToolPickerVisible = true
-  private let navigationCanvasSize = CGSize(width: 2400, height: 2400)
+  private var navigationOffset = CGPoint.zero
+  private var navigationPanStartOffset = CGPoint.zero
+  private var navigationScale: CGFloat = 1
+  private var navigationPinchStartScale: CGFloat = 1
 
   @objc var drawingData: NSString? {
     didSet {
@@ -68,10 +79,6 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   override func layoutSubviews() {
     super.layoutSubviews()
     canvasView.frame = bounds
-    canvasView.contentSize = CGSize(
-      width: max(navigationCanvasSize.width, bounds.width * 3),
-      height: max(navigationCanvasSize.height, bounds.height * 3),
-    )
   }
 
   override func didMoveToWindow() {
@@ -90,8 +97,11 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
     canvasView.maximumZoomScale = 1
     canvasView.alwaysBounceVertical = false
     canvasView.alwaysBounceHorizontal = false
+    canvasView.isScrollEnabled = false
 
     addSubview(canvasView)
+    addGestureRecognizer(navigationPanGesture)
+    addGestureRecognizer(navigationPinchGesture)
     updateInteractionMode()
     updateZoomAvailability()
   }
@@ -122,16 +132,13 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
   }
 
   private func updateZoomAvailability() {
-    canvasView.minimumZoomScale = zoomEnabled ? 0.75 : 1
-    canvasView.maximumZoomScale = zoomEnabled ? 3 : 1
-    canvasView.isScrollEnabled = zoomEnabled
-    canvasView.panGestureRecognizer.isEnabled = zoomEnabled
-    canvasView.pinchGestureRecognizer?.isEnabled = zoomEnabled
+    navigationPanGesture.isEnabled = zoomEnabled && !drawingEnabled
+    navigationPinchGesture.isEnabled = zoomEnabled && !drawingEnabled
 
-    if !zoomEnabled && canvasView.zoomScale != 1 {
-      canvasView.setZoomScale(1, animated: false)
-    } else if zoomEnabled {
+    if zoomEnabled && !drawingEnabled {
       updateZoomScale()
+    } else {
+      resetNavigationTransform()
     }
   }
 
@@ -140,18 +147,73 @@ final class PencilKitCanvasView: UIView, PKCanvasViewDelegate {
       return
     }
 
-    let boundedScale = min(
-      canvasView.maximumZoomScale,
-      max(canvasView.minimumZoomScale, CGFloat(truncating: zoomScale)),
-    )
-
-    if abs(canvasView.zoomScale - boundedScale) > 0.01 {
-      canvasView.setZoomScale(boundedScale, animated: true)
-    }
+    navigationScale = boundedNavigationScale(CGFloat(truncating: zoomScale))
+    applyNavigationTransform()
   }
 
   private func updateInteractionMode() {
     canvasView.drawingPolicy = drawingEnabled ? .anyInput : .pencilOnly
     canvasView.drawingGestureRecognizer.isEnabled = drawingEnabled
+    canvasView.isUserInteractionEnabled = drawingEnabled
+
+    navigationPanGesture.isEnabled = !drawingEnabled && zoomEnabled
+    navigationPinchGesture.isEnabled = !drawingEnabled && zoomEnabled
+
+    if drawingEnabled {
+      resetNavigationTransform()
+    }
+  }
+
+  private func resetNavigationTransform() {
+    navigationScale = 1
+    navigationOffset = .zero
+    canvasView.transform = .identity
+  }
+
+  private func boundedNavigationScale(_ scale: CGFloat) -> CGFloat {
+    min(3, max(0.75, scale))
+  }
+
+  private func applyNavigationTransform() {
+    canvasView.transform = CGAffineTransform(
+      translationX: navigationOffset.x,
+      y: navigationOffset.y,
+    ).scaledBy(x: navigationScale, y: navigationScale)
+  }
+
+  @objc private func handleNavigationPan(_ gesture: UIPanGestureRecognizer) {
+    guard !drawingEnabled else {
+      return
+    }
+
+    switch gesture.state {
+    case .began:
+      navigationPanStartOffset = navigationOffset
+    case .changed:
+      let translation = gesture.translation(in: self)
+      navigationOffset = CGPoint(
+        x: navigationPanStartOffset.x + translation.x,
+        y: navigationPanStartOffset.y + translation.y,
+      )
+      applyNavigationTransform()
+    default:
+      break
+    }
+  }
+
+  @objc private func handleNavigationPinch(_ gesture: UIPinchGestureRecognizer) {
+    guard !drawingEnabled else {
+      return
+    }
+
+    switch gesture.state {
+    case .began:
+      navigationPinchStartScale = navigationScale
+    case .changed:
+      navigationScale = boundedNavigationScale(navigationPinchStartScale * gesture.scale)
+      applyNavigationTransform()
+    default:
+      break
+    }
   }
 }
