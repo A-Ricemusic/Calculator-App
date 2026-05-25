@@ -41,6 +41,10 @@ export function useCalculusCalculator() {
   const fields = mode === "derivative" ? derivativeFields : integralFields;
 
   const result = useMemo(() => {
+    if (!values.expression.trim()) {
+      return "";
+    }
+
     try {
       if (mode === "derivative") {
         return calculateDerivative(values.expression, values.x);
@@ -53,6 +57,10 @@ export function useCalculusCalculator() {
   }, [mode, values]);
 
   const symbolicResult = useMemo(() => {
+    if (!values.expression.trim()) {
+      return "";
+    }
+
     if (mode === "derivative") {
       return getSymbolicDerivative(values.expression);
     }

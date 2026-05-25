@@ -3,6 +3,11 @@ import { useMemo, useState } from "react";
 import type { ButtonConfig, CalculatorHistoryEntry } from "../types";
 import { useCalculatorHistory } from "../history/useCalculatorHistory";
 import { formatValue } from "../utils/calculatorMath";
+import {
+  appendPercentageOperator,
+  normalizePercentageOperator,
+  parsePercentageInput,
+} from "../utils/percentageInput";
 
 export type PercentageOptionId =
   | "percentOfValue"
@@ -138,14 +143,6 @@ export const percentageOptions: PercentageOption[] = [
   },
 ];
 
-function parseInput(value: string) {
-  if (value === "" || value === "-") {
-    return 0;
-  }
-
-  return Number(value);
-}
-
 function formatPercentageExpression(option: PercentageOption, values: Record<string, string>) {
   return option.fields
     .map((field) => `${field.label} ${values[field.id] ?? "0"}${field.suffix ?? ""}`)
@@ -169,7 +166,7 @@ export function usePercentageCalculator() {
 
   const result = useMemo(() => {
     const parsedValues = Object.fromEntries(
-      option.fields.map((field) => [field.id, parseInput(values[field.id] ?? "")]),
+      option.fields.map((field) => [field.id, parsePercentageInput(values[field.id] ?? "")]),
     );
 
     return formatValue(option.calculate(parsedValues));
@@ -196,6 +193,11 @@ export function usePercentageCalculator() {
 
     if (/^\d$/.test(action)) {
       updateActiveField((current) => (current === "0" ? action : `${current}${action}`));
+      return;
+    }
+
+    if (normalizePercentageOperator(action)) {
+      updateActiveField((current) => appendPercentageOperator(current, action));
       return;
     }
 
