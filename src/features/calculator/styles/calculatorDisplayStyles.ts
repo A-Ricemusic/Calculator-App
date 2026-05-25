@@ -25,9 +25,9 @@ export function createCalculatorDisplayStyles(theme: CalculatorTheme) {
       fontSize: 60,
     },
     fractionDisplayPanel: {
-      maxHeight: 220,
-      minHeight: 170,
-      paddingBottom: 18,
+      maxHeight: 140,
+      minHeight: 100,
+      paddingBottom: 12,
     },
     fractionExpression: {
       alignItems: "center",

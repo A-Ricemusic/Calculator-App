@@ -187,9 +187,9 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       marginTop: -4,
     },
     percentageForm: {
-      gap: 10,
+      gap: 8,
       paddingHorizontal: 16,
-      paddingTop: 24,
+      paddingTop: 12,
     },
     percentageInputRow: {
       alignItems: "center",
@@ -197,7 +197,7 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       borderRadius: 8,
       flexDirection: "row",
       justifyContent: "space-between",
-      minHeight: 74,
+      minHeight: 54,
       paddingHorizontal: 18,
     },
     percentageInputRowActive: {
@@ -206,13 +206,13 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
     percentageInputLabel: {
       color: theme.colors.displayText,
       flex: 1,
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: "400",
     },
     percentageInputValue: {
       color: theme.colors.mutedText,
       flex: 1,
-      fontSize: 34,
+      fontSize: 30,
       fontWeight: "500",
       textAlign: "right",
     },
@@ -220,7 +220,7 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "space-between",
-      minHeight: 72,
+      minHeight: 52,
       paddingHorizontal: 18,
     },
     percentageAnswerLabel: {
@@ -231,7 +231,7 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
     percentageAnswerValue: {
       color: theme.colors.mutedText,
       flex: 1,
-      fontSize: 34,
+      fontSize: 30,
       fontWeight: "700",
       textAlign: "right",
     },

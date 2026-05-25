@@ -3,12 +3,7 @@ import { Text, View } from "react-native";
 import type { CalculatorStyles } from "../styles/calculatorStyleTypes";
 import type { FractionDisplayMode } from "../hooks/useFractionCalculator";
 import type { FractionParts, Rational } from "../utils/fractionMath";
-import {
-  formatFractionParts,
-  partsToRational,
-  rationalToImproperParts,
-  rationalToParts,
-} from "../utils/fractionMath";
+import { partsToRational, rationalToImproperParts, rationalToParts } from "../utils/fractionMath";
 
 type FractionDisplayProps = {
   currentValue: Rational | null;
@@ -83,11 +78,6 @@ export function FractionDisplay({
       {!waitingForOperand && !currentValue && (
         <Text accessibilityRole="alert" style={styles.fractionWarning}>
           Denominator cannot be 0
-        </Text>
-      )}
-      {shouldShowCurrentValue && (
-        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.fractionPlainText}>
-          {formatFractionParts(displayParts)}
         </Text>
       )}
     </View>
