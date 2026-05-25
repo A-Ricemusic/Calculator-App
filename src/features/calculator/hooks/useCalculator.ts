@@ -2,20 +2,14 @@ import { useMemo, useState } from "react";
 
 import type { ButtonConfig, CalculatorHistoryEntry, CalculatorMode, Operator } from "../types";
 import { useCalculatorHistory } from "../history/useCalculatorHistory";
+import {
+  appendExpressionValue,
+  hasTrailingBinaryOperator,
+  isExpressionDisplay,
+  toggleCalculatorSign,
+} from "../utils/calculatorInput";
 import { calculate, evaluateCalculatorExpression, formatValue } from "../utils/calculatorMath";
 import { calculateUnaryAction, isUnaryAction } from "../utils/scientificOperations";
-
-function isExpressionDisplay(value: string) {
-  return /[()+x/]/.test(value) || value.slice(1).includes("-");
-}
-
-function hasTrailingBinaryOperator(value: string) {
-  return /[+x/-]$/.test(value);
-}
-
-function appendExpressionValue(current: string, value: string) {
-  return current === "0" || current === "Error" ? value : `${current}${value}`;
-}
 
 export function useCalculator(mode: CalculatorMode) {
   const [display, setDisplay] = useState("0");
@@ -233,11 +227,15 @@ export function useCalculator(mode: CalculatorMode) {
     }
 
     if (action === "sign") {
-      setDisplay((current) => (current.startsWith("-") ? current.slice(1) : `-${current}`));
+      setDisplay(toggleCalculatorSign);
       return;
     }
 
     if (action === "percent") {
+      if (isExpressionDisplay(display)) {
+        return;
+      }
+
       setDisplay((current) => formatValue(Number(current) / 100));
       return;
     }

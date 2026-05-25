@@ -140,6 +140,10 @@ function assertFinite(value: number) {
   }
 }
 
+function allTermsAvailable(terms: Array<string | null>): terms is string[] {
+  return terms.every((term) => term !== null);
+}
+
 export function getSymbolicDerivative(expression: string) {
   const terms = splitSimpleTerms(expression);
 
@@ -157,9 +161,9 @@ export function getSymbolicDerivative(expression: string) {
     return formatPowerTerm(parsedTerm.coefficient * parsedTerm.power, parsedTerm.power - 1);
   });
 
-  return derivativeTerms.includes(null)
-    ? "Symbolic derivative unavailable"
-    : joinTerms(derivativeTerms);
+  return allTermsAvailable(derivativeTerms)
+    ? joinTerms(derivativeTerms)
+    : "Symbolic derivative unavailable";
 }
 
 export function getSymbolicIntegral(expression: string) {
@@ -194,9 +198,9 @@ export function getSymbolicIntegral(expression: string) {
     return `${formatCoefficient(parsedTerm.coefficient)}/${denominator}x^${formatCalculusValue(nextPower)}`;
   });
 
-  return integralTerms.includes(null)
-    ? "Symbolic integral unavailable"
-    : `${joinTerms(integralTerms)} + C`;
+  return allTermsAvailable(integralTerms)
+    ? `${joinTerms(integralTerms)} + C`
+    : "Symbolic integral unavailable";
 }
 
 export function calculateDerivative(

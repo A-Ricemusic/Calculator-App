@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   calculateFractions,
   formatFractionParts,
+  parseFormattedFractionParts,
   partsToRational,
   rationalToImproperParts,
   rationalToParts,
@@ -76,5 +77,38 @@ describe("fractionMath", () => {
       sign: -1,
       whole: "0",
     });
+  });
+
+  it("parses formatted history values back into fraction parts", () => {
+    expect(parseFormattedFractionParts("3")).toEqual({
+      denominator: "",
+      numerator: "",
+      sign: 1,
+      whole: "3",
+    });
+    expect(parseFormattedFractionParts("1/2")).toEqual({
+      denominator: "2",
+      numerator: "1",
+      sign: 1,
+      whole: "0",
+    });
+    expect(parseFormattedFractionParts("-1/2")).toEqual({
+      denominator: "2",
+      numerator: "1",
+      sign: -1,
+      whole: "0",
+    });
+    expect(parseFormattedFractionParts("-2 1/3")).toEqual({
+      denominator: "3",
+      numerator: "1",
+      sign: -1,
+      whole: "2",
+    });
+  });
+
+  it("rejects invalid formatted history values", () => {
+    expect(parseFormattedFractionParts("Error")).toBeNull();
+    expect(parseFormattedFractionParts("1/0")).toBeNull();
+    expect(parseFormattedFractionParts("not a fraction")).toBeNull();
   });
 });

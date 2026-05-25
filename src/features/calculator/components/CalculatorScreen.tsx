@@ -8,6 +8,7 @@ type CalculatorScreenProps = {
   display: string;
   handlePress: (button: ButtonConfig) => void;
   isSecondFunction: boolean;
+  keypadWidth?: number;
   mode: CalculatorMode;
   styles: CalculatorStyles;
 };
@@ -17,6 +18,7 @@ export function CalculatorScreen({
   display,
   handlePress,
   isSecondFunction,
+  keypadWidth,
   mode,
   styles,
 }: CalculatorScreenProps) {
@@ -26,6 +28,7 @@ export function CalculatorScreen({
       <CalculatorKeypad
         clearLabel={clearLabel}
         isSecondFunction={isSecondFunction}
+        keypadWidth={keypadWidth}
         mode={mode}
         onPress={handlePress}
         styles={styles}

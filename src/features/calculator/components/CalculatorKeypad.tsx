@@ -16,6 +16,7 @@ const BUTTON_GAP = 12;
 type CalculatorKeypadProps = {
   clearLabel: string;
   isSecondFunction: boolean;
+  keypadWidth?: number;
   mode: CalculatorMode;
   onPress: (button: ButtonConfig) => void;
   styles: CalculatorStyles;
@@ -24,14 +25,16 @@ type CalculatorKeypadProps = {
 export function CalculatorKeypad({
   clearLabel,
   isSecondFunction,
+  keypadWidth,
   mode,
   onPress,
   styles,
 }: CalculatorKeypadProps) {
   const { width } = useWindowDimensions();
+  const layoutWidth = keypadWidth ?? width;
   const buttonSize =
     mode === "basic"
-      ? Math.floor((width - KEYPAD_PADDING_H * 2 - BUTTON_GAP * (COLUMNS - 1)) / COLUMNS)
+      ? Math.floor((layoutWidth - KEYPAD_PADDING_H * 2 - BUTTON_GAP * (COLUMNS - 1)) / COLUMNS)
       : undefined;
 
   return (

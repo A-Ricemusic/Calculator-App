@@ -156,6 +156,10 @@ function stripResultSuffix(result: string) {
   return result.endsWith("%") ? result.slice(0, -1) : result;
 }
 
+function getZeroPercentageValues(option: PercentageOption) {
+  return Object.fromEntries(option.fields.map((field) => [field.id, "0"]));
+}
+
 export function usePercentageCalculator() {
   const [optionId, setOptionId] = useState<PercentageOptionId>("percentOfValue");
   const option = percentageOptions.find((item) => item.id === optionId) ?? percentageOptions[0];
@@ -196,12 +200,18 @@ export function usePercentageCalculator() {
     }
 
     if (action === ".") {
-      updateActiveField((current) => (current.includes(".") ? current : `${current || "0"}.`));
+      updateActiveField((current) => {
+        if (current.includes(".")) {
+          return current;
+        }
+
+        return current === "-" ? "-0." : `${current || "0"}.`;
+      });
       return;
     }
 
     if (action === "clear") {
-      setValues(option.initialValues);
+      setValues(getZeroPercentageValues(option));
       setActiveField(option.fields[0].id);
       return;
     }

@@ -35,7 +35,7 @@ export function ConversionScreen({ styles }: ConversionScreenProps) {
         <TextInput
           accessibilityLabel="Conversion input value"
           inputMode="decimal"
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           onChangeText={conversion.setInputValue}
           placeholder="0"
           placeholderTextColor={styles.conversionPlaceholder?.color as string}

@@ -159,3 +159,36 @@ export function formatFractionParts(parts: FractionParts) {
 
   return `${sign}${whole} ${parts.numerator}/${parts.denominator || "?"}`;
 }
+
+export function parseFormattedFractionParts(value: string): FractionParts | null {
+  const trimmed = value.trim();
+
+  if (!trimmed || trimmed === "Error") {
+    return null;
+  }
+
+  const sign = trimmed.startsWith("-") ? -1 : 1;
+  const unsigned = trimmed.replace(/^[+-]/, "").trim();
+  const [wholeOrFraction, fractionText, extra] = unsigned.split(/\s+/);
+
+  if (!wholeOrFraction || extra !== undefined) {
+    return null;
+  }
+
+  const fraction = fractionText ?? (wholeOrFraction.includes("/") ? wholeOrFraction : undefined);
+  const whole = fractionText
+    ? wholeOrFraction
+    : wholeOrFraction.includes("/")
+      ? "0"
+      : wholeOrFraction;
+  const [numerator = "", denominator = ""] = fraction?.split("/") ?? [];
+
+  const parts: FractionParts = {
+    denominator,
+    numerator,
+    sign,
+    whole,
+  };
+
+  return partsToRational(parts) ? parts : null;
+}

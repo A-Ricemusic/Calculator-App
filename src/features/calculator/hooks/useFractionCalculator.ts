@@ -5,6 +5,7 @@ import { useCalculatorHistory } from "../history/useCalculatorHistory";
 import {
   calculateFractions,
   formatFractionParts,
+  parseFormattedFractionParts,
   partsToRational,
   rationalToParts,
   type FractionParts,
@@ -165,14 +166,7 @@ export function useFractionCalculator() {
   }
 
   function loadHistoryEntry(entry: CalculatorHistoryEntry) {
-    const [whole = "0", fraction] = entry.result.replace("-", "").split(" ");
-    const [numerator = "", denominator = ""] = fraction?.split("/") ?? [];
-    setParts({
-      denominator,
-      numerator,
-      sign: entry.result.startsWith("-") ? -1 : 1,
-      whole,
-    });
+    setParts(parseFormattedFractionParts(entry.result) ?? emptyParts);
     setStoredValue(null);
     setOperator(null);
     setWaitingForOperand(true);

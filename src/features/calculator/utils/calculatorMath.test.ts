@@ -37,6 +37,8 @@ describe("calculatorMath", () => {
     expect(evaluateCalculatorExpression("(8/2)+(3x2)")).toBe(10);
     expect(evaluateCalculatorExpression("10/(2+3)")).toBe(2);
     expect(evaluateCalculatorExpression("-2x(3+4)")).toBe(-14);
+    expect(evaluateCalculatorExpression("2+-3")).toBe(-1);
+    expect(evaluateCalculatorExpression("2x(-3)")).toBe(-6);
     expect(evaluateCalculatorExpression("1e3+(2x5)")).toBe(1010);
   });
 
