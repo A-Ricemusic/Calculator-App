@@ -11,6 +11,9 @@ type CalculusScreenProps = {
 export function CalculusScreen({ styles }: CalculusScreenProps) {
   const calculator = useCalculusCalculator();
   const expressionField = calculator.fields.find((field) => field.id === "expression");
+  const secondaryFields = calculator.fields.filter(
+    (field) => field.id !== "expression" && field.id !== "lower" && field.id !== "upper",
+  );
   const boundFields = calculator.fields.filter(
     (field) => field.id === "lower" || field.id === "upper",
   );
@@ -86,6 +89,7 @@ export function CalculusScreen({ styles }: CalculusScreenProps) {
 
       <View style={styles.calculusForm}>
         {expressionField ? renderField(expressionField) : null}
+        {secondaryFields.map((field) => renderField(field))}
         {boundFields.length > 0 ? (
           <View style={styles.calculusBoundsRow}>
             {boundFields.map((field) => renderField(field, true))}
