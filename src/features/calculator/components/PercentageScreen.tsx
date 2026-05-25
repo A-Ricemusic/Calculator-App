@@ -83,7 +83,6 @@ export function PercentageScreen({ onOpenMenu, styles }: PercentageScreenProps) 
           );
         })}
         <View style={styles.percentageAnswerRow}>
-          <Text style={styles.percentageAnswerLabel}>Answer</Text>
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
