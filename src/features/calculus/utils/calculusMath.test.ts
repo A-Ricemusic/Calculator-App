@@ -26,6 +26,7 @@ describe("calculusMath", () => {
   it("returns symbolic polynomial derivatives and integrals", () => {
     expect(getSymbolicDerivative("x^2")).toBe("2x");
     expect(getSymbolicDerivative("3x^2 + 4x - 7")).toBe("6x + 4");
+    expect(getSymbolicDerivative("2x^sqrt(9)")).toBe("6x^2");
     expect(getSymbolicIntegral("x^2")).toBe("1/3x^3 + C");
   });
 

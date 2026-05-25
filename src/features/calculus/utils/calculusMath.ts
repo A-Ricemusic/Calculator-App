@@ -3,7 +3,7 @@ import { formatValue } from "../../calculator/utils/calculatorMath";
 
 const DEFAULT_DERIVATIVE_STEP = 0.0001;
 const DEFAULT_INTEGRAL_SLICES = 200;
-const SIMPLE_TERM_PATTERN = /^([+-]?)(?:(\d+(?:\.\d+)?)\*?)?(x)?(?:\^([+-]?\d+(?:\.\d+)?))?$/;
+const SIMPLE_TERM_PATTERN = /^([+-]?)(?:(\d+(?:\.\d+)?)\*?)?(x)?(?:\^(.+))?$/;
 
 function parsePositiveNumber(value: string, fallback: number) {
   const parsed = parseNumericValue(value);
@@ -60,18 +60,27 @@ function splitSimpleTerms(expression: string) {
     .replace(/\s+/g, "")
     .replace(/^\+/, "");
 
-  if (!normalized || /[()*/]/.test(normalized)) {
+  if (!normalized || /[*/]/.test(normalized)) {
     return null;
   }
 
   const terms: string[] = [];
   let termStart = 0;
+  let parenthesesDepth = 0;
 
   for (let index = 1; index < normalized.length; index += 1) {
     const character = normalized[index];
     const previous = normalized[index - 1];
 
-    if ((character === "+" || character === "-") && previous !== "^") {
+    if (character === "(") {
+      parenthesesDepth += 1;
+    }
+
+    if (character === ")") {
+      parenthesesDepth -= 1;
+    }
+
+    if ((character === "+" || character === "-") && previous !== "^" && parenthesesDepth === 0) {
       terms.push(normalized.slice(termStart, index));
       termStart = index;
     }
@@ -93,7 +102,14 @@ function parseSimpleTerm(term: string) {
   const sign = signText === "-" ? -1 : 1;
   const hasVariable = Boolean(variableText);
   const coefficient = sign * (coefficientText ? Number(coefficientText) : 1);
-  const power = hasVariable ? (powerText ? Number(powerText) : 1) : 0;
+  const power =
+    hasVariable && powerText
+      ? /[xy]/i.test(powerText)
+        ? Number.NaN
+        : parseNumericValue(powerText)
+      : hasVariable
+        ? 1
+        : 0;
 
   if (!Number.isFinite(coefficient) || !Number.isFinite(power)) {
     return null;
