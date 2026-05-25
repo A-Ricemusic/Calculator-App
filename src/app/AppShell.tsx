@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text, View } from "react-native";
 
 import { CalculatorModeView } from "../features/calculator";
+import { CalculusScreen } from "../features/calculus";
 import { ConversionScreen } from "../features/conversion";
 import { GraphingScreen } from "../features/graphing";
 import { MathNotesScreen } from "../features/notes";
@@ -26,7 +27,8 @@ export function AppShell({
   styles,
   theme,
 }: AppShellProps) {
-  const isCalculatorMode = mode === "basic" || mode === "scientific" || mode === "fraction";
+  const isCalculatorMode =
+    mode === "basic" || mode === "scientific" || mode === "fraction" || mode === "percentage";
 
   if (isCalculatorMode) {
     return (
@@ -54,12 +56,15 @@ export function AppShell({
           </Pressable>
         </View>
         {mode === "conversion" && <Text style={styles.modeTitle}>Conversion</Text>}
+        {mode === "calculus" && <Text style={styles.modeTitle}>Calculus</Text>}
         {mode === "graphing" && <Text style={styles.modeTitle}>Graphing</Text>}
         {mode === "notes" && <Text style={styles.modeTitle}>Math Notes</Text>}
         <View style={styles.iconButton} />
       </View>
 
-      {mode === "graphing" ? (
+      {mode === "calculus" ? (
+        <CalculusScreen styles={styles} />
+      ) : mode === "graphing" ? (
         <GraphingScreen styles={styles} theme={theme} />
       ) : mode === "notes" ? (
         <MathNotesScreen onSelectMode={onSelectMode} styles={styles} theme={theme} />

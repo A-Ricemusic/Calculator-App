@@ -8,6 +8,7 @@ import { CalculatorHistory } from "./CalculatorHistory";
 import { CalculatorScreen } from "./CalculatorScreen";
 import { FractionDisplay } from "./FractionDisplay";
 import { FractionKeypad } from "./FractionKeypad";
+import { PercentageScreen } from "./PercentageScreen";
 import { useCalculator } from "../hooks/useCalculator";
 import { useFractionCalculator } from "../hooks/useFractionCalculator";
 
@@ -38,6 +39,14 @@ export function CalculatorModeView({
     loadHistoryEntry,
     resetAll,
   } = useCalculator(calculatorMode);
+
+  if (mode === "percentage") {
+    return (
+      <View style={[styles.appShell, shellStyle]}>
+        <PercentageScreen onOpenMenu={onOpenMenu} styles={styles} />
+      </View>
+    );
+  }
 
   if (mode === "fraction") {
     function loadFractionHistoryAndClose(entry: (typeof fractionCalculator.history)[number]) {

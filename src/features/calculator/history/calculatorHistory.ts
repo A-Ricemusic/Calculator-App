@@ -27,5 +27,5 @@ export function createHistoryEntry(expression: string, result: string): Calculat
 }
 
 export function shouldStoreHistoryResult(result: string) {
-  return result !== "Error" && Number.isFinite(Number(result));
+  return result.trim() !== "" && result !== "Error" && !result.includes("NaN");
 }
