@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PanResponder, View } from "react-native";
 import Svg, { Circle, G, Line, Path, Rect, Text as SvgText } from "react-native-svg";
 
@@ -7,6 +7,11 @@ import type { GraphingStyles } from "../../styles/graphingStyleTypes";
 import type { CalculatorTheme } from "@features/theme";
 import type { GraphViewport, PlottedEquation } from "../../types";
 import { formatTick, makeTicks, niceStep, pointsToPath } from "../utils/graphGeometry";
+import {
+  findNearestGraphPoint,
+  formatSelectedCoordinate,
+  type SelectedGraphPoint,
+} from "../utils/graphSelection";
 import { panViewport, zoomViewportAtScreenPoint } from "../utils/graphViewport";
 
 type GraphCanvasProps = {
@@ -28,6 +33,10 @@ type PinchState = {
   distance: number;
   viewport: GraphViewport;
 };
+
+const POINT_HIT_RADIUS = 28;
+const SELECTION_LABEL_HEIGHT = 28;
+const SELECTION_LABEL_PADDING = 10;
 
 function getTouchDistance(touchA: TouchPoint, touchB: TouchPoint) {
   return Math.hypot(touchA.locationX - touchB.locationX, touchA.locationY - touchB.locationY);
@@ -53,6 +62,8 @@ export function GraphCanvas({
   const latestViewport = useRef<GraphViewport>(viewport);
   const panStartViewport = useRef<GraphViewport>(viewport);
   const pinchStart = useRef<PinchState | null>(null);
+  const didMove = useRef(false);
+  const [selectedPoint, setSelectedPoint] = useState<SelectedGraphPoint | null>(null);
 
   latestViewport.current = viewport;
 
@@ -85,6 +96,7 @@ export function GraphCanvas({
         },
         onPanResponderMove: (event, gestureState) => {
           const touches = event.nativeEvent.touches;
+          didMove.current = true;
 
           if (touches.length >= 2) {
             const [touchA, touchB] = touches;
@@ -141,8 +153,61 @@ export function GraphCanvas({
     [height, onViewportChange, width],
   );
 
+  function handleGraphPress(locationX: number, locationY: number) {
+    const nextSelectedPoint = findNearestGraphPoint({
+      equations,
+      maxDistance: POINT_HIT_RADIUS,
+      screenPoint: { x: locationX, y: locationY },
+      toScreenX: geometry.toScreenX,
+      toScreenY: geometry.toScreenY,
+    });
+
+    setSelectedPoint(nextSelectedPoint);
+  }
+
+  const selectionLabel = selectedPoint
+    ? `(${formatSelectedCoordinate(selectedPoint.x)}, ${formatSelectedCoordinate(selectedPoint.y)})`
+    : "";
+  const selectionLabelWidth = Math.max(
+    64,
+    selectionLabel.length * 7.5 + SELECTION_LABEL_PADDING * 2,
+  );
+  const selectedScreenX = selectedPoint ? geometry.toScreenX(selectedPoint.x) : 0;
+  const selectedScreenY = selectedPoint ? geometry.toScreenY(selectedPoint.y) : 0;
+  const maxSelectionLabelX = Math.max(
+    SELECTION_LABEL_PADDING,
+    width - selectionLabelWidth - SELECTION_LABEL_PADDING,
+  );
+  const selectionLabelX = selectedPoint
+    ? Math.min(
+        Math.max(SELECTION_LABEL_PADDING, selectedScreenX - selectionLabelWidth / 2),
+        maxSelectionLabelX,
+      )
+    : 0;
+  const selectionLabelY = selectedPoint
+    ? Math.max(SELECTION_LABEL_PADDING, selectedScreenY - 44)
+    : 0;
+
   return (
-    <View style={styles.graphArea} {...panResponder.panHandlers}>
+    <View
+      style={styles.graphArea}
+      onTouchEnd={(event) => {
+        if (didMove.current) {
+          didMove.current = false;
+          return;
+        }
+
+        const touch = event.nativeEvent.changedTouches[0];
+
+        if (touch) {
+          handleGraphPress(touch.locationX, touch.locationY);
+        }
+      }}
+      onTouchStart={() => {
+        didMove.current = false;
+      }}
+      {...panResponder.panHandlers}
+    >
       <Svg height={height} width={width}>
         <Rect fill={graphBackground} height={height} width={width} x={0} y={0} />
 
@@ -230,6 +295,54 @@ export function GraphCanvas({
           fill={graphAxisLine}
           r={2.5}
         />
+
+        {selectedPoint && (
+          <G>
+            <Line
+              stroke={selectedPoint.color}
+              strokeDasharray="4 4"
+              strokeOpacity={0.55}
+              strokeWidth={1.2}
+              x1={selectedScreenX}
+              x2={selectedScreenX}
+              y1={selectedScreenY}
+              y2={geometry.toScreenY(0)}
+            />
+            <Line
+              stroke={selectedPoint.color}
+              strokeDasharray="4 4"
+              strokeOpacity={0.55}
+              strokeWidth={1.2}
+              x1={selectedScreenX}
+              x2={geometry.toScreenX(0)}
+              y1={selectedScreenY}
+              y2={selectedScreenY}
+            />
+            <Circle cx={selectedScreenX} cy={selectedScreenY} fill={selectedPoint.color} r={4.5} />
+            <Rect
+              fill={theme.colors.screen}
+              height={SELECTION_LABEL_HEIGHT}
+              opacity={0.96}
+              rx={6}
+              ry={6}
+              stroke={theme.colors.divider}
+              strokeWidth={1}
+              width={selectionLabelWidth}
+              x={selectionLabelX}
+              y={selectionLabelY}
+            />
+            <SvgText
+              fill={theme.colors.topText}
+              fontSize={13}
+              fontWeight="600"
+              textAnchor="middle"
+              x={selectionLabelX + selectionLabelWidth / 2}
+              y={selectionLabelY + 18}
+            >
+              {selectionLabel}
+            </SvgText>
+          </G>
+        )}
       </Svg>
     </View>
   );

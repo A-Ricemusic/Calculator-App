@@ -109,26 +109,28 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
     fractionTopRow: {
       flexDirection: "row",
       gap: 6,
+      justifyContent: "center",
     },
     fractionBody: {
       flex: 1,
       flexDirection: "row",
       gap: 6,
+      justifyContent: "center",
     },
     fractionNumberBlock: {
-      flex: 1,
+      flex: 0,
       gap: 4,
     },
     fractionStackedPads: {
-      flex: 1.4,
+      flex: 0,
       gap: 4,
     },
     fractionOperatorColumn: {
-      flex: 0.55,
+      flex: 0,
       gap: 6,
     },
     fractionSmallRow: {
-      flex: 1,
+      flex: 0,
       flexDirection: "row",
       gap: 4,
     },

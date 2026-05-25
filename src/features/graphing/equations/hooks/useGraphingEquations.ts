@@ -17,10 +17,7 @@ function createEquation(index: number): GraphEquation {
 }
 
 export function useGraphingEquations(graphWidth: number) {
-  const [equations, setEquations] = useState<GraphEquation[]>([
-    { ...createEquation(0), expression: "3x + 5y = 30" },
-    { ...createEquation(1), expression: "x^2 + 1" },
-  ]);
+  const [equations, setEquations] = useState<GraphEquation[]>([]);
   const [viewport, setViewport] = useState<GraphViewport>(initialGraphViewport);
 
   const plottedEquations = useMemo<PlottedEquation[]>(() => {
