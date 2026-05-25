@@ -64,7 +64,22 @@ function splitSimpleTerms(expression: string) {
     return null;
   }
 
-  return normalized.match(/[+-]?[^+-]+/g);
+  const terms: string[] = [];
+  let termStart = 0;
+
+  for (let index = 1; index < normalized.length; index += 1) {
+    const character = normalized[index];
+    const previous = normalized[index - 1];
+
+    if ((character === "+" || character === "-") && previous !== "^") {
+      terms.push(normalized.slice(termStart, index));
+      termStart = index;
+    }
+  }
+
+  terms.push(normalized.slice(termStart));
+
+  return terms;
 }
 
 function parseSimpleTerm(term: string) {
@@ -170,6 +185,10 @@ export function getSymbolicIntegral(expression: string) {
 
     if (parsedTerm.coefficient === -nextPower) {
       return formatPowerTerm(-1, nextPower);
+    }
+
+    if (nextPower === 1) {
+      return formatPowerTerm(parsedTerm.coefficient, nextPower);
     }
 
     return `${formatCoefficient(parsedTerm.coefficient)}/${denominator}x^${formatCalculusValue(nextPower)}`;

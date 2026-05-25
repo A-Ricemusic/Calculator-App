@@ -23,6 +23,12 @@ describe("parseGraphExpression", () => {
     expect(parsed?.evaluate(10)).toBeCloseTo(0);
   });
 
+  it("returns NaN for undefined numeric outputs", () => {
+    expect(parseGraphExpression("1/(x-1)")?.evaluate(1)).toBeNaN();
+    expect(parseGraphExpression("sqrt(x)")?.evaluate(-1)).toBeNaN();
+    expect(parseGraphExpression("y/0 = x")?.evaluate(1)).toBeNaN();
+  });
+
   it("rejects equations without y for now", () => {
     expect(() => parseGraphExpression("x = 3")).toThrow("Equations without y");
   });

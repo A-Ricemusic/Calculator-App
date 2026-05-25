@@ -28,4 +28,11 @@ describe("calculusMath", () => {
     expect(getSymbolicDerivative("3x^2 + 4x - 7")).toBe("6x + 4");
     expect(getSymbolicIntegral("x^2")).toBe("1/3x^3 + C");
   });
+
+  it("handles constant and negative-power symbolic calculus", () => {
+    expect(getSymbolicDerivative("7")).toBe("0");
+    expect(getSymbolicDerivative("-2x^-3")).toBe("6x^-4");
+    expect(getSymbolicIntegral("4")).toBe("4x + C");
+    expect(getSymbolicIntegral("x^-1")).toBe("Symbolic integral unavailable");
+  });
 });

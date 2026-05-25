@@ -10,6 +10,11 @@ export type Rational = {
   numerator: number;
 };
 
+const invalidRational: Rational = {
+  denominator: 0,
+  numerator: 0,
+};
+
 function gcd(a: number, b: number): number {
   let x = Math.abs(a);
   let y = Math.abs(b);
@@ -25,7 +30,7 @@ function gcd(a: number, b: number): number {
 
 export function reduceFraction(value: Rational): Rational {
   if (value.denominator === 0) {
-    return value;
+    return invalidRational;
   }
 
   const sign = value.denominator < 0 ? -1 : 1;
@@ -44,6 +49,10 @@ export function partsToRational(parts: FractionParts): Rational | null {
   const numerator = Number(parts.numerator || "0");
   const denominator = Number(parts.denominator || "0");
 
+  if (!Number.isFinite(whole) || !Number.isFinite(numerator) || !Number.isFinite(denominator)) {
+    return null;
+  }
+
   if (denominator === 0 && numerator !== 0) {
     return null;
   }
@@ -58,6 +67,16 @@ export function partsToRational(parts: FractionParts): Rational | null {
 
 export function rationalToParts(value: Rational): FractionParts {
   const reduced = reduceFraction(value);
+
+  if (reduced.denominator === 0) {
+    return {
+      denominator: "",
+      numerator: "",
+      sign: 1,
+      whole: "Error",
+    };
+  }
+
   const sign = reduced.numerator < 0 ? -1 : 1;
   const absoluteNumerator = Math.abs(reduced.numerator);
   const whole = Math.trunc(absoluteNumerator / reduced.denominator);
@@ -73,6 +92,16 @@ export function rationalToParts(value: Rational): FractionParts {
 
 export function rationalToImproperParts(value: Rational): FractionParts {
   const reduced = reduceFraction(value);
+
+  if (reduced.denominator === 0) {
+    return {
+      denominator: "",
+      numerator: "",
+      sign: 1,
+      whole: "Error",
+    };
+  }
+
   const sign = reduced.numerator < 0 ? -1 : 1;
   const numerator = Math.abs(reduced.numerator);
 
@@ -104,6 +133,10 @@ export function calculateFractions(left: Rational, right: Rational, operator: st
       denominator: left.denominator * right.denominator,
       numerator: left.numerator * right.numerator,
     });
+  }
+
+  if (right.numerator === 0) {
+    return invalidRational;
   }
 
   return reduceFraction({

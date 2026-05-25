@@ -51,7 +51,7 @@ function buildEvaluator(expression: string) {
 
   return (x: number) => {
     const value = evaluator(x);
-    return typeof value === "number" ? value : Number.NaN;
+    return typeof value === "number" && Number.isFinite(value) ? value : Number.NaN;
   };
 }
 
@@ -70,7 +70,9 @@ function solveLinearY(left: string, right: string) {
     throw error;
   }
   const f = (x: number, y: number) => {
-    return Number(leftEval(x, y)) - Number(rightEval(x, y));
+    const value = Number(leftEval(x, y)) - Number(rightEval(x, y));
+
+    return Number.isFinite(value) ? value : Number.NaN;
   };
 
   return (x: number) => {
@@ -79,7 +81,13 @@ function solveLinearY(left: string, right: string) {
     const atTwo = f(x, 2);
     const coefficient = atOne - atZero;
 
-    if (Math.abs(coefficient) < 1e-10 || Math.abs(atTwo - atOne - coefficient) > 1e-7) {
+    if (
+      !Number.isFinite(atZero) ||
+      !Number.isFinite(coefficient) ||
+      !Number.isFinite(atTwo) ||
+      Math.abs(coefficient) < 1e-10 ||
+      Math.abs(atTwo - atOne - coefficient) > 1e-7
+    ) {
       return Number.NaN;
     }
 
