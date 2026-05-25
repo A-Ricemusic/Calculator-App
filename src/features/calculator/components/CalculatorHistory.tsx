@@ -32,7 +32,12 @@ export function CalculatorHistory({
         <View style={styles.historySheet}>
           <View style={styles.historyGrabber} />
           <View style={styles.historyHeader}>
-            <Text style={styles.historyTitle}>History</Text>
+            <View>
+              <Text style={styles.historyTitle}>History</Text>
+              <Text style={styles.historySubtitle}>
+                {history.length === 1 ? "1 calculation" : `${history.length} calculations`}
+              </Text>
+            </View>
             <View style={styles.historyActions}>
               <Pressable
                 accessibilityRole="button"
@@ -75,8 +80,11 @@ export function CalculatorHistory({
             </View>
           ) : (
             <ScrollView
-              showsVerticalScrollIndicator={false}
+              alwaysBounceVertical={false}
               contentContainerStyle={styles.historyList}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator
+              style={styles.historyScroll}
             >
               {history.map((entry) => (
                 <Pressable

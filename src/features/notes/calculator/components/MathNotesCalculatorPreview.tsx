@@ -11,10 +11,13 @@ type MathNotesCalculatorPreviewProps = {
   theme: CalculatorTheme;
 };
 
+const previewHorizontalInset = 48;
+const previewMaxWidth = 332;
+
 export function MathNotesCalculatorPreview({ onClose, theme }: MathNotesCalculatorPreviewProps) {
   const calculator = useCalculator("basic");
   const { width } = useWindowDimensions();
-  const previewWidth = Math.min(width - 28, 360);
+  const previewWidth = Math.min(width - previewHorizontalInset, previewMaxWidth);
   const calculatorStyles = useMemo(() => createCalculatorStyles(theme), [theme]);
   const previewCalculatorStyles = useMemo(
     () =>
@@ -79,7 +82,7 @@ const previewStyles = StyleSheet.create({
     overflow: "hidden",
     paddingTop: 8,
     position: "absolute",
-    top: 96,
+    top: 72,
     zIndex: 7,
   },
   header: {

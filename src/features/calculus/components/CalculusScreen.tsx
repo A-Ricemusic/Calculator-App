@@ -10,6 +10,38 @@ type CalculusScreenProps = {
 
 export function CalculusScreen({ styles }: CalculusScreenProps) {
   const calculator = useCalculusCalculator();
+  const expressionField = calculator.fields.find((field) => field.id === "expression");
+  const boundFields = calculator.fields.filter(
+    (field) => field.id === "lower" || field.id === "upper",
+  );
+
+  function renderField(field: (typeof calculator.fields)[number], compact = false) {
+    const active = field.id === calculator.activeField;
+
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Edit ${field.label}`}
+        key={field.id}
+        onPress={() => calculator.setActiveField(field.id)}
+        style={[
+          styles.calculusInputRow,
+          compact && styles.calculusBoundInput,
+          active && styles.calculusInputRowActive,
+        ]}
+      >
+        <Text style={styles.calculusInputLabel}>{field.label}</Text>
+        <Text
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.5}
+          style={styles.calculusInputValue}
+        >
+          {calculator.values[field.id] || "0"}
+        </Text>
+      </Pressable>
+    );
+  }
 
   return (
     <>
@@ -53,33 +85,13 @@ export function CalculusScreen({ styles }: CalculusScreenProps) {
       </View>
 
       <View style={styles.calculusForm}>
-        {calculator.fields.map((field) => {
-          const active = field.id === calculator.activeField;
-
-          return (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Edit ${field.label}`}
-              key={field.id}
-              onPress={() => calculator.setActiveField(field.id)}
-              style={[styles.calculusInputRow, active && styles.calculusInputRowActive]}
-            >
-              <Text style={styles.calculusInputLabel}>{field.label}</Text>
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.5}
-                style={styles.calculusInputValue}
-              >
-                {calculator.values[field.id] || "0"}
-              </Text>
-            </Pressable>
-          );
-        })}
+        {expressionField ? renderField(expressionField) : null}
+        {boundFields.length > 0 ? (
+          <View style={styles.calculusBoundsRow}>
+            {boundFields.map((field) => renderField(field, true))}
+          </View>
+        ) : null}
         <View style={styles.calculusAnswerRow}>
-          <Text style={styles.calculusAnswerLabel}>
-            {calculator.mode === "derivative" ? "Derivative" : "Integral"}
-          </Text>
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
@@ -90,7 +102,6 @@ export function CalculusScreen({ styles }: CalculusScreenProps) {
           </Text>
         </View>
         <View style={styles.calculusAnswerRow}>
-          <Text style={styles.calculusAnswerLabel}>Answer</Text>
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit

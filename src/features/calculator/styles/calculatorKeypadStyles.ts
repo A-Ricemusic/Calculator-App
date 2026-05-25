@@ -293,6 +293,15 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
     calculusInputRowActive: {
       backgroundColor: "rgba(255, 255, 255, 0.12)",
     },
+    calculusBoundsRow: {
+      flexDirection: "row",
+      gap: 8,
+    },
+    calculusBoundInput: {
+      flex: 1,
+      minHeight: 56,
+      paddingHorizontal: 14,
+    },
     calculusInputLabel: {
       color: theme.colors.displayText,
       flex: 1,
@@ -323,7 +332,7 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       flex: 1,
       fontSize: 28,
       fontWeight: "700",
-      textAlign: "right",
+      textAlign: "left",
     },
     calculusKeypad: {
       flex: 1,
