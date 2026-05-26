@@ -118,12 +118,10 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
     fractionNumberBlock: {
       flex: 1,
       gap: 4,
-      minHeight: 214,
     },
     fractionStackedPads: {
       flex: 1.4,
       gap: 4,
-      minHeight: 438,
     },
     fractionOperatorColumn: {
       flex: 0.55,
@@ -133,7 +131,6 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       flex: 1,
       flexDirection: "row",
       gap: 4,
-      minHeight: 50,
     },
     fractionButton: {
       alignItems: "center",
@@ -141,9 +138,8 @@ export function createCalculatorKeypadStyles(theme: CalculatorTheme) {
       borderRadius: 8,
       flex: 1,
       justifyContent: "center",
-      minHeight: 48,
       paddingHorizontal: 2,
-      paddingVertical: 14,
+      paddingVertical: 8,
     },
     fractionWideButton: {
       flex: 2.07,
