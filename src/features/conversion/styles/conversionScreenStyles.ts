@@ -4,8 +4,12 @@ export function createConversionScreenStyles(theme: CalculatorTheme) {
   return {
     conversionScreen: {
       flex: 1,
+    },
+    conversionScrollContent: {
+      flexGrow: 1,
       paddingHorizontal: 20,
       paddingTop: 16,
+      paddingBottom: 24,
     },
     conversionCategorySelector: {
       alignItems: "center",
