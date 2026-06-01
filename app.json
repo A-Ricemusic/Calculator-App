@@ -13,6 +13,11 @@
     },
     "ios": {
       "bundleIdentifier": "com.anthonyrice.calculatorapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9878db45-7e8b-4df0-a011-2846035fe721"
+      }
     }
   }
 }

@@ -1,0 +1,41 @@
+name: Deploy iOS to TestFlight
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  testflight:
+    name: Build and submit iOS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Test
+        run: bun run test
+
+      - name: Format check
+        run: bun run fmt:check
+
+      - name: Build and submit to TestFlight
+        run: eas build --platform ios --profile production --auto-submit --non-interactive
